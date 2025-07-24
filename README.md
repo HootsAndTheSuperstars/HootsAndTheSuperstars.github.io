@@ -5,8 +5,11 @@ Hey there! here's what you need to know for now:
 Controls:
 
 D, Space, cursor up: jump
+
 cursor left, cursor right: Move left and right
+
 A, cursor down (both in air): use ability 
+
 Maintaining S: run
 
 What to do?
