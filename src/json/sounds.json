@@ -1,0 +1,67 @@
+[
+    {
+        "path": "assets/sounds",
+        "files": [
+            {
+                "type": "audio",
+                "key": "bomb_explosion",
+                "url": "bomb_explosion.wav"
+            },
+            {
+                "type": "audio",
+                "key": "box_explosion",
+                "url": "box_explosion.wav"
+            },
+            {
+                "type": "audio",
+                "key": "wetfard",
+                "url": "wetfard.wav"
+            },
+            {
+                "type": "audio",
+                "key": "shield",
+                "url": "shield.wav"
+            },
+            {
+                "type": "audio",
+                "key": "jump",
+                "url": "jump.wav"
+            },
+            {
+                "type": "audio",
+                "key": "skidd",
+                "url": "skidd.wav"
+            },
+            {
+                "type": "audio",
+                "key": "star_get",
+                "url": "star_get.wav"
+            },
+            {
+                "type": "audio",
+                "key": "hurt",
+                "url": "hurt.wav"
+            },
+            {
+                "type": "audio",
+                "key": "hurt_shield",
+                "url": "hurt_shield.wav"
+            },
+            {
+                "type": "audio",
+                "key": "youMustDie",
+                "url": "youMustDie.wav"
+            },
+            {
+                "type": "audio",
+                "key": "fall",
+                "url": "fall.wav"
+            },
+            {
+                "type": "audio",
+                "key": "floor_destroy",
+                "url": "floor_destroy.wav"
+            }
+        ]
+    }
+]
