@@ -8,12 +8,20 @@
     <title>Hoots!</title>
     <style>
         
-            body{
-                margin: 1;
+            html{
                 background: url(assets/Pause/pause_background.png);
-                text-align: center;
+            }
+            body {
+                margin: 0;
+                overflow: hidden; /* Evita barras de desplazamiento */
+            }
 
-                
+            #game_container {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                width: 100vw; /* Ocupa todo el ancho de la ventana */
+                height: 100vh; /* Ocupa todo el alto de la ventana */
             }
             @font-face {
                 font-family: 'HUDfont';
@@ -21,14 +29,18 @@
                 font-weight: normal;
                 font-style: normal;
             }
+            
     </style>
 </head>
 <body>
+
+    <div id="game_container">
     <script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js"></script>
     <script src="src/phaser.min.js"></script>
 
-    <script type= "module" src="src/index.js"></script>
-
+    
+        <script type= "module" src="src/index.js"></script>
+    </div>
 
 
 </body>

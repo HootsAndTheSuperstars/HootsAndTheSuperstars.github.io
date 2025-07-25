@@ -6,6 +6,7 @@ import { Error } from './error.js';
 
 const config = {
     type: Phaser.AUTO,
+    parent: 'game_container',
     width: 1500,
     height: 600,
     scene: [ToC, Game, Pause, GameOver, Error],
