@@ -70,7 +70,7 @@ export class ToC extends Phaser.Scene{
         this.sound.add('hurt_dev')
         
 
-        this.input.keyboard.on('keyboard-D', () =>{
+        this.input.keyboard.on('keydown-D', () =>{
             if(!this.errorLaunch){
                 this.errorLaunch = true
                 this.sound.play('hurt_dev')
