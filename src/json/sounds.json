@@ -66,6 +66,11 @@
                 "type": "audio",
                 "key": "floor_destroy",
                 "url": "floor_destroy.wav"
+            },
+            {
+                "type": "audio",
+                "key": "stomp_activate",
+                "url": "stomp_activate.wav"
             }
         ]
     }

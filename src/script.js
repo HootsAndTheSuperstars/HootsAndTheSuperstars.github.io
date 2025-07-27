@@ -110,6 +110,7 @@
         this.sound.add('youMustDie')
         this.sound.add('fall')
         this.sound.add('floor_destroy')
+        this.activeStomp = this.sound.add('stomp_activate')
         
         
         //this.sound.add('shield')
@@ -126,12 +127,12 @@
         console.log("inputs created!")
         this.input.keyboard.on('keydown-ENTER', () =>
         {
-            if(!this.charstateDead){
+            if(!this.charstateDead && !this.groundKill){
                 console.log('Pausing game...')
                 this.scene.launch('pause')
                 this.scene.pause('stage')
             }
-            else if(this.charstateDead){
+            else{
                 console.log("You can't pause the game right now...")
             }
         });
@@ -641,9 +642,15 @@
                 }
             }
             else if(!this.player.body.onFloor() && (this.keyA.isDown || this.cursors.down.isDown)){
-                this.charstateJump = false;
-                this.charstateFall = false;
-                this.charstateAbility = true;
+                if(!this.charstateAbility && this.Char1){
+                    this.charstateAbility = true;
+                    if(!this.activeStomp.isPlaying){
+                        this.activeStomp.play()
+                    }
+                    this.charstateJump = false;
+                    this.charstateFall = false;
+    
+                }
 
             }
         }
