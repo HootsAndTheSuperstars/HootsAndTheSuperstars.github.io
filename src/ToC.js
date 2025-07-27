@@ -45,6 +45,7 @@ export class ToC extends Phaser.Scene{
 
         this.tocButtonAnims = this.tocButton.create(750, 490, 'ToC_button').setVisible(false)
         this.tocButtonAnims.setInteractive()
+        this.tocButtonAnims.anims.play('button_color1')
         this.time.delayedCall(1300, () =>{
             this.tocButtonAnims.setVisible(true)
         })
