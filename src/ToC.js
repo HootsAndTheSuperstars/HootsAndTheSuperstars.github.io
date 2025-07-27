@@ -12,7 +12,7 @@ export class ToC extends Phaser.Scene{
     }
     preload (){
         this.load.image('ToC', 'assets/ToC/ToC.png')
-        this.load.spritesheet('ToC_button', 'assets/ToC/ToC_button.png', {frameWidth: 278, frameHeight: 70})
+        this.load.spritesheet('ToC_button', 'assets/ToC/ToC_buttons.png', {frameWidth: 278, frameHeight: 70})
         this.load.audio('accept', 'assets/sounds/continue.wav')
     }
 
