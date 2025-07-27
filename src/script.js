@@ -405,9 +405,11 @@
 
                     this.time.delayedCall(600, () =>
                     {
-                        this.effectShield = true
-                        this.sound.play('shield')
-                        this.shield = this.shieldPhysics.create(0, 0, 'shield').setAlpha(0.6)
+                        if(!this.gameOver){
+                            this.effectShield = true
+                            this.sound.play('shield')
+                            this.shield = this.shieldPhysics.create(0, 0, 'shield').setAlpha(0.6)
+                        }
                     });
                 }
         });

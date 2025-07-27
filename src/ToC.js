@@ -18,6 +18,7 @@ export class ToC extends Phaser.Scene{
 
     create ()
     {
+        this.keyD = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
         console.log("The ToC right now is not available...")
         this.add.image(750, 300, 'ToC')
 
@@ -80,11 +81,11 @@ export class ToC extends Phaser.Scene{
             this.time.delayedCall(2000, () =>{
                 this.cameras.main.fadeOut(1000)
                 this.time.delayedCall(1000, () => {
-                    if(this.game.device.os.desktop && !this.checkForBoot){
+                    if(this.game.device.os.desktop && !this.checkForBoot && !this.keyD.isDown){
                         this.checkForBoot = true
                         this.scene.switch('titlescreen')
                     }
-                    else if(!this.game.device.os.desktop){
+                    else if(!this.game.device.os.desktop || this.keyD.isDown){
                         if(this.desktopCheck){
                             this.desktopCheck = true
                             this.scene.launch('error', {
