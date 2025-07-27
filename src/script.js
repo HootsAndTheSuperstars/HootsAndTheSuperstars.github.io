@@ -59,6 +59,7 @@
 
         this.youAskedForIt = false;
         this.aboveWorldBounds = false
+        this.groundKill = false
     }
     preload ()
     {
@@ -98,6 +99,7 @@
         //sounds start here
         this.sound.add('wetfard')
         this.sound.add('bomb_explosion')
+        this.sound.add('bomb_fall')
         this.sound.add('box_explosion')
         this.jumpSound = this.sound.add('jump')
         this.sound.add('shield')
@@ -108,6 +110,7 @@
         this.sound.add('youMustDie')
         this.sound.add('fall')
         this.sound.add('floor_destroy')
+        
         
         //this.sound.add('shield')
         //main game
@@ -134,19 +137,25 @@
         });
         this.input.keyboard.on('keydown-L', () =>
         {
-            this.sound.play('youMustDie')
-            this.time.delayedCall(850, () =>{
-                this.mainplatform.destroy()
-                this.platform1.destroy()
-                this.platform2.destroy()
-                this.platform3.destroy()
-                this.platform4.destroy()
-                this.charstateDead = true
-                this.sound.play('floor_destroy')
-                this.time.delayedCall(200, () =>{
-                    this.sound.play('fall')
+            if(!this.groundKill){
+                
+                this.groundKill = true
+                this.sound.play('youMustDie')
+                this.time.delayedCall(850, () =>{
+                    this.starPlayerCollider.active = false
+                    this.mainplatform.destroy()
+                    this.platform1.destroy()
+                    this.platform2.destroy()
+                    this.platform3.destroy()
+                    this.platform4.destroy()
+                    this.charstateDead = true
+                    this.sound.play('floor_destroy')
+                    console.error('You must DIE!!!\n - Gamñomn')
+                    this.time.delayedCall(200, () =>{
+                        this.sound.play('fall')
+                    })
                 })
-            })
+            }
         });
         //  A simple background for our game
         this.add.tileSprite(750, 300, 1500, 600, 'sky');
@@ -182,10 +191,10 @@
         console.log("Created platform 1");
     
         if (r_platform2 == 1){
-            this.platform2 = this.platforms.create(1390, 353, 'platform_0x01');
+            this.platform2 = this.platforms.create(1390, 345, 'platform_0x01');
         }
         else if (r_platform2 == 2){
-            this.platform2 = this.platforms.create(1390, 353, 'platform_0x02');    
+            this.platform2 = this.platforms.create(1390, 345, 'platform_0x02');    
         }
         console.log("Created platform 2");
         if (r_platform3 == 1){
@@ -198,10 +207,10 @@
 
 
         if (r_platform4 == 1){
-            this.platform4 = this.platforms.create(50, 232, 'platform_0x01');
+            this.platform4 = this.platforms.create(50, 270, 'platform_0x01');
             }
         else if (r_platform4 == 2){
-            this.platform4 = this.platforms.create(50, 232, 'platform_0x02');   
+            this.platform4 = this.platforms.create(50, 270, 'platform_0x02');   
         }
         console.log("Created platform 4");
 
@@ -361,7 +370,7 @@
         this.physics.add.collider(this.bombs, this.bombs);
 
         //  Checks to see if the player overlaps with any of the stars, if he does call the collectStar function
-        this.physics.add.overlap(this.player, this.stars, this.collectStar, null, this);
+        this.starPlayerCollider = this.physics.add.overlap(this.player, this.stars, this.collectStar, null, this);
 
         this.bombPlayerCollider = this.physics.add.collider(this.player, this.bombs, this.hitBomb, null, this);
 
@@ -416,9 +425,17 @@
             this.aboveWorldBounds = true
             this.bombPlayerCollider = false
             this.cameras.main.fadeOut(1000)
+            const noWay = Phaser.Math.Between(1, 1995)
             this.time.delayedCall(5000, () =>{
-                this.scene.launch('error')
-                this.scene.stop('stage')
+                if(noWay == 1994){
+                    this.scene.launch('error')
+                }
+                else{
+                    this.scene.launch('gameover', {
+                        score: this.score,
+                    })
+                }
+                    this.scene.stop('stage')
                     
                 
             })
@@ -637,7 +654,7 @@
         };
 
         if(!this.charstateHurt){
-            if((this.player.body.onFloor() && (!this.cursors.up.isDown && !this.keyD.isDown || this.keySPACEBAR.isDown)|| !this.player.body.onFloor()) && (!this.cursors.left.isDown && !this.cursors.right.isDown || this.cursors.left.isDown && this.cursors.right.isDown)){
+            if((this.player.body.onFloor() && (!this.cursors.up.isDown && !this.keyD.isDown || this.keySPACEBAR.isDown)|| !this.player.body.onFloor()) && (!this.cursors.left.isDown && !this.cursors.right.isDown || this.cursors.left.isDown && this.cursors.right.isDown) || (this.player.body.velocity.x == 0 && (this.player.body.touching.left || this.player.body.touching.right))){
                 if((this.player.body.velocity.x >= 150 || this.player.body.velocity.x <= -150) && !this.checkforpreventingSkiddafterStun){
                     this.charstateSkidd = true
                     this.charstateIdle = true
@@ -751,6 +768,7 @@
 
         if(this.keyE.isDown && this.keyZ.isDown && !this.youAskedForIt){
             this.youAskedForIt = true
+            console.warn('You are doomed...')
         }
     }
 
@@ -784,10 +802,10 @@
 
             });
 
-            const x = Phaser.Math.Between(400, 1100);
+            const x = Phaser.Math.Between(100, 1100);
             const badLuck = Phaser.Math.FloatBetween(1, 10000)
 
-            const bomb = this.bombs.create(x, 16, 'bomb');
+            const bomb = this.bombs.create(x, -40, 'bomb');
             bomb.body.setMaxSpeed(800);
             bomb.setGravityY(300);
             bomb.anims.play('bomb_movement', true);
@@ -801,15 +819,16 @@
             console.log("Bomb created!");
             bomb.body.debugBodyColor = 0xff0000;
             console.log("Added color red (#ff0000) to the bomb's hitbox")
-
+            this.sound.play('bomb_fall')
 
             if(badLuck == 1){
                 this.youAskedForIt = true
+                console.warn('You are doomed...')
             }
             if(this.youAskedForIt){
                 this.sound.play('wetfard')
-                for (let i = 0; i < 800; i++){
-                    const bomb = this.bombs.create(x, 16, 'bomb');
+                for (let i = 0; i < 999; i++){
+                    const bomb = this.bombs.create(x, -20, 'bomb');
                     bomb.body.setMaxSpeed(800);
                     bomb.setGravityY(300);
                     bomb.anims.play('bomb_movement', true);
@@ -823,6 +842,7 @@
                     console.log("Bomb created!");
                     bomb.body.debugBodyColor = 0xff0000;
                     console.log("Added color red (#ff0000) to the bomb's hitbox")
+                    console.error("Not so EZ anymore, huh?")
                 }
             }
 
@@ -835,6 +855,7 @@
                     this.Yshield = Phaser.Math.Between(100, 450);
                     this.shieldBox = this.shieldBoxes.create(this.Xshield, this.Yshield, 'shield_box')
                     this.shieldBox.anims.play('shield_box', true)
+                    console.log("This should have spawned a shield box...")
             
                 }
             }

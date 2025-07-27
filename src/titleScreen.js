@@ -1,0 +1,78 @@
+export class TitleScreen extends Phaser.Scene{
+
+    constructor (){
+
+        super({key: 'titlescreen'});
+    }
+    init(){
+        this.fastFlash = false;
+        
+    }
+    preload (){
+        this.load.image('titleHoots', 'assets/Title Screen/hoots_titlescreen.png')
+        this.load.image('title_background', 'assets/Title Screen/tts_background.png')
+        this.load.spritesheet('enter_text_tts', 'assets/Title Screen/pressenter_text_tts.png', {frameWidth: 274, frameHeight: 42})
+        this.load.audio('continue', 'assets/sounds/continue.wav')
+        
+    }
+
+    create ()
+    {
+
+        this.cameras.main.flash(800);
+        this.bg_tts = this.add.tileSprite(750, 300, 1500, 600, 'title_background');
+        this.titleHoots = this.add.image(750, 250, 'titleHoots')
+        this.pressEnterTextTTS = this.physics.add.staticGroup();
+
+        this.anims.create({
+
+            key: 'text_tts_flash',
+            frames: this.anims.generateFrameNumbers('enter_text_tts', {start: 0, end: 1}),
+            frameRate: 4,
+            repeat: -1
+        });
+
+        this.anims.create({
+
+            key: 'text_tts_flash_fast',
+            frames: this.anims.generateFrameNumbers('enter_text_tts', {start: 0, end: 1}),
+            frameRate: 18,
+            repeat: -1
+        });
+
+
+        this.pressEnterTextTTSAnims = this.pressEnterTextTTS.create(750, 520, 'enter_text_tts').setVisible(false)
+        
+        this.sound.add('continue')
+        console.log('Hey, welcome!\n Title screen assets created!')
+
+        this.time.delayedCall(100, () =>{
+            this.pressEnterTextTTSAnims.setVisible(true)
+            this.pressEnterTextTTSAnims.anims.play('text_tts_flash')
+                this.input.keyboard.on('keydown-ENTER', () =>
+                {
+                if(!this.fastFlash){
+                    console.log('Enter pressed! Starting game...')
+                    this.fastFlash = true
+                    this.pressEnterTextTTSAnims.anims.play('text_tts_flash_fast')
+                    this.sound.play('continue')
+                    this.time.delayedCall(2000, () => {
+                            this.cameras.main.fadeOut(1000)
+                            this.time.delayedCall(1000, () => {
+                                console.log('Switching to stage...\n Prepare for console.log caos')
+                                this.scene.switch('stage')
+                                this.scene.stop('titlescreen')
+                        })
+                    })
+                }
+            });
+        
+        })
+
+    }
+    update (){
+        this.bg_tts.tilePositionX += 1
+        this.bg_tts.tilePositionY -= 1
+    }
+
+}

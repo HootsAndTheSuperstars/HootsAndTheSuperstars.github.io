@@ -9,6 +9,11 @@
             },
             {
                 "type": "audio",
+                "key": "bomb_fall",
+                "url": "bomb_fall.wav"
+            },
+            {
+                "type": "audio",
                 "key": "box_explosion",
                 "url": "box_explosion.wav"
             },

@@ -17,22 +17,6 @@ export class Pause extends Phaser.Scene{
 
     create ()
     {
-        this.game.events.on('error', function(error) {
-            console.error('Game error:', error);
-            this.scene.launch('error')
-        });     
-        this.load.on('loaderror', function (fileObj, error) {
-            console.error('Error on object:', fileObj.key, error);
-            this.scene.launch('error')
-        });
-        this.scene.scene.events.on('error', function(scene, error) {
-            console.error('Scene error:', error);
-            this.scene.launch('error')
-        });
-        window.onerror = function(message, source, lineno, colno, error) {
-            console.error('Global error:', message, source, lineno, colno, error);
-            this.scene.launch('error')
-        };
         this.keyW = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
         this.sound.add('pause_trigger')
         this.sound.play('pause_trigger')
