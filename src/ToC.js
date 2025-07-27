@@ -70,7 +70,7 @@ export class ToC extends Phaser.Scene{
         this.sound.add('hurt_dev')
         
 
-        this.input.keyboard.on('keydown-D', () =>{
+        this.input.keyboard.on('keydown-E', () =>{
             if(!this.errorLaunch){
                 this.errorLaunch = true
                 this.sound.play('hurt_dev')
@@ -95,7 +95,7 @@ export class ToC extends Phaser.Scene{
                         this.scene.switch('titlescreen')
                     }
                     else if(!this.game.device.os.desktop || this.errorLaunch){
-                        if(this.desktopCheck){
+                        if(!this.desktopCheck){
                             this.desktopCheck = true
                             this.scene.launch('error', {
                                 desktopCheck: this.desktopCheck,
