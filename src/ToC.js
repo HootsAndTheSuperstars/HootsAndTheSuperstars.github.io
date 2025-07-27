@@ -9,11 +9,14 @@ export class ToC extends Phaser.Scene{
         this.errorText;
         this.desktopCheck = false
         this.checkForBoot = false
+        this.errorLaunch = false
     }
     preload (){
         this.load.image('ToC', 'assets/ToC/ToC.png')
         this.load.spritesheet('ToC_button', 'assets/ToC/ToC_buttons.png', {frameWidth: 280, frameHeight: 70})
         this.load.audio('accept', 'assets/sounds/continue.wav')
+        this.load.audio('hurt_dev', 'assets/sounds/hurt_shield.wav')
+
     }
 
     create ()
@@ -64,9 +67,15 @@ export class ToC extends Phaser.Scene{
                 this.game.canvas.style.cursor = 'default'
             }
         })
+        this.sound.add('hurt_dev')
         
 
-        
+        this.input.keyboard.on('keyboard-D', () =>{
+            if(!this.errorLaunch){
+                this.errorLaunch = true
+                this.sound.play('hurt_dev')
+            }
+        })
 
 
         this.tocButtonAnims.once('pointerdown', function()
@@ -81,11 +90,11 @@ export class ToC extends Phaser.Scene{
             this.time.delayedCall(2000, () =>{
                 this.cameras.main.fadeOut(1000)
                 this.time.delayedCall(1000, () => {
-                    if(this.game.device.os.desktop && !this.checkForBoot && !this.keyD.isDown){
+                    if(this.game.device.os.desktop && !this.checkForBoot && !this.errorLaunch){
                         this.checkForBoot = true
                         this.scene.switch('titlescreen')
                     }
-                    else if(!this.game.device.os.desktop || this.keyD.isDown){
+                    else if(!this.game.device.os.desktop || this.errorLaunch){
                         if(this.desktopCheck){
                             this.desktopCheck = true
                             this.scene.launch('error', {
