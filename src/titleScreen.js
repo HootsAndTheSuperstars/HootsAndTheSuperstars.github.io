@@ -13,13 +13,23 @@ export class TitleScreen extends Phaser.Scene{
         this.load.image('title_background', 'assets/Title Screen/tts_background.png')
         this.load.spritesheet('enter_text_tts', 'assets/Title Screen/pressenter_text_tts.png', {frameWidth: 274, frameHeight: 42})
         this.load.audio('continue', 'assets/sounds/continue.wav')
+        this.load.audio('title', 'assets/sounds/title.wav')
         
     }
 
     create ()
     {
+        this.loopTitleMusic = this.sound.add('title')
+        this.loopTitleMusic.play()
 
-        this.cameras.main.flash(800);
+        //3.994
+        this.cameras.main.fadeOut(1)
+        this.time.delayedCall(3994, () =>{
+            this.cameras.main.fadeIn(1)
+            this.cameras.main.flash(800)
+        })
+            
+        
         this.bg_tts = this.add.tileSprite(750, 300, 1500, 600, 'title_background');
         this.titleHoots = this.add.image(750, 250, 'titleHoots')
         this.pressEnterTextTTS = this.physics.add.staticGroup();
@@ -52,6 +62,7 @@ export class TitleScreen extends Phaser.Scene{
                 this.input.keyboard.on('keydown-ENTER', () =>
                 {
                 if(!this.fastFlash){
+                    this.loopTitleMusic.stop()
                     console.log('Enter pressed! Starting game...')
                     this.fastFlash = true
                     this.pressEnterTextTTSAnims.anims.play('text_tts_flash_fast')
