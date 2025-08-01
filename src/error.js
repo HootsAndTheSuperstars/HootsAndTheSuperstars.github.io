@@ -9,15 +9,6 @@ export class Error extends Phaser.Scene{
         this.errorText;
         this.desktopCheck = data.desktopCheck
     }
-    preload (){
-        this.load.image('error_background', 'assets/Error/error_background.png')
-        this.load.image('error_text', 'assets/Error/error_text.png')
-        this.load.audio('error', 'assets/sounds/error.wav');
-        this.load.image('no_way!', 'assets/Error/no_way.png');
-        this.load.image('desktop_only', 'assets/Error/desktop_only.png');
-        this.load.image('no_way!_small', 'assets/Error/no_way_small.png')
-
-    }
 
     create ()
     {

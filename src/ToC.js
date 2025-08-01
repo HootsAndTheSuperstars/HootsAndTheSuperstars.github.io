@@ -11,14 +11,6 @@ export class ToC extends Phaser.Scene{
         this.checkForBoot = false
         this.errorLaunch = false
     }
-    preload (){
-        this.load.image('ToC', 'assets/ToC/ToC.png')
-        this.load.spritesheet('ToC_button', 'assets/ToC/ToC_buttons.png', {frameWidth: 280, frameHeight: 70})
-        this.load.audio('accept', 'assets/sounds/continue.wav')
-        this.load.audio('hurt_dev', 'assets/sounds/hurt_shield.wav')
-
-    }
-
     create ()
     {
         this.keyD = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);

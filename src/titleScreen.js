@@ -8,19 +8,25 @@ export class TitleScreen extends Phaser.Scene{
         this.fastFlash = false;
         
     }
-    preload (){
-        this.load.image('titleHoots', 'assets/Title Screen/hoots_titlescreen.png')
-        this.load.image('title_background', 'assets/Title Screen/tts_background.png')
-        this.load.spritesheet('enter_text_tts', 'assets/Title Screen/pressenter_text_tts.png', {frameWidth: 274, frameHeight: 42})
-        this.load.audio('continue', 'assets/sounds/continue.wav')
-        this.load.audio('title', 'assets/sounds/title.wav')
-        
-    }
+
 
     create ()
     {
         this.loopTitleMusic = this.sound.add('title')
+
+        this.loopTitleMusic.addMarker({
+            name: 'loopPoint',
+            start: 3.994, // Start playing from 5 seconds
+            config: {
+                loop: true // Automatically loop within the marker
+            }
+        });
+
         this.loopTitleMusic.play()
+        
+        this.loopTitleMusic.on('complete', () => {
+            this.loopTitleMusic.play('loopPoint'); // Play again
+        });
 
         //3.994
         this.cameras.main.fadeOut(1)

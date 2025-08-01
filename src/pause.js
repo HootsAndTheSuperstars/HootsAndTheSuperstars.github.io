@@ -8,12 +8,7 @@ export class Pause extends Phaser.Scene{
         this.fastFlash = false;
         this.pauseText;
     }
-    preload (){
-        this.load.image('pause_background', 'assets/Pause/pause_background.png')
-        this.load.spritesheet('pause_text', 'assets/Pause/pause_text.png', {frameWidth: 385, frameHeight: 94})
-        this.load.audio('pause_trigger', 'assets/sounds/pause_trigger.wav');
-        this.load.audio('pause_quit', 'assets/sounds/pause_quit.wav');
-    }
+
 
     create ()
     {

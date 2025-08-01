@@ -9,17 +9,6 @@ export class GameOver extends Phaser.Scene{
         this.fastFlash = false;
         this.pressEnterText;
     }
-    preload (){
-        this.load.script('webfont', 'https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js');
-        this.load.image('gameover_background', 'assets/GameOver/gameover_background.png')
-        this.load.image('gameover_text', 'assets/GameOver/gameover_text.png')
-        this.load.spritesheet('pressenter_text', 'assets/GameOver/pressenter_text.png', {frameWidth: 530, frameHeight: 42})
-        this.load.spritesheet('returnTitle', 'assets/GameOver/returnTitle.png', {frameWidth: 436, frameHeight: 26})
-        this.load.audio('gameOver_music', 'assets/sounds/Game Over.wav');
-        this.load.audio('continue', 'assets/sounds/continue.wav')
-        this.load.audio('hurt_GO', 'assets/sounds/hurt_shield.wav')
-
-    }
 
     create ()
     {
