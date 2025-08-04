@@ -94,8 +94,12 @@
         //this.score = 0
         //this.badLuck = false
 
-
+        this.mainStageMusic = this.sound.add('stage')
         this.cameras.main.fadeIn(500)
+        this.time.delayedCall(500, () =>{
+            this.mainStageMusic.play()
+            this.mainStageMusic.loop = true
+        })
         //sounds start here
         this.sound.add('wetfard')
         this.sound.add('bomb_explosion')
@@ -111,6 +115,7 @@
         this.sound.add('fall')
         this.sound.add('floor_destroy')
         this.activeStomp = this.sound.add('stomp_activate')
+        
         
         
         //this.sound.add('shield')
@@ -131,6 +136,7 @@
                 console.log('Pausing game...')
                 this.scene.launch('pause')
                 this.scene.pause('stage')
+                this.mainStageMusic.pause()
             }
             else{
                 console.log("You can't pause the game right now...")
@@ -154,6 +160,7 @@
                     console.error('You must DIE!!!\n - Gamñomn')
                     this.time.delayedCall(200, () =>{
                         this.sound.play('fall')
+                        this.mainStageMusic.stop()
                     })
                 })
             }
@@ -423,6 +430,12 @@
 
     update ()
     {
+
+        //music handler
+        if(!this.scene.isActive('pause') && this.mainStageMusic.isPaused){
+            this.mainStageMusic.resume()
+            console.log("Music resumed")
+        }
 
         if(this.player.body.y > 1000 && !this.aboveWorldBounds){
             this.aboveWorldBounds = true
@@ -933,6 +946,7 @@
             this.charstateDead = true;
             this.physics.pause();
             this.cameras.main.shake(300, 0.025);
+            this.mainStageMusic.stop()
             
         }
         this.sound.play('bomb_explosion')

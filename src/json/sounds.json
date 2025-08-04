@@ -71,6 +71,11 @@
                 "type": "audio",
                 "key": "stomp_activate",
                 "url": "stomp_activate.wav"
+            },
+            {
+                "type": "audio",
+                "key": "stage",
+                "url": "stage.wav"
             }
         ]
     }

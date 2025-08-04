@@ -48,6 +48,7 @@ export class Pause extends Phaser.Scene{
                 this.time.delayedCall(900, () => {
                     this.scene.resume('stage');
                     this.scene.stop('pause')
+
                 })
             }
         });
