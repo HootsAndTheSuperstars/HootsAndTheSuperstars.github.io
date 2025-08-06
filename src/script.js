@@ -222,7 +222,7 @@
 
         //  The score
         this.scoreText = this.add.text(16, 16, `SCORE: ${this.score}`, { fontFamily:'HUDfont', fontSize: '32px', fill: '#000' }).setVisible(false);
-        this.levelText = this.add.text(16, 50, `LEVEL: ${this.level}`, { fontFamily:'HUDfont', fontSize: '32px', fill: '#000' }).setVisible(false);
+        this.levelText = this.add.text(16, 50, 'LEVEL: 1', { fontFamily:'HUDfont', fontSize: '32px', fill: '#000' }).setVisible(false);
 
 
         // The player and its settings
