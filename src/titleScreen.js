@@ -62,7 +62,7 @@ export class TitleScreen extends Phaser.Scene{
         this.sound.add('continue')
         console.log('Hey, welcome!\n Title screen assets created!')
 
-        this.time.delayedCall(100, () =>{
+        this.time.delayedCall(4000, () =>{
             this.pressEnterTextTTSAnims.setVisible(true)
             this.pressEnterTextTTSAnims.anims.play('text_tts_flash')
                 this.input.keyboard.on('keydown-ENTER', () =>

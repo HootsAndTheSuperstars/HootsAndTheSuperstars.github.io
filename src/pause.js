@@ -4,18 +4,21 @@ export class Pause extends Phaser.Scene{
 
         super({key: 'pause'});
     }
-    init(){
+    init(data){
         this.fastFlash = false;
         this.pauseText;
+        this.score = data.score
+        this.bombLoad = data.bombLoad
+        this.level = data.level
     }
 
 
     create ()
     {
         this.keyW = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
-        this.sound.add('pause_trigger')
-        this.sound.play('pause_trigger')
-        this.sound.add('pause_quit')
+        this.sound.add('beep')
+        this.sound.play('beep')
+        this.sound.add('check')
 
         this.bg_pause = this.add.tileSprite(750, 300, 1500, 600, 'pause_background');
         this.pauseText = this.physics.add.staticGroup();
@@ -39,10 +42,15 @@ export class Pause extends Phaser.Scene{
 
         console.log("Created pause's text and background!")
 
+        this.scoreText = this.add.text(16, 16, `SCORE: ${this.score}`, { fontFamily:'HUDfont', fontSize: '32px', fill: '#fff' });
+        this.levelText = this.add.text(16, 50, `LEVEL: ${this.level}`, { fontFamily:'HUDfont', fontSize: '32px', fill: '#fff' });
+        this.bombLoadText = this.add.text(16, 85, `BOMB LOAD: ${this.bombLoad}`, { fontFamily:'HUDfont', fontSize: '32px', fill: '#fff' });
+
+
         this.input.keyboard.on('keydown-ENTER', () =>
         {
             if(!this.fastFlash){
-                this.sound.play('pause_quit')
+                this.sound.play('check')
                 this.fastFlash = true
                 console.log('Resuming game...')
                 this.time.delayedCall(900, () => {
@@ -65,12 +73,18 @@ export class Pause extends Phaser.Scene{
             console.log("Hiding assets...")
             this.bg_pause.setAlpha(0)
             this.pauseText.setAlpha(0.3)
+            this.scoreText.setAlpha(0.3)
+            this.bombLoadText.setAlpha(0.3)
+            this.levelText.setAlpha(0.3)
     
         }
         else if(!this.keyW.isDown){
             console.log("Showing assets...")
             this.bg_pause.setAlpha(0.95)
             this.pauseText.setAlpha(1)
+            this.scoreText.setAlpha(1)
+            this.bombLoadText.setAlpha(1)
+            this.levelText.setAlpha(1)
         }
     }
 

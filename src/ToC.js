@@ -59,13 +59,13 @@ export class ToC extends Phaser.Scene{
                 this.game.canvas.style.cursor = 'default'
             }
         })
-        this.sound.add('hurt_dev')
+        this.sound.add('hurt')
         
 
         this.input.keyboard.on('keydown-E', () =>{
             if(!this.errorLaunch){
                 this.errorLaunch = true
-                this.sound.play('hurt_dev')
+                this.sound.play('hurt')
             }
         })
 
@@ -76,8 +76,8 @@ export class ToC extends Phaser.Scene{
             this.game.canvas.style.cursor = 'default'
             this.fastFlash = true
             this.tocButtonAnims.input.useHandCursor = false
-            this.sound.add('accept')
-            this.sound.play('accept')
+            this.sound.add('continue')
+            this.sound.play('continue')
             this.tocButtonAnims.anims.play('button_flash')
             this.time.delayedCall(2000, () =>{
                 this.cameras.main.fadeOut(1000)

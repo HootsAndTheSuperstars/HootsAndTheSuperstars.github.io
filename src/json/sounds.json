@@ -74,9 +74,42 @@
             },
             {
                 "type": "audio",
+                "key": "continue",
+                "url": "continue.wav"
+            },
+            {
+                "type": "audio",
+                "key": "check",
+                "url": "pause_quit.wav"
+            },
+            {
+                "type": "audio",
+                "key": "beep",
+                "url": "pause_trigger.wav"
+            },
+
+            
+            {
+                "type": "audio",
                 "key": "stage",
                 "url": "stage.wav"
+            },
+            {
+                "type": "audio",
+                "key": "error",
+                "url": "error.wav"
+            },
+            {
+                "type": "audio",
+                "key": "title",
+                "url": "title.wav"
+            },
+            {
+                "type": "audio",
+                "key": "gameOver",
+                "url": "Game Over.wav"
             }
+
         ]
     }
 ]

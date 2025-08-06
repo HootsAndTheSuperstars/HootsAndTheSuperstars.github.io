@@ -64,9 +64,9 @@ export class GameOver extends Phaser.Scene{
         console.log("Created game over's text and background!")
 
         this.sound.add('continue')
-        this.sound.add('hurt_GO')
+        this.sound.add('hurt_shield')
 
-        const music = this.sound.add('gameOver_music')
+        const music = this.sound.add('gameOver')
         music.loop = true
         this.time.delayedCall(1000, () => {
             music.play()
@@ -99,7 +99,7 @@ export class GameOver extends Phaser.Scene{
                         this.pressEnterTextAnims.setVisible(false)
                         this.escReturnTextAnims.anims.play('text_return_flash')
                         this.fastFlash = true
-                        this.sound.play('hurt_GO')
+                        this.sound.play('hurt_shield')
                         console.log('You coward (pressed ESC)\n Going back to title screen...')
                         music.stop()
                         this.time.delayedCall(2000, () => {

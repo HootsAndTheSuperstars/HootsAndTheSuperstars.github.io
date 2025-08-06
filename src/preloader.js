@@ -9,15 +9,12 @@ export class PreLoader extends Phaser.Scene{
         //TOC
         this.load.image('ToC', 'assets/ToC/ToC.png')
         this.load.spritesheet('ToC_button', 'assets/ToC/ToC_buttons.png', {frameWidth: 280, frameHeight: 70})
-        this.load.audio('accept', 'assets/sounds/continue.wav')
         this.load.audio('hurt_dev', 'assets/sounds/hurt_shield.wav')
         
         //title screen
         this.load.image('titleHoots', 'assets/Title Screen/hoots_titlescreen.png')
         this.load.image('title_background', 'assets/Title Screen/tts_background.png')
         this.load.spritesheet('enter_text_tts', 'assets/Title Screen/pressenter_text_tts.png', {frameWidth: 274, frameHeight: 42})
-        this.load.audio('continue', 'assets/sounds/continue.wav')
-        this.load.audio('title', 'assets/sounds/title.wav')
 
         //main game
         this.load.script('webfont', 'https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js');
@@ -46,24 +43,17 @@ export class PreLoader extends Phaser.Scene{
         this.load.image('gameover_text', 'assets/GameOver/gameover_text.png')
         this.load.spritesheet('pressenter_text', 'assets/GameOver/pressenter_text.png', {frameWidth: 530, frameHeight: 42})
         this.load.spritesheet('returnTitle', 'assets/GameOver/returnTitle.png', {frameWidth: 436, frameHeight: 26})
-        this.load.audio('gameOver_music', 'assets/sounds/Game Over.wav');
-        this.load.audio('continue', 'assets/sounds/continue.wav')
-        this.load.audio('hurt_GO', 'assets/sounds/hurt_shield.wav')
 
         //Error
         this.load.image('error_background', 'assets/Error/error_background.png')
         this.load.image('error_text', 'assets/Error/error_text.png')
-        this.load.audio('error', 'assets/sounds/error.wav');
         this.load.image('no_way!', 'assets/Error/no_way.png');
         this.load.image('desktop_only', 'assets/Error/desktop_only.png');
         this.load.image('no_way!_small', 'assets/Error/no_way_small.png')
 
         //pause
         this.load.image('pause_background', 'assets/Pause/pause_background.png')
-        this.load.spritesheet('pause_text', 'assets/Pause/pause_text.png', {frameWidth: 385, frameHeight: 94})
-        this.load.audio('pause_trigger', 'assets/sounds/pause_trigger.wav');
-        this.load.audio('pause_quit', 'assets/sounds/pause_quit.wav');
-        
+        this.load.spritesheet('pause_text', 'assets/Pause/pause_text.png', {frameWidth: 385, frameHeight: 94})        
     }
 
     create (){

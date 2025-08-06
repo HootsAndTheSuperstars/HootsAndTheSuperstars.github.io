@@ -12,6 +12,11 @@
         this.scoreText;
         this.gameOver = false;
         this.score = 0;
+        this.innerScore = 0;
+        this.bombsExploded = 0;
+        this.level = 1;
+        this.bombSpawning = 0;
+        this.bombsThatShouldSpawn = 1;
 
 
         this.cursors;
@@ -61,30 +66,6 @@
         this.aboveWorldBounds = false
         this.groundKill = false
     }
-    preload ()
-    {
-        this.load.script('webfont', 'https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js');
-
-        this.load.image('sky', 'assets/background/noon_background.png');
-        this.load.image('sky_nearestClouds', 'assets/background/noon_nearestClouds.png');
-        this.load.image('sky_middleClouds', 'assets/background/noon_middleClouds.png');
-        this.load.image('sky_farestClouds', 'assets/background/noon_farestClouds.png');
-        this.load.image('platform_0x02', 'assets/platforms/platform_02.png');
-        this.load.image('platform_0x01', 'assets/platforms/platform_01.png');
-        this.load.image('platform_0x00', 'assets/platforms/platform_main.png');
-
-
-        this.load.spritesheet('star', 'assets/misc/star.png', {frameWidth: 25, frameHeight: 24});
-        this.load.spritesheet('starGet', 'assets/misc/star_explosion.png', {frameWidth: 25, frameHeight: 73});
-        this.load.spritesheet('boom', 'assets/misc/bomb_explosion.png', {frameWidth: 56, frameHeight: 56});
-        this.load.spritesheet('bomb', 'assets/misc/bomb.png', {frameWidth: 28, frameHeight: 28});
-        this.load.spritesheet('dude', 'assets/hoots/hoots.png', {frameWidth: 64, frameHeight: 64});
-        this.load.spritesheet('boxes', 'assets/misc/power_boxes.png', {frameWidth: 30, frameHeight: 30});
-
-        this.load.spritesheet('shield', 'assets/misc/shield/shield.png', {frameWidth: 48, frameHeight: 42});
-        this.load.pack('music_json', 'src/json/sounds.json')
-
-    }
 
     create ()
     {
@@ -114,6 +95,7 @@
         this.sound.add('youMustDie')
         this.sound.add('fall')
         this.sound.add('floor_destroy')
+        this.sound.add('continue')
         this.activeStomp = this.sound.add('stomp_activate')
         
         
@@ -134,7 +116,11 @@
         {
             if(!this.charstateDead && !this.groundKill){
                 console.log('Pausing game...')
-                this.scene.launch('pause')
+                this.scene.launch('pause', {
+                    score: this.score,
+                    bombLoad: this.bombsThatShouldSpawn,
+                    level: this.level,
+                })
                 this.scene.pause('stage')
                 this.mainStageMusic.pause()
             }
@@ -234,6 +220,11 @@
         console.log("Platforms' box should be re-sized now...");
 
 
+        //  The score
+        this.scoreText = this.add.text(16, 16, `SCORE: ${this.score}`, { fontFamily:'HUDfont', fontSize: '32px', fill: '#000' }).setVisible(false);
+        this.levelText = this.add.text(16, 50, `LEVEL: ${this.level}`, { fontFamily:'HUDfont', fontSize: '32px', fill: '#000' }).setVisible(false);
+
+
         // The player and its settings
         this.player = this.physics.add.sprite(100, 450, 'dude');
         console.log("Player Created!");
@@ -331,7 +322,7 @@
         //  Some stars to collect, 12 in total, evenly spaced 70 pixels apart along the x axis
         this.stars = this.physics.add.group({
             key: 'star',
-            repeat: 15,
+            repeat: 1,
             setXY: { x: 12, y: 0, stepX: 70 }
         });
 
@@ -366,9 +357,6 @@
         console.log("Stars created!")
 
         this.bombs = this.physics.add.group();
-
-        //  The score
-        this.scoreText = this.add.text(16, 16, 'SCORE: 0', { fontFamily:'HUDfont', fontSize: '32px', fill: '#000' }).setVisible(false);
 
         //  Collide the player and the stars with the platforms
         this.physics.add.collider(this.player, this.platforms, null, (player) => { return (this.player.body.velocity.y >= 0)});
@@ -460,9 +448,9 @@
 
         //Background starts here
         if(!this.gameOver){
-            this.bg_nearestClouds.tilePositionX -= 0.1;
-            this.bg_middleClouds.tilePositionX -= 0.05;
-            this.bg_farestClouds.tilePositionX -= 0.025;
+            this.bg_nearestClouds.tilePositionX -= 0.2;
+            this.bg_middleClouds.tilePositionX -= 0.1;
+            this.bg_farestClouds.tilePositionX -= 0.05;
         }
         else if(this.gameOver){
             this.bg_nearestClouds.tilePositionX -= 0;
@@ -525,11 +513,11 @@
                 else if(this.charstateRun && this.charstateWalk && !this.charstateSkidd){
                     console.log("State: Running");
                     if(this.facingLeft){
-                        this.player.setVelocityX(-250);
+                        this.player.setVelocityX(-300);
                         console.log("Left, fast speed");
                     }
                     else if(this.facingRight){
-                        this.player.setVelocityX(250);
+                        this.player.setVelocityX(300);
                         console.log("Right, fast speed");                
                     }
                 }
@@ -543,21 +531,21 @@
                     }
                     if(!this.charstateIdle){
                         if(this.cursors.left.isDown){
-                            this.player.setAccelerationX(-300);
+                            this.player.setAccelerationX(-350);
                             console.log("Pushing right");
                         }
                         else if(this.cursors.right.isDown){
-                            this.player.setAccelerationX(300);
+                            this.player.setAccelerationX(350);
                             console.log("Pushing left");                
                         }
                     }    
                     else if(this.charstateIdle){
                         if(this.facingLeft){
-                            this.player.setAccelerationX(300);
+                            this.player.setAccelerationX(350);
                             console.log("Pushing right");
                         }
                         else if(this.facingRight){
-                            this.player.setAccelerationX(-300);
+                            this.player.setAccelerationX(-350);
                             console.log("Pushing left");                
                         }
                     }             
@@ -788,8 +776,25 @@
         }
     
 
-        if(this.keyE.isDown && this.keyZ.isDown && !this.youAskedForIt){
+        //bomb manager
+
+        if(this.bombsExploded >= 15 || this.innerScore >= 10000){
+            if(this.innerScore >= 10000){
+                this.innerScore = 0
+            }
+            this.bombsExploded = 0
+            this.level += 1
+            this.bombsThatShouldSpawn += 1
+            this.levelText.setText(`LEVEL: ${this.level}`);
+            this.sound.play('check')
+            if(this.level <= 10){
+                this.mainStageMusic.rate += 0.01
+            }
+        }
+        else if(this.keyE.isDown && this.keyZ.isDown && !this.youAskedForIt){
             this.youAskedForIt = true
+            this.bombsThatShouldSpawn += 999
+            this.sound.play('beep')
             console.warn('You are doomed...')
         }
     }
@@ -808,7 +813,9 @@
             this.starSound.play()
         }
         this.score += 100;
+        this.innerScore += 100;
         this.scoreText.setText(`SCORE: ${this.score}`).setVisible(true);
+        this.levelText.setVisible(true)
 
         if (this.stars.countActive(true) === 0)
         {
@@ -823,50 +830,39 @@
                 
 
             });
-
-            const x = Phaser.Math.Between(100, 1100);
-            const badLuck = Phaser.Math.FloatBetween(1, 10000)
-
-            const bomb = this.bombs.create(x, -40, 'bomb');
-            bomb.body.setMaxSpeed(800);
-            bomb.setGravityY(300);
-            bomb.anims.play('bomb_movement', true);
-            bomb.setBounce(1);
-            bomb.setCollideWorldBounds(true);
-            bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
-            //this should be for a better hitbox w/ the bomb...
-            bomb.setCircle(7);
-            bomb.body.offset.y = 7;
-            bomb.body.offset.x = 7;
-            console.log("Bomb created!");
-            bomb.body.debugBodyColor = 0xff0000;
-            console.log("Added color red (#ff0000) to the bomb's hitbox")
-            this.sound.play('bomb_fall')
-
+            const badLuck = Phaser.Math.Between(1, 1000)
             if(badLuck == 1){
                 this.youAskedForIt = true
+                this.bombsThatShouldSpawn += 999
                 console.warn('You are doomed...')
             }
+
+
             if(this.youAskedForIt){
                 this.sound.play('wetfard')
-                for (let i = 0; i < 999; i++){
-                    const bomb = this.bombs.create(x, -20, 'bomb');
-                    bomb.body.setMaxSpeed(800);
-                    bomb.setGravityY(300);
-                    bomb.anims.play('bomb_movement', true);
-                    bomb.setBounce(1);
-                    bomb.setCollideWorldBounds(true);
-                    bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
-                    //this should be for a better hitbox w/ the bomb...
-                    bomb.setCircle(7);
-                    bomb.body.offset.y = 7;
-                    bomb.body.offset.x = 7;
-                    console.log("Bomb created!");
-                    bomb.body.debugBodyColor = 0xff0000;
-                    console.log("Added color red (#ff0000) to the bomb's hitbox")
-                    console.error("Not so EZ anymore, huh?")
-                }
             }
+            else{
+                this.sound.play('bomb_fall')
+            }
+
+            for (let i = this.bombSpawning; i < this.bombsThatShouldSpawn; i++){
+                const x = Phaser.Math.Between(100, 1400);
+                const bomb = this.bombs.create(x, -10, 'bomb');
+                bomb.body.setMaxSpeed(500);
+                bomb.setGravityY(300);
+                bomb.anims.play('bomb_movement', true);
+                bomb.setBounce(1);
+                bomb.setCollideWorldBounds(true);
+                bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
+                //this should be for a better hitbox w/ the bomb...
+                bomb.setCircle(7);
+                bomb.body.offset.y = 7;
+                bomb.body.offset.x = 7;
+                console.log("Bomb created!");
+                bomb.body.debugBodyColor = 0xff0000;
+                console.log("Added color red (#ff0000) to the bomb's hitbox")  
+            }
+            
 
                 
             
@@ -881,6 +877,8 @@
             
                 }
             }
+            this.badLuck = false
+            this.youAskedForIt = false
             
 
         }
@@ -897,7 +895,9 @@
             bomb.anims.play("explode", true);
             if(this.effectShield && this.charstateAbility){
                 this.score += 500;
+                this.innerScore += 500;
                 this.scoreText.setText(`SCORE: ${this.score}`);
+                this.bombsExploded += 1
             }
             if(this.effectShield && !this.charstateAbility){
                 this.invAfterHit = true;
@@ -906,14 +906,18 @@
                 this.upStun = true;
                 this.sound.play('hurt_shield')
                 this.score += 10;
+                this.innerScore += 10;
                 this.scoreText.setText(`SCORE: ${this.score}`);
+                this.bombsExploded += 1
             }
             if(!this.effectShield && this.charstateAbility){
                 this.charstateAbility = false;
                 this.upStun = true;
                 this.sound.play('hurt')
-                this.score += 200;
+                this.score += 100;
+                this.innerScore += 100;
                 this.scoreText.setText(`SCORE: ${this.score}`);
+                this.bombsExploded += 1
             }
             this.time.delayedCall(1000, () => {
                 bomb.destroy();
