@@ -65,6 +65,7 @@
         this.youAskedForIt = false;
         this.aboveWorldBounds = false
         this.groundKill = false
+        this.fastLevelUp = false
     }
 
     create ()
@@ -108,6 +109,7 @@
         this.keyA = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
         this.keyE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
         this.keyZ = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Z);
+        this.key1 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ONE);
         this.keySPACEBAR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
 
@@ -222,7 +224,7 @@
 
         //  The score
         this.scoreText = this.add.text(16, 16, `SCORE: ${this.score}`, { fontFamily:'HUDfont', fontSize: '32px', fill: '#000' }).setVisible(false);
-        this.levelText = this.add.text(16, 50, 'LEVEL: 1', { fontFamily:'HUDfont', fontSize: '32px', fill: '#000' }).setVisible(false);
+        this.levelText = this.add.text(16, 50, 'LEVEL: 0', { fontFamily:'HUDfont', fontSize: '32px', fill: '#000' }).setVisible(false);
 
 
         // The player and its settings
@@ -322,7 +324,7 @@
         //  Some stars to collect, 12 in total, evenly spaced 70 pixels apart along the x axis
         this.stars = this.physics.add.group({
             key: 'star',
-            repeat: 1,
+            repeat: 15,
             setXY: { x: 12, y: 0, stepX: 70 }
         });
 
@@ -778,7 +780,8 @@
 
         //bomb manager
 
-        if(this.bombsExploded >= 15 || this.innerScore >= 10000){
+        if(((this.bombsExploded >= 15 || this.innerScore >= 10000) || this.key1.isDown) && this.level <= 256 && !this.fastLevelUp){
+            this.fastLevelUp = true
             if(this.innerScore >= 10000){
                 this.innerScore = 0
             }
@@ -790,12 +793,23 @@
             if(this.level <= 10){
                 this.mainStageMusic.rate += 0.01
             }
+            this.time.delayedCall(500, () =>{
+                this.fastLevelUp = false
+            })
         }
         else if(this.keyE.isDown && this.keyZ.isDown && !this.youAskedForIt){
             this.youAskedForIt = true
             this.bombsThatShouldSpawn += 999
             this.sound.play('beep')
             console.warn('You are doomed...')
+        }
+
+        if(this.level >= 255){
+            this.physics.pause()
+            this.mainStageMusic.stop()
+            this.time.delayedCall(500, () =>{
+                this.scene.switch('error')
+            })
         }
     }
 
