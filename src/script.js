@@ -815,8 +815,7 @@
         this.score += 100;
         this.innerScore += 100;
         this.scoreText.setText(`SCORE: ${this.score}`).setVisible(true);
-        this.levelText.setVisible(true)
-
+        this.levelText.setText(`LEVEL: ${this.level}`).setVisible(true)
         if (this.stars.countActive(true) === 0)
         {
             //  A new batch of stars to collect
