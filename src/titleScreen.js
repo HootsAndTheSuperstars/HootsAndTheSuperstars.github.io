@@ -6,6 +6,7 @@ export class TitleScreen extends Phaser.Scene{
     }
     init(){
         this.fastFlash = false;
+        this.preventPrematureStart = true;
         
     }
 
@@ -33,6 +34,7 @@ export class TitleScreen extends Phaser.Scene{
         this.time.delayedCall(3994, () =>{
             this.cameras.main.fadeIn(1)
             this.cameras.main.flash(800)
+            this.preventPrematureStart = false
         })
             
         
@@ -67,7 +69,7 @@ export class TitleScreen extends Phaser.Scene{
             this.pressEnterTextTTSAnims.anims.play('text_tts_flash')
                 this.input.keyboard.on('keydown-ENTER', () =>
                 {
-                if(!this.fastFlash){
+                if(!this.fastFlash && !this.preventPrematureStart){
                     this.loopTitleMusic.stop()
                     console.log('Enter pressed! Starting game...')
                     this.fastFlash = true
@@ -77,7 +79,7 @@ export class TitleScreen extends Phaser.Scene{
                             this.cameras.main.fadeOut(1000)
                             this.time.delayedCall(1000, () => {
                                 console.log('Switching to stage...\n Prepare for console.log caos')
-                                this.scene.switch('stage')
+                                this.scene.switch('menu')
                                 this.scene.stop('titlescreen')
                         })
                     })

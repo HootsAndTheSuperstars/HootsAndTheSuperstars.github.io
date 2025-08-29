@@ -54,9 +54,21 @@ export class PreLoader extends Phaser.Scene{
         //pause
         this.load.image('pause_background', 'assets/Pause/pause_background.png')
         this.load.spritesheet('pause_text', 'assets/Pause/pause_text.png', {frameWidth: 385, frameHeight: 94})        
+
+        //Menu
+        this.load.spritesheet('menu_selecter', 'assets/Menu/menu_selecter.png', {frameWidth: 290, frameHeight: 76})
+        this.load.spritesheet('menu_buttons', 'assets/Menu/menu_buttons.png', {frameWidth: 282, frameHeight: 72})
+        this.load.image('hopon_dev', 'assets/Menu/hopon_dev.png')
+        this.load.image('menu_background', 'assets/Menu/menu_background.png')
+        this.load.image('menu_arrow', 'assets/Menu/menu_arrow.png')
+        this.load.image('menu_arrowH', 'assets/Menu/menu_arrowH.png')
+        //this.load.image('menu_starBombs', 'assets/Menu/sihoulettes.png')
+        
+
     }
 
     create (){
         this.scene.launch('ToC')
+        
     }
 }

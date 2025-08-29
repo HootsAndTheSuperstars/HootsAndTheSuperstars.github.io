@@ -100,13 +100,13 @@ export class GameOver extends Phaser.Scene{
                         this.escReturnTextAnims.anims.play('text_return_flash')
                         this.fastFlash = true
                         this.sound.play('hurt_shield')
-                        console.log('You coward (pressed ESC)\n Going back to title screen...')
+                        console.log('You coward (pressed ESC)\n Going back to the menu...')
                         music.stop()
                         this.time.delayedCall(2000, () => {
                             this.cameras.main.fadeOut(1000)
                             this.time.delayedCall(1000, () => {
                                 console.log('Switching to titlescreen...')
-                                this.scene.switch('titlescreen')
+                                this.scene.switch('menu')
                                 this.scene.stop('gameover')
                         })
                     })

@@ -10,7 +10,11 @@ cursor left, cursor right: Move left and right
 
 A, cursor down (both in air): use ability 
 
-Maintaining S: run
+Maintaining S: Run/Back
+
+Escape (ESC): Back (In short)
+
+Enter: Select/Pause
 
 What to do?
 
@@ -18,11 +22,13 @@ In this game you simply recolect stars and avoid bombs, shrimple! You can destro
 
 Powers:
 
+Stomp (Ability): This ability will launch you straight to the floor, making you unable to move sideways but you will be able to break a bomb (if you get to destroy one, you will be stunned and you will be vulnerable to other bombs)
+
 Shield: Gives you protection against a bomb and bomb stunning when using your ability, it will give you temporal invulnerability if it breaks.
 
 Secrets: 
 
-For now, there are two secrets, can you find them?
+For now, there are three secrets, can you find them?
 
 Side notes:
 
@@ -34,4 +40,4 @@ Side notes:
 
 - Credits to: idk, i've been doing this all alone
 
-- This was made with Phaser Engine; using the "FirstGame" as a base
+- This was made with Phaser3 Engine; using the "FirstGame" as a base
