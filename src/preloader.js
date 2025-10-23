@@ -68,7 +68,64 @@ export class PreLoader extends Phaser.Scene{
     }
 
     create (){
-        this.scene.launch('ToC')
+        this.anims.create({
+            key: 'turn',
+            frames: [ { key: 'dude', frame: 0 } ],
+            frameRate: 20
+        });
+
+        this.anims.create({
+            key: 'walk',
+            frames: this.anims.generateFrameNumbers('dude', { start: 4, end: 7 }),
+            frameRate: 10,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'run',
+            frames: this.anims.generateFrameNumbers('dude', { start: 8, end: 11 }),
+            frameRate: 15,
+            repeat: -1
+        });
+        this.anims.create({
+            key: 'skidd',
+            frames: this.anims.generateFrameNumbers('dude', { start: 16, end: 17 }),
+            frameRate: 15,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'jump',
+            frames: this.anims.generateFrameNumbers('dude', { start: 18, end: 19 }),
+            frameRate: 10,
+            repeat: -1
+        });
+        this.anims.create({
+            key: 'fall',
+            frames: this.anims.generateFrameNumbers('dude', { start: 20, end: 21 }),
+            frameRate: 10,
+            repeat: -1
+        });
+        this.anims.create({
+            key: 'stomp',
+            frames: this.anims.generateFrameNumbers('dude', { start: 22, end: 25 }),
+            frameRate: 30,
+            repeat: -1
+        });
+        this.anims.create({
+            key: 'hurt',
+            frames: [ { key: 'dude', frame: 26 } ],
+            frameRate: 20
+        });
+        this.anims.create({
+            key: 'dead',
+            frames: this.anims.generateFrameNumbers('dude', { start: 27, end: 28 }),
+            frameRate: 10,
+            repeat: -1
+        });
+
+        
+        this.scene.launch('stage')
         
     }
 }
