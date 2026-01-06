@@ -5,7 +5,8 @@ export class GameOver extends Phaser.Scene{
         super({key: 'gameover'});
     }
     init(data){
-        this.score = data.score
+        this.score = data.score;
+        this.stageName = data.stageName;
         this.fastFlash = false;
         this.pressEnterText;
     }
@@ -85,7 +86,7 @@ export class GameOver extends Phaser.Scene{
                             this.cameras.main.fadeOut(1000)
                             this.time.delayedCall(1000, () => {
                                 console.log('Switching to stage...')
-                                this.scene.switch('stage')
+                                this.scene.switch(Phaser.Utils.String.Format('%1', [this.stageName]))
                                 this.scene.stop('gameover')
                         })
                     })

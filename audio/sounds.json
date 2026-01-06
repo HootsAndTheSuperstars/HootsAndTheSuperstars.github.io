@@ -1,0 +1,146 @@
+[
+    {
+        "path": "audio/sounds",
+        "files": [
+            {
+                "type": "audio",
+                "key": "bomb_explosion",
+                "url": "bomb_explosion.wav"
+            },
+            {
+                "type": "audio",
+                "key": "bomb_fall",
+                "url": "bomb_fall.wav"
+            },
+            {
+                "type": "audio",
+                "key": "box_explosion",
+                "url": "box_explosion.wav"
+            },
+            {
+                "type": "audio",
+                "key": "munch",
+                "url": "munch.wav"
+            },
+            {
+                "type": "audio",
+                "key": "wetfard",
+                "url": "wetfard.wav"
+            },
+            {
+                "type": "audio",
+                "key": "shield",
+                "url": "shield.wav"
+            },
+            {
+                "type": "audio",
+                "key": "jump",
+                "url": "jump.wav"
+            },
+            {
+                "type": "audio",
+                "key": "skidd",
+                "url": "skidd.wav"
+            },
+            {
+                "type": "audio",
+                "key": "star_get",
+                "url": "star_get.wav"
+            },
+            {
+                "type": "audio",
+                "key": "hurt",
+                "url": "hurt.wav"
+            },
+            {
+                "type": "audio",
+                "key": "hurt_shield",
+                "url": "hurt_shield.wav"
+            },
+            {
+                "type": "audio",
+                "key": "youMustDie",
+                "url": "youMustDie.wav"
+            },
+            {
+                "type": "audio",
+                "key": "fall",
+                "url": "fall.wav"
+            },
+            {
+                "type": "audio",
+                "key": "floor_destroy",
+                "url": "floor_destroy.wav"
+            },
+            {
+                "type": "audio",
+                "key": "stomp_activate",
+                "url": "stomp_activate.wav"
+            },
+            {
+                "type": "audio",
+                "key": "continue",
+                "url": "continue.wav"
+            },
+            {
+                "type": "audio",
+                "key": "check",
+                "url": "pause_quit.wav"
+            },
+            {
+                "type": "audio",
+                "key": "beep",
+                "url": "pause_trigger.wav"
+            },
+            {
+                "type": "audio",
+                "key": "select",
+                "url": "selecting.wav"
+            },
+            {
+                "type": "audio",
+                "key": "invalid",
+                "url": "invalid.wav"
+            }
+
+        ]
+    },
+    {
+        "path": "audio/music",
+        "files": [
+        
+            
+            {
+                "type": "audio",
+                "key": "stage",
+                "url": "stage.wav"
+            },
+            {
+                "type": "audio",
+                "key": "test_zone",
+                "url": "testzone.wav"
+            },
+            {
+                "type": "audio",
+                "key": "error",
+                "url": "error.wav"
+            },
+            {
+                "type": "audio",
+                "key": "title",
+                "url": "title.wav"
+            },
+            {
+                "type": "audio",
+                "key": "gameOver",
+                "url": "gameover.wav"
+            },
+            {
+                "type": "audio",
+                "key": "mainMenu",
+                "url": "mainmenu.wav"
+            }
+
+        ]
+    }
+]

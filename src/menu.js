@@ -205,6 +205,7 @@ export class Menu extends Phaser.Scene{
             this.hopOnExecute = false
             this.buttonLock = true
             this.time.delayedCall(2500, () =>{
+                this.hopOnUp.stop()
                 this.hopOnOut.play()
                 this.buttonLock = false
                 this.invalidPlayed = false

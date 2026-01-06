@@ -6,17 +6,18 @@ import { GameOver } from './gameOver.js';
 import { Error } from './error.js';
 import { TitleScreen } from './titleScreen.js';
 import { Menu } from './menu.js';
+import { TestStage } from './testzone.js';
 
 const config = {
     type: Phaser.AUTO,
     parent: 'game_container',
     width: 1500,
     height: 600,
-    scene: [PreLoader, ToC, TitleScreen, Menu, Game, GameOver, Pause, Error],
+    scene: [PreLoader, ToC, TitleScreen, Menu, Game, TestStage, /*unmovable*/  Pause, GameOver, Error],
     physics: {
         default: 'arcade',
         arcade: {
-            debug: false
+            debug: true
         }
     },
 };

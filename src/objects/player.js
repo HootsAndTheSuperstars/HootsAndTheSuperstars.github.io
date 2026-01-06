@@ -7,6 +7,8 @@ export class ObjPlayer extends Phaser.Physics.Arcade.Sprite {
 
         //char check
         this.Char1 = true;
+        this.Char2 = false;
+        this.CharChange = false;
 
         //background
         //movement spud
@@ -26,7 +28,8 @@ export class ObjPlayer extends Phaser.Physics.Arcade.Sprite {
 
     constructor (scene, x, y)
     {
-        super(scene, x, y, 'dude');
+        super(scene, x, y, "hoots");
+        this.init()
         scene.add.existing(this);
         scene.physics.add.existing(this);
         console.log("Player Created!");
@@ -42,11 +45,36 @@ export class ObjPlayer extends Phaser.Physics.Arcade.Sprite {
         //  Our player animations, turning, walking left and walking right
 
     }
-
-    update (cursors, keyA, keyS, keyD, keySPACEBAR, skiddSound, jumpSound, activeStomp){
+    update (cursors, keyA, keyS, keyD, keySPACEBAR, key2, skiddSound, jumpSound, activeStomp, gameOver, time){
         //Updates
-        //sprites
+        
+        //hitbox handler
 
+        if(!this.charstateAbility){
+            this.body.setSize(16, 38);
+            //this.body.setOffset(25, 14);
+        }
+        else if (this.charstateAbility){
+            this.body.setSize(46, 38);
+            //this.body.setOffset(30, 14);
+        }
+
+        if(key2.isDown && this.CharChange == false){
+            this.CharChange = true
+            if(this.Char1){
+                this.Char2 = true
+                this.Char1 = false
+                console.warn('Changing to char2...')
+            }
+            else if(this.Char2){
+                this.Char2 = false
+                this.Char1 = true
+                console.warn('Changing to char1...')
+            }
+            time.delayedCall(1000, () =>{
+                this.CharChange = false
+            })
+        }
         //char starts here
         if(!this.charstateDead)
         {
@@ -180,7 +208,7 @@ export class ObjPlayer extends Phaser.Physics.Arcade.Sprite {
             if (this.upStun){
                 this.body.setVelocityY(-200)
                 this.charstateHurt = true;
-                this.time.delayedCall(100, () => {
+                time.delayedCall(100, () => {
                     this.upStun = false
                 })
             }
@@ -189,7 +217,9 @@ export class ObjPlayer extends Phaser.Physics.Arcade.Sprite {
             this.setVelocityX(0);
             console.log("State: Dead")
         }
+ 
 
+        //Keybinds
         if(!this.charstateHurt){
             //general walk
             if(cursors.left.isDown || cursors.right.isDown){
@@ -245,18 +275,20 @@ export class ObjPlayer extends Phaser.Physics.Arcade.Sprite {
 
         else if(this.body.onFloor()){
             this.charstateHurt = false;
-            this.time.delayedCall(300, () =>{
+            time.delayedCall(300, () =>{
                 this.checkforpreventingSkiddafterStun = false
             })
         };
 
         if(!this.charstateHurt){
             if((this.body.onFloor() && (!cursors.up.isDown && !keyD.isDown || keySPACEBAR.isDown)|| !this.body.onFloor()) && (!cursors.left.isDown && !cursors.right.isDown || cursors.left.isDown && cursors.right.isDown) || (this.body.velocity.x == 0 && (this.body.touching.left || this.body.touching.right))){
-                if((this.body.velocity.x >= 150 || this.body.velocity.x <= -150) && !this.checkforpreventingSkiddafterStun){
-                    this.charstateSkidd = true
+                if((this.body.velocity.x >= 160 || this.body.velocity.x <= -160) && !this.checkforpreventingSkiddafterStun){
+                    if(this.charstateRun){
+                        this.charstateSkidd = true
+                    }
                     this.charstateIdle = true
                 }
-                else if(this.body.velocity.x < 150 && this.body.velocity.x > -150 || this.checkforpreventingSkiddafterStun){
+                else if(this.body.velocity.x < 160 && this.body.velocity.x > -160 || this.checkforpreventingSkiddafterStun){
                     this.charstateIdle = true
                     this.charstateSkidd = false
                 }
@@ -278,7 +310,7 @@ export class ObjPlayer extends Phaser.Physics.Arcade.Sprite {
 
         }
             //gameover ig
-            if (this.gameOver)
+            if (gameOver)
             {
                 this.charstateDead = true;
             }
@@ -288,56 +320,61 @@ export class ObjPlayer extends Phaser.Physics.Arcade.Sprite {
         
     
 
-        if(this.Char1){
             if(!this.charstateDead && !this.charstateHurt){
                 if (this.charstateWalk && this.body.onFloor() && !this.charstateJump)
                 {
                     if(!this.charstateSkidd && this.body.velocity.y == 0){
                         if((this.body.velocity.x < 0 && this.body.velocity.x > -199) || (this.body.velocity.x > 0 && this.body.velocity.x < 199)){
-                            this.play('walk', true);
+                            this.play(Phaser.Utils.String.Format('%1_walk', [this.CharKey]), true);
                         }
                         else if(this.body.velocity.x <= -200 || this.body.velocity.x >= 200){
-                            this.play('run', true);
+                            this.play(Phaser.Utils.String.Format('%1_run', [this.CharKey]), true);
                         }
                     }
                         else if(this.charstateSkidd){
-                        this.play('skidd', true);
+                        this.play(Phaser.Utils.String.Format('%1_skidd', [this.CharKey]), true);
                     }
                 
                 }
 
                 else if (this.charstateJump && this.body.velocity.y <= -1){
-                    this.play('jump', true);
+                    this.play(Phaser.Utils.String.Format('%1_jump', [this.CharKey]), true);
                 }
                 else if (this.charstateFall && this.body.velocity.y >= 1){
-                    this.play('fall', true)
+                    this.play(Phaser.Utils.String.Format('%1_fall', [this.CharKey]), true)
                 }
                 else if(this.charstateAbility && !this.body.onFloor() && !this.charstateFall){
-                    this.play('stomp', true)
+                    this.play(Phaser.Utils.String.Format('%1_stomp', [this.CharKey]), true)
                 }
 
                 else if(this.charstateIdle && this.body.onFloor())
                 {
                     if(this.charstateSkidd){
-                        this.play('skidd', true);
+                        this.play(Phaser.Utils.String.Format('%1_skidd', [this.CharKey]), true);
                     }
                     else{
-                        this.play('turn', true);
+                        this.play(Phaser.Utils.String.Format('%1_turn', [this.CharKey]), true);
                     }
                 }
 
             }
             else if(this.charstateDead){
-                this.play('dead', true)
+                this.play(Phaser.Utils.String.Format('%1_dead', [this.CharKey]), true)
             }
             else if (this.charstateHurt && !this.body.onFloor()){
-                this.play('hurt', true)
+                this.play(Phaser.Utils.String.Format('%1_hurt', [this.CharKey]), true)
             }
 
+        
+
+        if(this.Char1){
+            this.CharKey = "hoots"
         }
-
-
+        if(this.Char2){
+            this.CharKey = "hoots2"
+        }
     }
+
 
 }
 

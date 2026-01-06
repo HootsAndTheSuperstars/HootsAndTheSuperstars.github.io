@@ -1,0 +1,97 @@
+{
+    "anims": [
+
+        {
+            "key": "hoots_turn",
+            "frames": [ 
+                { "frame": 0 }
+            ],
+            "frameRate": 20,
+            "defaultTextureKey": "hoots"
+        },
+        {
+            "key": "hoots_walk",
+            "frames": [
+                { "frame": 4 }, 
+                { "frame": 5 },
+                { "frame": 6 },
+                { "frame": 7 }
+            ],
+            "frameRate": 10,
+            "repeat": -1,
+            "defaultTextureKey": "hoots"
+        },
+        {
+            "key": "hoots_run",
+            "frames": [
+                { "frame": 8 }, 
+                { "frame": 9 },
+                { "frame": 10 },
+                { "frame": 11 }
+            ],
+            "frameRate": 15,
+            "repeat": -1,
+            "defaultTextureKey": "hoots"
+        },
+        {
+            "key": "hoots_skidd",
+            "frames": [
+                { "frame": 16 }, 
+                { "frame": 17 }
+            ],
+            "frameRate": 15,
+            "repeat": -1,
+            "defaultTextureKey": "hoots"
+        },
+        {
+            "key": "hoots_jump",
+            "frames": [
+                { "frame": 18 }, 
+                { "frame": 19 }
+            ],
+            "frameRate": 10,
+            "repeat": -1,
+            "defaultTextureKey": "hoots"
+        },
+        {
+            "key": "hoots_fall",
+            "frames": [
+                { "frame": 20 }, 
+                { "frame": 21 }
+            ],
+            "frameRate": 10,
+            "repeat": -1,
+            "defaultTextureKey": "hoots"
+        },
+        {
+            "key": "hoots_stomp",
+            "frames": [
+                { "frame": 22 }, 
+                { "frame": 23 },
+                { "frame": 24 },
+                { "frame": 25 }
+            ],
+            "frameRate": 30,
+            "repeat": -1,
+            "defaultTextureKey": "hoots"
+        },
+        {
+            "key": "hoots_hurt",
+            "frames": [ 
+                { "frame": 26 }
+            ],
+            "frameRate": 20,
+            "defaultTextureKey": "hoots"
+        },
+        {
+            "key": "hoots_dead",
+            "frames": [
+                { "frame": 27 }, 
+                { "frame": 28 }
+            ],
+            "frameRate": 10,
+            "repeat": -1,
+            "defaultTextureKey": "hoots"
+        }
+    ]
+}

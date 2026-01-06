@@ -10,6 +10,7 @@ export class Pause extends Phaser.Scene{
         this.score = data.score
         this.bombLoad = data.bombLoad
         this.level = data.level
+        this.stageName = data.stageName
     }
 
 
@@ -54,7 +55,7 @@ export class Pause extends Phaser.Scene{
                 this.fastFlash = true
                 console.log('Resuming game...')
                 this.time.delayedCall(900, () => {
-                    this.scene.resume('stage');
+                    this.scene.resume(Phaser.Utils.String.Format('%1', [this.stageName]));
                     this.scene.stop('pause')
 
                 })

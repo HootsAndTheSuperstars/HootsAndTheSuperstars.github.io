@@ -10,13 +10,14 @@ export class Game extends Phaser.Scene
     }
 
     init(){
+        this.stageName = 'stage';
         this.gameOverLauncher = false;
         this.scoreText;
         this.gameOver = false;
         this.score = 0;
         this.innerScore = 0;
-        this.bombsExploded = 0;
         this.level = 1;
+        this.bombsExploded = 0;
         this.bombSpawning = 0;
         this.bombsThatShouldSpawn = 1;
 
@@ -42,7 +43,7 @@ export class Game extends Phaser.Scene
         //effects
         this.effectShield = false;
         this.shield;
-        this.shieldBoxes;
+        this.shieldGenObj;
 
         this.youAskedForIt = false;
         this.aboveWorldBounds = false
@@ -69,6 +70,7 @@ export class Game extends Phaser.Scene
         this.sound.add('bomb_explosion')
         this.sound.add('bomb_fall')
         this.sound.add('box_explosion')
+        this.sound.add('munch')
         this.jumpSound = this.sound.add('jump')
         this.sound.add('shield')
         this.skiddSound = this.sound.add('skidd')
@@ -94,26 +96,31 @@ export class Game extends Phaser.Scene
         this.keyE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
         this.keyZ = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Z);
         this.key1 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ONE);
+        this.key2 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.TWO);
+
         this.keySPACEBAR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
 
         console.log("inputs created!")
         this.input.keyboard.on('keydown-ENTER', () =>
         {
-            if(!this.charstateDead && !this.groundKill){
-                console.log('Pausing game...')
-                this.scene.launch('pause', {
-                    score: this.score,
-                    bombLoad: this.bombsThatShouldSpawn,
-                    level: this.level,
-                })
-                this.scene.pause('stage')
-                this.mainStageMusic.pause()
-            }
-            else{
-                console.log("You can't pause the game right now...")
-            }
+                if(!this.charstateDead && !this.groundKill){
+                    console.log('Pausing game...')
+                    this.scene.launch('pause', {
+                        score: this.score,
+                        bombLoad: this.bombsThatShouldSpawn,
+                        level: this.level,
+                        stageName: this.stageName,
+                    })
+                    this.scene.pause('stage')
+                    this.mainStageMusic.pause()
+                }
+                else{
+                    console.log("You can't pause the game right now...")
+                }
         });
+
+    
         this.input.keyboard.on('keydown-L', () =>
         {
             if(!this.groundKill){
@@ -127,7 +134,7 @@ export class Game extends Phaser.Scene
                     this.platform2.destroy()
                     this.platform3.destroy()
                     this.platform4.destroy()
-                    this.charstateDead = true
+                    this.player.charstateDead = true
                     this.sound.play('floor_destroy')
                     console.error('You must DIE!!!\n - Gamñomn')
                     this.time.delayedCall(200, () =>{
@@ -213,7 +220,7 @@ export class Game extends Phaser.Scene
         console.log("Char sprites created!");
 
 
-        this.player = new ObjPlayer(this, 100, 450);
+        this.player = new ObjPlayer(this, 750, 450);
         this.anims.create({
 
             key: 'bomb_movement',
@@ -271,7 +278,7 @@ export class Game extends Phaser.Scene
         });
         console.log("Stars created!")
 
-        this.bombs = this.physics.add.group();
+        this.bombs = this.physics.add.group()
 
         //  Collide the player and the stars with the platforms
         this.physics.add.collider(this.player, this.platforms, null, (player) => { return (this.player.body.velocity.y >= 0)});
@@ -287,11 +294,7 @@ export class Game extends Phaser.Scene
 
         //Powers start here
 
-        this.anims.create({
-            key: 'shield_box',
-            frames: [ { key: 'boxes', frame: 4 } ],
-            frameRate: 20
-        });
+        
         this.anims.create({
 
             key: 'shield',
@@ -304,15 +307,14 @@ export class Game extends Phaser.Scene
 
 
 
-        this.shieldBoxes = this.physics.add.staticGroup();
+        this.shieldGenObj = this.physics.add.group();
 
-        this.physics.add.collider(this.player, this.shieldBoxes, (player, _shieldBoxes) =>
+        this.physics.add.collider(this.player, this.shieldGenObj, (player, _shieldGenObj) =>
         {
-            if ((this.player.body.touching.up && _shieldBoxes.body.touching.down || this.charstateAbility) && !this.gameOver)
+            if (!this.gameOver)
                 {
-                    this.sound.play('box_explosion')
-                    this.cameras.main.shake(200, 0.002);
-                    _shieldBoxes.destroy();
+                    this.sound.play('munch')
+                    _shieldGenObj.destroy();
 
                     this.time.delayedCall(600, () =>
                     {
@@ -325,10 +327,6 @@ export class Game extends Phaser.Scene
                 }
         });
 
-        
-        this.physics.add.collider(this.stars, this.shieldBoxes);
-        this.physics.add.collider(this.bombs, this.shieldBoxes);
-
 
         
     }
@@ -336,7 +334,7 @@ export class Game extends Phaser.Scene
     update ()
     {
         //player handler
-        this.player.update(this.cursors, this.keyA, this.keyS, this.keyD, this.keySPACEBAR, this.skiddSound, this.jumpSound, this.activeStomp);
+        this.player.update(this.cursors, this.keyA, this.keyS, this.keyD, this.keySPACEBAR, this.key2, this.skiddSound, this.jumpSound, this.activeStomp, this.gameOver, this.time);
         //music handler
         if(!this.scene.isActive('pause') && this.mainStageMusic.isPaused){
             this.mainStageMusic.resume()
@@ -504,13 +502,13 @@ export class Game extends Phaser.Scene
 
                 
             
-            if(!this.effectShield && this.shieldBoxes.countActive(true) == 0){
+            if(!this.effectShield && this.shieldGenObj.countActive(true) == 0){
                 const shieldProbability = Phaser.Math.Between(1, 5)
                 if(shieldProbability == 3){
                     this.Xshield = Phaser.Math.Between(100, 1400);
                     this.Yshield = Phaser.Math.Between(100, 450);
-                    this.shieldBox = this.shieldBoxes.create(this.Xshield, this.Yshield, 'shield_box')
-                    this.shieldBox.anims.play('shield_box', true)
+                    this.shieldCollect = this.shieldGenObj.create(this.Xshield, this.Yshield, 'shield_box')
+                    this.shieldCollect.anims.play('shield_pw', true)
                     console.log("This should have spawned a shield box...")
             
                 }
@@ -521,36 +519,35 @@ export class Game extends Phaser.Scene
 
         }
     }
-
     hitBomb (player, bomb)
     {
-        if (this.charstateAbility || this.effectShield){
+        if (this.player.charstateAbility || this.effectShield){
             bomb.body.setVelocity(0, 0);
             bomb.body.setEnable(false);
             bomb.body.debugBodyColor = 0x9048fc;
             this.cameras.main.shake(200, 0.003);
             console.log("You should have seen a shake effect on your screen rn")
             bomb.anims.play("explode", true);
-            if(this.effectShield && this.charstateAbility){
+            if(this.effectShield && this.player.charstateAbility){
                 this.score += 500;
                 this.innerScore += 500;
                 this.scoreText.setText(`SCORE: ${this.score}`);
                 this.bombsExploded += 1
             }
-            if(this.effectShield && !this.charstateAbility){
+            if(this.effectShield && !this.player.charstateAbility){
                 this.invAfterHit = true;
                 this.effectShield = false;
                 this.shield.destroy()
-                this.upStun = true;
+                this.player.upStun = true;
                 this.sound.play('hurt_shield')
                 this.score += 10;
                 this.innerScore += 10;
                 this.scoreText.setText(`SCORE: ${this.score}`);
                 this.bombsExploded += 1
             }
-            if(!this.effectShield && this.charstateAbility){
+            if(!this.effectShield && this.player.charstateAbility){
                 this.charstateAbility = false;
-                this.upStun = true;
+                this.player.upStun = true;
                 this.sound.play('hurt')
                 this.score += 100;
                 this.innerScore += 100;
@@ -580,12 +577,12 @@ export class Game extends Phaser.Scene
                 });
             bomb.anims.play('explode', true);
             this.bombPlayerCollider.active = false
-            this.charstateFall = false;
-            this.charstateWalk = false;
-            this.charstateJump = false;
-            this.charstateIdle = false;
-            this.charstateSkidd = false;
-            this.charstateDead = true;
+            this.player.charstateFall = false;
+            this.player.charstateWalk = false;
+            this.player.charstateJump = false;
+            this.player.charstateIdle = false;
+            this.player.charstateSkidd = false;
+            this.player.charstateDead = true;
             this.physics.pause();
             this.cameras.main.shake(300, 0.025);
             this.mainStageMusic.stop()
@@ -593,6 +590,5 @@ export class Game extends Phaser.Scene
         }
         this.sound.play('bomb_explosion')
     }
-
-    }
+}
 

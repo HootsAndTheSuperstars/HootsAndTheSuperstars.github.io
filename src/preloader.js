@@ -5,7 +5,17 @@ export class PreLoader extends Phaser.Scene{
     }
     preload (){
 
+        //nothing
+        this.load.image('nothing', "assets/nothing.png")
 
+        //player
+
+        this.load.spritesheet('hoots', 'assets/hoots/hoots.png', {frameWidth: 64, frameHeight: 64});
+        this.load.spritesheet('hoots2', 'assets/hoots/hoots2.png', {frameWidth: 64, frameHeight: 64});
+
+
+        this.load.animation('hootsAnims', '/assets/hoots/hoots.json')
+        this.load.animation('hootsAnims2', '/assets/hoots/hoots2.json')
         //TOC
         this.load.image('ToC', 'assets/ToC/ToC.png')
         this.load.spritesheet('ToC_button', 'assets/ToC/ToC_buttons.png', {frameWidth: 280, frameHeight: 70})
@@ -16,6 +26,11 @@ export class PreLoader extends Phaser.Scene{
         this.load.image('title_background', 'assets/Title Screen/tts_background.png')
         this.load.spritesheet('enter_text_tts', 'assets/Title Screen/pressenter_text_tts.png', {frameWidth: 274, frameHeight: 42})
 
+
+        //Test Stage
+        this.load.image('test_background', 'assets/teststage/test_background.png');
+        this.load.image('teststage_mainplatform', 'assets/teststage/mainplatform.png');
+        this.load.image('platform_test_0x01', 'assets/teststage/platform_01.png');
         //main game
         this.load.script('webfont', 'https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js');
 
@@ -32,11 +47,14 @@ export class PreLoader extends Phaser.Scene{
         this.load.spritesheet('starGet', 'assets/misc/star_explosion.png', {frameWidth: 25, frameHeight: 73});
         this.load.spritesheet('boom', 'assets/misc/bomb_explosion.png', {frameWidth: 56, frameHeight: 56});
         this.load.spritesheet('bomb', 'assets/misc/bomb.png', {frameWidth: 28, frameHeight: 28});
-        this.load.spritesheet('dude', 'assets/hoots/hoots.png', {frameWidth: 64, frameHeight: 64});
-        this.load.spritesheet('boxes', 'assets/misc/power_boxes.png', {frameWidth: 30, frameHeight: 30});
+        
+        
+        this.load.spritesheet('powerups', 'assets/misc/powerups.png', {frameWidth: 30, frameHeight: 30});
+        this.load.animation('powerupsAnims', '/assets/misc/powerups.json')
+
 
         this.load.spritesheet('shield', 'assets/misc/shield/shield.png', {frameWidth: 48, frameHeight: 42});
-        this.load.pack('music_json', 'src/json/sounds.json')
+        this.load.pack('music_json', 'audio/sounds.json')
 
         //gameOver
         this.load.image('gameover_background', 'assets/GameOver/gameover_background.png')
@@ -68,64 +86,12 @@ export class PreLoader extends Phaser.Scene{
     }
 
     create (){
-        this.anims.create({
-            key: 'turn',
-            frames: [ { key: 'dude', frame: 0 } ],
-            frameRate: 20
-        });
+        this.sound.pauseOnBlur = false;
+        this.scene.launch('menu')
 
-        this.anims.create({
-            key: 'walk',
-            frames: this.anims.generateFrameNumbers('dude', { start: 4, end: 7 }),
-            frameRate: 10,
-            repeat: -1
-        });
 
-        this.anims.create({
-            key: 'run',
-            frames: this.anims.generateFrameNumbers('dude', { start: 8, end: 11 }),
-            frameRate: 15,
-            repeat: -1
-        });
-        this.anims.create({
-            key: 'skidd',
-            frames: this.anims.generateFrameNumbers('dude', { start: 16, end: 17 }),
-            frameRate: 15,
-            repeat: -1
-        });
 
-        this.anims.create({
-            key: 'jump',
-            frames: this.anims.generateFrameNumbers('dude', { start: 18, end: 19 }),
-            frameRate: 10,
-            repeat: -1
-        });
-        this.anims.create({
-            key: 'fall',
-            frames: this.anims.generateFrameNumbers('dude', { start: 20, end: 21 }),
-            frameRate: 10,
-            repeat: -1
-        });
-        this.anims.create({
-            key: 'stomp',
-            frames: this.anims.generateFrameNumbers('dude', { start: 22, end: 25 }),
-            frameRate: 30,
-            repeat: -1
-        });
-        this.anims.create({
-            key: 'hurt',
-            frames: [ { key: 'dude', frame: 26 } ],
-            frameRate: 20
-        });
-        this.anims.create({
-            key: 'dead',
-            frames: this.anims.generateFrameNumbers('dude', { start: 27, end: 28 }),
-            frameRate: 10,
-            repeat: -1
-        });
 
-        
-        this.scene.launch('stage')
         
     }
 }

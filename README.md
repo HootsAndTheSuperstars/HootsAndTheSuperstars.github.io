@@ -41,3 +41,28 @@ Side notes:
 - Credits to: idk, i've been doing this all alone
 
 - This was made with Phaser3 Engine; using the "FirstGame" as a base
+
+
+Controles:
+
+D, Espacio, cursor arriba: saltar
+
+Cursor izquierda, cursor derecha: moverse a la izquierda y a la derecha
+
+A, cursor abajo (ambos en el aire): usar habilidad
+
+Mantener S: correr/atrás
+
+Escape (ESC): atrás (en resumen)
+
+Intro: seleccionar/pausar
+
+¿Qué hacer?
+
+En este juego, simplemente recolectas estrellas y evitas las bombas, ¡facil! Puedes destruir las bombas con tu habilidad, pero te aturdirá y te hará vulnerable hasta que toques el suelo.
+
+Poderes:
+
+Pisotón (Habilidad): Esta habilidad te lanzará directamente al suelo, impidiéndote moverte lateralmente, pero podrás romper una bomba (si destruyes una, quedarás aturdido y vulnerable a otras bombas).
+
+Escudo: Te protege contra bombas y te aturde al usar tu habilidad; te dará invulnerabilidad temporal si se rompe.
