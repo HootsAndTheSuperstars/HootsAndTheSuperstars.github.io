@@ -15,7 +15,7 @@ export class ToC extends Phaser.Scene{
     {
         this.keyD = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
         console.log("The ToC right now is not available...")
-        this.add.image(750, 300, 'ToC')
+        this.add.image(450, 300, 'ToC')
 
         this.anims.create({
             key: 'button_flash',
@@ -39,7 +39,7 @@ export class ToC extends Phaser.Scene{
         this.tocButton = this.physics.add.staticGroup()
 
 
-        this.tocButtonAnims = this.tocButton.create(750, 490, 'ToC_button').setVisible(false)
+        this.tocButtonAnims = this.tocButton.create(450, 490, 'ToC_button').setVisible(false)
         this.tocButtonAnims.setInteractive()
         this.tocButtonAnims.anims.play('button_color1')
         this.time.delayedCall(1300, () =>{

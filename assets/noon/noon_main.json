@@ -1,0 +1,42 @@
+{
+    "noonAssets":{
+        "path": "assets/noon",
+        "files": [
+            {
+                "type": "image",
+                "key": "sky",
+                "url": "noon_background.png"
+            },
+            {
+                "type": "image",
+                "key": "sky_nearestClouds",
+                "url": "noon_nearestClouds.png"
+            },
+            {
+                "type": "image",
+                "key": "sky_middleClouds",
+                "url": "noon_middleClouds.png"
+            },
+            {
+                "type": "image",
+                "key": "sky_farestClouds",
+                "url": "noon_farestClouds.png"
+            },
+            {
+                "type": "image",
+                "key": "decoration",
+                "url": "noon_foreground_deco.png"
+            },
+            {
+                "type": "image",
+                "key": "ground",
+                "url": "noon_floor.png"
+            },
+            {
+                "type": "image",
+                "key": "platforms",
+                "url": "noon_foreground_solid.png"
+            }
+        ]
+    }
+}

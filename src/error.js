@@ -12,26 +12,25 @@ export class Error extends Phaser.Scene{
 
     create ()
     {
-        
         const musicError = this.sound.add('error')
         musicError.loop = true
         musicError.play()
 
-        this.bg_error = this.add.tileSprite(750, 300, 1500, 600, 'error_background');
+        this.bg_error = this.add.tileSprite(450, 300, 940, 600, 'error_background');
         if(this.desktopCheck){
-            this.noway_text1 = this.add.tileSprite(750, 50, 1500, 38, 'desktop_only');
-            this.noway_text2 = this.add.tileSprite(750, 550, 1500, 38, 'desktop_only');
+            this.noway_text1 = this.add.tileSprite(450, 50, 940, 38, 'desktop_only');
+            this.noway_text2 = this.add.tileSprite(450, 550, 940, 38, 'desktop_only');
             console.error("Hey! you can't play on mobile devices!\nHop on a pc or laptop and try again...")
         }
         else{
-            this.noway_text1 = this.add.tileSprite(750, 50, 1500, 29, 'no_way!');           
-            this.noway_text2 = this.add.tileSprite(750, 550, 1500, 29, 'no_way!');
+            this.noway_text1 = this.add.tileSprite(450, 50, 940, 29, 'no_way!');           
+            this.noway_text2 = this.add.tileSprite(450, 550, 940, 29, 'no_way!');
             console.error("No way? No way? No way!")
         }
-        this.noway_small_text1 = this.add.tileSprite(750, 100, 1500, 13, 'no_way!_small');
-        this.noway_small_text2 = this.add.tileSprite(750, 500, 1500, 13, 'no_way!_small');
+        this.noway_small_text1 = this.add.tileSprite(450, 100, 940, 13, 'no_way!_small');
+        this.noway_small_text2 = this.add.tileSprite(450, 500, 940, 13, 'no_way!_small');
 
-        this.add.image(750, 300, 'error_text');
+        this.add.image(450, 300, 'error_text');
 
         console.log("Created error's text and background!")
     }

@@ -175,14 +175,16 @@ export class Menu extends Phaser.Scene{
             targets: this.hopOnAnim,
             y: '+=570',
             ease: 'Power2',
-            paused: true
+            paused: true,
+            persist: true
         });
 
         this.hopOnOut = this.tweens.add({
             targets: this.hopOnAnim,
             y: '-=570',
             ease: 'Power2',
-            paused: true
+            paused: true,
+            persist: true
         });
 
 

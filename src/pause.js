@@ -21,7 +21,7 @@ export class Pause extends Phaser.Scene{
         this.sound.play('beep')
         this.sound.add('check')
 
-        this.bg_pause = this.add.tileSprite(750, 300, 1500, 600, 'pause_background');
+        this.bg_pause = this.add.tileSprite(450, 300, 940, 600, 'pause_background');
         this.pauseText = this.physics.add.staticGroup();
 
         this.anims.create({
@@ -38,14 +38,14 @@ export class Pause extends Phaser.Scene{
             frameRate: 18,
             repeat: -1
         });
-        this.pauseTextAnims = this.pauseText.create(750, 300, 'pause_text'),
+        this.pauseTextAnims = this.pauseText.create(450, 300, 'pause_text'),
         this.pauseTextAnims.anims.play('text_flash_pause', true);
 
         console.log("Created pause's text and background!")
 
-        this.scoreText = this.add.text(16, 16, `SCORE: ${this.score}`, { fontFamily:'HUDfont', fontSize: '32px', fill: '#fff' });
-        this.levelText = this.add.text(16, 50, `LEVEL: ${this.level}`, { fontFamily:'HUDfont', fontSize: '32px', fill: '#fff' });
-        this.bombLoadText = this.add.text(16, 85, `BOMB LOAD: ${this.bombLoad}`, { fontFamily:'HUDfont', fontSize: '32px', fill: '#fff' });
+        this.scoreText = this.add.text(13, 16, `SCORE: ${this.score}`, { fontFamily:'HUDfont', fontSize: '32px', fill: '#fff' });
+        this.levelText = this.add.text(13, 50, `LEVEL: ${this.level}`, { fontFamily:'HUDfont', fontSize: '32px', fill: '#fff' });
+        this.bombLoadText = this.add.text(13, 85, `BOMB LOAD: ${this.bombLoad}`, { fontFamily:'HUDfont', fontSize: '32px', fill: '#fff' });
 
 
         this.input.keyboard.on('keydown-ENTER', () =>
@@ -73,10 +73,10 @@ export class Pause extends Phaser.Scene{
         if(this.keyW.isDown){
             console.log("Hiding assets...")
             this.bg_pause.setAlpha(0)
-            this.pauseText.setAlpha(0.3)
-            this.scoreText.setAlpha(0.3)
-            this.bombLoadText.setAlpha(0.3)
-            this.levelText.setAlpha(0.3)
+            this.pauseText.setAlpha(0)
+            this.scoreText.setAlpha(0)
+            this.bombLoadText.setAlpha(0)
+            this.levelText.setAlpha(0)
     
         }
         else if(!this.keyW.isDown){

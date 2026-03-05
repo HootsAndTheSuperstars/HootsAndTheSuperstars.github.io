@@ -12,6 +12,7 @@ export class ObjPlayer extends Phaser.Physics.Arcade.Sprite {
 
         //background
         //movement spud
+        this.abilityCooldown = false
         this.charstateWalk = false;
         this.charstateIdle = true;
         this.charstateJump = false;
@@ -24,6 +25,7 @@ export class ObjPlayer extends Phaser.Physics.Arcade.Sprite {
         this.charstateSkidd = false;
         this.invAfterHit = false;
         this.checkforpreventingSkiddafterStun = false
+        this.charstateThroughPlatform = false
     }
 
     constructor (scene, x, y)
@@ -33,21 +35,45 @@ export class ObjPlayer extends Phaser.Physics.Arcade.Sprite {
         scene.add.existing(this);
         scene.physics.add.existing(this);
         console.log("Player Created!");
-        this.body.setSize(16, 38);
         this.body.setOffset(25, 14);
         console.log("The player's hitbox should be mesured to fit the sprites");
         //  Player physics properties. Give the little guy a slight bounce.
         this.setBounce(0);
         this.body.setGravityY(600);
-        this.setCollideWorldBounds(true);
-        this.debugBodyColor = 0x9048fc;
+        this.debugBodyColor = 0xffffff;
         console.log("Player's MISC configs should work now...");
         //  Our player animations, turning, walking left and walking right
 
     }
     update (cursors, keyA, keyS, keyD, keySPACEBAR, key2, skiddSound, jumpSound, activeStomp, gameOver, time){
         //Updates
+
+        //Special console logs
+
+        if(this.abilityCooldown){
+            console.log("Cooldown")
+        }
+        if(this.coyoteTime){
+            console.log("Coyote time")
+        }
+        if(this.charstateAbility){
+            console.log("Ability")
+        }
         
+        //special sound handler
+
+        if(this.body.onFloor()){
+            jumpSound.stop()
+            activeStomp.stop()
+        }
+        if(!this.charstateAbility && activeStomp.isPlaying){
+            activeStomp.stop()
+        }
+
+
+
+
+
         //hitbox handler
 
         if(!this.charstateAbility){
@@ -57,6 +83,22 @@ export class ObjPlayer extends Phaser.Physics.Arcade.Sprite {
         else if (this.charstateAbility){
             this.body.setSize(46, 38);
             //this.body.setOffset(30, 14);
+        }
+        /*
+        if(this.charstateThroughPlatform){
+            console.log("Not Trough platform")
+        }
+        else if(!this.charstateThroughPlatform){
+            console.log("Through platform")
+        }
+        */
+
+        if(this.body.velocity.y > -1){
+            this.charstateThroughPlatform = true
+            
+        }
+        else if (this.body.velocity.y <= 0){
+            this.charstateThroughPlatform = false
         }
 
         if(key2.isDown && this.CharChange == false){
@@ -82,11 +124,11 @@ export class ObjPlayer extends Phaser.Physics.Arcade.Sprite {
             if(!this.charstateSkidd){
                 if(this.facingLeft == true){
                     this.setFlipX(true);
-                    console.log("Fliping player anims to the Left")
+                    //console.log("Fliping player anims to the Left")
                 }
                 else if(this.facingRight == true){
                     this.setFlipX(false);
-                    console.log("Fliping player anims to the Right")
+                    //console.log("Fliping player anims to the Right")
                 }
             }
 
@@ -117,29 +159,29 @@ export class ObjPlayer extends Phaser.Physics.Arcade.Sprite {
         //states for movement
             if(!this.charstateHurt){
                 if(this.charstateWalk && !this.charstateRun && !this.charstateSkidd){
-                    console.log("State: Walking");
+                    //console.log("State: Walking");
                     if(this.facingLeft){
                         this.setVelocityX(-160);
-                        console.log("Left, normal speed");
+                        ////console.log("Left, normal speed");
                     }
                     else if(this.facingRight){
                         this.setVelocityX(160);
-                        console.log("Right, normal speed");                
+                        //console.log("Right, normal speed");                
                     }
                 }
                 else if(this.charstateRun && this.charstateWalk && !this.charstateSkidd){
-                    console.log("State: Running");
+                    //console.log("State: Running");
                     if(this.facingLeft){
                         this.setVelocityX(-300);
-                        console.log("Left, fast speed");
+                        //console.log("Left, fast speed");
                     }
                     else if(this.facingRight){
                         this.setVelocityX(300);
-                        console.log("Right, fast speed");                
+                        //console.log("Right, fast speed");                
                     }
                 }
                 else if(this.charstateSkidd){
-                    console.log("State: Skidding")
+                    //console.log("State: Skidding")
                     if(!skiddSound.isPlaying && this.body.onFloor()){
                         skiddSound.play()
                     }
@@ -149,21 +191,21 @@ export class ObjPlayer extends Phaser.Physics.Arcade.Sprite {
                     if(!this.charstateIdle){
                         if(cursors.left.isDown){
                             this.setAccelerationX(-350);
-                            console.log("Pushing right");
+                            //console.log("Pushing right");
                         }
                         else if(cursors.right.isDown){
                             this.setAccelerationX(350);
-                            console.log("Pushing left");                
+                            //console.log("Pushing left");                
                         }
                     }    
                     else if(this.charstateIdle){
                         if(this.facingLeft){
                             this.setAccelerationX(350);
-                            console.log("Pushing right");
+                            //console.log("Pushing right");
                         }
                         else if(this.facingRight){
                             this.setAccelerationX(-350);
-                            console.log("Pushing left");                
+                            //console.log("Pushing left");                
                         }
                     }             
                 }
@@ -171,38 +213,38 @@ export class ObjPlayer extends Phaser.Physics.Arcade.Sprite {
                     this.setAccelerationX(0);
                     this.setAccelerationY(0);
                     this.setVelocityX(0);
-                    console.log("State: idle");
+                    //console.log("State: idle");
                 }
 
                 if(this.charstateJump && !this.charstateFall){
                     this.setVelocityY(-490);
-                    console.log("State: Jumping");
+                    //console.log("State: Jumping");
                 }
                 else if(this.charstateFall && !this.charstateJump){
                     this.setAccelerationY(900);
-                    console.log("State: Falling");
+                    //console.log("State: Falling");
                 }
                 else if(this.charstateFall && this.charstateJump){
                     this.setAccelerationY(0);
-                    console.log("State: Maintaining jump");
+                    //console.log("State: Maintaining jump");
                 }
                 else if(this.charstateAbility){
                     this.setVelocityX(0);
-                    this.setVelocityY(1500)
-                    console.log("State: Stomp")
+                    this.setVelocityY(900)
+                    //console.log("State: Stomp")
                 }
             }
             else if(this.charstateHurt){
 
-                console.log("State: Hurt");
+                //console.log("State: Hurt");
                 
                 if(this.facingLeft){
                     this.setVelocityX(180);
-                    console.log("Pushed right");
+                    //console.log("Pushed right");
                 }
                 else if(this.facingRight){
                     this.setVelocityX(-180);
-                    console.log("Pushed left");                
+                    //console.log("Pushed left");                
                 }
             }
             if (this.upStun){
@@ -215,11 +257,20 @@ export class ObjPlayer extends Phaser.Physics.Arcade.Sprite {
         }
         else if(this.charstateDead){
             this.setVelocityX(0);
-            console.log("State: Dead")
+            //console.log("State: Dead")
         }
  
 
         //Keybinds
+        if(this.coyoteTime && !this.body.onFloor()){
+            time.delayedCall(50,() => {
+                this.coyoteTime = false
+                if(!keyA.isDown && !cursors.down.isDown){
+                    this.charstateFall = true
+                }
+                
+            })
+        }
         if(!this.charstateHurt){
             //general walk
             if(cursors.left.isDown || cursors.right.isDown){
@@ -233,40 +284,47 @@ export class ObjPlayer extends Phaser.Physics.Arcade.Sprite {
                         this.charstateSkidd = false
                     }
                 }
-                else if(!keyS.isDown || !this.body.onFloor()){
+                else if(!keyS.isDown || (!this.body.onFloor() && !this.coyoteTime)){
                     this.charstateRun = false
                     this.charstateSkidd = false
                 }
                 
             }
             //jumping and falling
-            if((cursors.up.isDown || keyD.isDown || keySPACEBAR.isDown) && this.body.onFloor()){
+            if((cursors.up.isDown || keyD.isDown || keySPACEBAR.isDown) && (this.body.onFloor() || this.coyoteTime)){
                 if(!jumpSound.isPlaying){
                     jumpSound.play()
                 }
+                this.coyoteTime = false
                 this.charstateJump = true;
                 this.charstateFall = false;
                 this.charstateSkidd = false
             }
             else if(!keyA.isDown && !cursors.down.isDown){
-                if((cursors.up.isDown || keyD.isDown || keySPACEBAR.isDown) && !this.body.onFloor() && this.body.velocity.y < -1){
+                if((cursors.up.isDown || keyD.isDown || keySPACEBAR.isDown) && !this.body.onFloor() && this.body.velocity.y < -1 && !this.coyoteTime){
                     this.charstateJump = true;
                     this.charstateFall = true 
                 }
                 else if(!this.body.onFloor() && (this.body.velocity.y >= -1 && (cursors.up.isDown || keyD.isDown || keySPACEBAR.isDown) || (!cursors.up.isDown || !keyD.isDown || keySPACEBAR.isDown))){
-                    this.charstateJump = false;
-                    this.charstateFall = true;
-                    this.charstateSkidd = false
+                    
+                    if(this.charstateJump){
+                        this.charstateJump = false;
+                        this.charstateFall = true;
+                        this.charstateAbility = false
+                        this.charstateSkidd = false
+                    }
                 }
             }
-            else if(!this.body.onFloor() && (keyA.isDown || cursors.down.isDown)){
+            else if(!this.body.onFloor() && (keyA.isDown || cursors.down.isDown) && !this.abilityCooldown && !this.coyoteTime){
                 if(!this.charstateAbility && this.Char1){
-                    this.charstateAbility = true;
-                    if(!activeStomp.isPlaying){
-                        activeStomp.play()
-                    }
                     this.charstateJump = false;
                     this.charstateFall = false;
+                    //this.charstateWalk = false
+                    this.charstateAbility = true;
+                    if(!activeStomp.isPlaying && this.charstateAbility){
+                        activeStomp.play()
+                    }
+                    
     
                 }
 
@@ -300,6 +358,7 @@ export class ObjPlayer extends Phaser.Physics.Arcade.Sprite {
             if(this.body.onFloor()){
                 this.charstateFall = false;
                 this.charstateAbility = false;
+                this.coyoteTime = true;
 
             };
 

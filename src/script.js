@@ -45,6 +45,11 @@ export class Game extends Phaser.Scene
         this.shield;
         this.shieldGenObj;
 
+        this.invGenObj;
+        
+        this.effectInv = false;
+        this.invStack = 0;
+
         this.youAskedForIt = false;
         this.aboveWorldBounds = false
         this.groundKill = false
@@ -53,6 +58,7 @@ export class Game extends Phaser.Scene
 
     create ()
     {
+       this.physics.world.setBounds(20, 0, 900, 600)
 
         //this.charstateDead = false
         //this.gameOver = false
@@ -65,15 +71,21 @@ export class Game extends Phaser.Scene
             this.mainStageMusic.play()
             this.mainStageMusic.loop = true
         })
+
+        this.invMusic = this.sound.add('invincibility')
+        this.invMusicIntro = this.sound.add('invincibilityIntro')
+        this.invMusic.loop = true
         //sounds start here
         this.sound.add('wetfard')
         this.sound.add('bomb_explosion')
         this.sound.add('bomb_fall')
         this.sound.add('box_explosion')
         this.sound.add('munch')
-        this.jumpSound = this.sound.add('jump')
         this.sound.add('shield')
+        this.jumpSound = this.sound.add('jump')
         this.skiddSound = this.sound.add('skidd')
+        this.activeStomp = this.sound.add('stomp_activate')
+
         this.starSound = this.sound.add('star_get')
         this.sound.add('hurt')
         this.sound.add('hurt_shield')
@@ -81,7 +93,6 @@ export class Game extends Phaser.Scene
         this.sound.add('fall')
         this.sound.add('floor_destroy')
         this.sound.add('continue')
-        this.activeStomp = this.sound.add('stomp_activate')
         
         
         this.physics.world.checkCollision.up = false;
@@ -93,12 +104,13 @@ export class Game extends Phaser.Scene
         this.keyS = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
         this.keyD = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
         this.keyA = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
+        this.keySPACEBAR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+
         this.keyE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
         this.keyZ = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Z);
         this.key1 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ONE);
         this.key2 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.TWO);
 
-        this.keySPACEBAR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
 
         console.log("inputs created!")
@@ -114,117 +126,47 @@ export class Game extends Phaser.Scene
                     })
                     this.scene.pause('stage')
                     this.mainStageMusic.pause()
+                    this.invMusic.pause()
+                    this.invMusicIntro.pause()
                 }
                 else{
                     console.log("You can't pause the game right now...")
                 }
         });
 
-    
-        this.input.keyboard.on('keydown-L', () =>
-        {
-            if(!this.groundKill){
-                
-                this.groundKill = true
-                this.sound.play('youMustDie')
-                this.time.delayedCall(850, () =>{
-                    this.starPlayerCollider.active = false
-                    this.mainplatform.destroy()
-                    this.platform1.destroy()
-                    this.platform2.destroy()
-                    this.platform3.destroy()
-                    this.platform4.destroy()
-                    this.player.charstateDead = true
-                    this.sound.play('floor_destroy')
-                    console.error('You must DIE!!!\n - Gamñomn')
-                    this.time.delayedCall(200, () =>{
-                        this.sound.play('fall')
-                        this.mainStageMusic.stop()
-                    })
-                })
-            }
-        });
-        //  A simple background for our game
         this.add.tileSprite(750, 300, 1500, 600, 'sky');
         // We add some complexity to the background
-        this.bg_farestClouds = this.add.tileSprite(750, 100, 1500, 23, 'sky_farestClouds'),
-        this.bg_middleClouds = this.add.tileSprite(750, 180, 1500, 131, 'sky_middleClouds'),
-        this.bg_nearestClouds = this.add.tileSprite(750, 430, 1500, 346, 'sky_nearestClouds'),
+        this.bg_farestClouds = this.add.tileSprite(450, 220, 940, 46, 'sky_farestClouds');
+        this.bg_middleClouds = this.add.tileSprite(450, 280, 940, 131, 'sky_middleClouds');
+        this.bg_nearestClouds = this.add.tileSprite(450, 350, 940, 346, 'sky_nearestClouds');
 
-        //  The platforms group contains the ground and the platforms we can jump on
-        this.platforms = this.physics.add.staticGroup();
+        //Background spud!
 
-        //  Here we create the ground.
-        //  Main platform
-        this.mainplatform = this.platforms.create(400, 568, 'platform_0x00');
-        this.mainplatform.body.setSize(3016, 17);
-        this.mainplatform.body.setOffset(0, 37);
-        console.log("Created Main platform!");
-
-        //  Now let's create some platforms
-
-        var r_platform1 = Phaser.Math.Between(1, 2)
-        var r_platform2 = Phaser.Math.Between(1, 2)
-        var r_platform3 = Phaser.Math.Between(1, 2)
-        var r_platform4 = Phaser.Math.Between(1, 2)
-
-
-        if (r_platform1 == 1){
-            this.platform1 = this.platforms.create(600, 382, 'platform_0x01');
-        }
-        else if (r_platform1 == 2){
-            this.platform1 = this.platforms.create(600, 382, 'platform_0x02');    
-        };
-        console.log("Created platform 1");
     
-        if (r_platform2 == 1){
-            this.platform2 = this.platforms.create(1390, 345, 'platform_0x01');
-        }
-        else if (r_platform2 == 2){
-            this.platform2 = this.platforms.create(1390, 345, 'platform_0x02');    
-        }
-        console.log("Created platform 2");
-        if (r_platform3 == 1){
-            this.platform3 = this.platforms.create(750, 202, 'platform_0x01');
-            }
-        else if (r_platform3 == 2){
-            this.platform3 = this.platforms.create(750, 202, 'platform_0x02');    
-        }
-        console.log("Created platform 3");
+        //tilemap of the stage itself
+        const stage = this.add.tilemap('noonStage');
 
+        const decorationTiles = stage.addTilesetImage("decoration", "decoration");
+        const groundTiles = stage.addTilesetImage("ground", "ground");
+        const platformsTiles = stage.addTilesetImage("platforms", "platforms");
 
-        if (r_platform4 == 1){
-            this.platform4 = this.platforms.create(50, 270, 'platform_0x01');
-            }
-        else if (r_platform4 == 2){
-            this.platform4 = this.platforms.create(50, 270, 'platform_0x02');   
-        }
-        console.log("Created platform 4");
-
-
-        this.platform1.body.setSize(518, 20);
-        this.platform1.body.setOffset(-8.5, 34);
-        this.platform2.body.setSize(518, 20);
-        this.platform2.body.setOffset(-8.5, 34);
-        this.platform3.body.setSize(518, 20);
-        this.platform3.body.setOffset(-8.5, 34);
-        this.platform4.body.setSize(518, 20);
-        this.platform4.body.setOffset(-8.5, 34);
-        console.log("Platforms' box should be re-sized now...");
-
+        const decorationLayer = stage.createLayer("decoration", decorationTiles)
+        this.player = new ObjPlayer(this, 450, 450);
+        const groundLayer = stage.createLayer("ground", groundTiles)
+        const platformsLayer = stage.createLayer("platforms", platformsTiles)
 
         //  The score
-        this.scoreText = this.add.text(16, 16, `SCORE: ${this.score}`, { fontFamily:'HUDfont', fontSize: '32px', fill: '#000' }).setVisible(false);
-        this.levelText = this.add.text(16, 50, 'LEVEL: 0', { fontFamily:'HUDfont', fontSize: '32px', fill: '#000' }).setVisible(false);
+        this.scoreText = this.add.text(32, 16, `SCORE: ${this.score}`, { fontFamily:'HUDfont', fontSize: '32px', fill: '#000' }).setVisible(false);
+        this.levelText = this.add.text(32, 50, 'LEVEL: 0', { fontFamily:'HUDfont', fontSize: '32px', fill: '#000' }).setVisible(false);
 
         console.log("Char sprites created!");
 
 
-        this.player = new ObjPlayer(this, 750, 450);
+        
         this.anims.create({
 
             key: 'bomb_movement',
-            frames: this.anims.generateFrameNumbers('bomb', {start: 0, end: 3}),
+            frames: this.anims.generateFrameNumbers('bomb', {start: 4, end: 7}),
             frameRate: 10,
             repeat: -1
         });
@@ -244,7 +186,7 @@ export class Game extends Phaser.Scene
         //  Some stars to collect, 12 in total, evenly spaced 70 pixels apart along the x axis
         this.stars = this.physics.add.group({
             key: 'star',
-            repeat: 15,
+            repeat: 10,
             setXY: { x: 12, y: 0, stepX: 70 }
         });
 
@@ -281,11 +223,16 @@ export class Game extends Phaser.Scene
         this.bombs = this.physics.add.group()
 
         //  Collide the player and the stars with the platforms
-        this.physics.add.collider(this.player, this.platforms, null, (player) => { return (this.player.body.velocity.y >= 0)});
-        this.physics.add.collider(this.player, this.mainplatform);
-        this.physics.add.collider(this.stars, this.platforms);
-        this.physics.add.collider(this.bombs, this.platforms);
+        this.physics.add.collider(this.player, platformsLayer, null, (player) => { return (this.player.charstateThroughPlatform == true)});
+        this.physics.add.collider(this.player, groundLayer);
+        this.physics.add.collider(this.stars, platformsLayer);
+        this.physics.add.collider(this.stars, groundLayer);
+        this.physics.add.collider(this.bombs, groundLayer);
+        this.physics.add.collider(this.bombs, platformsLayer);
         this.physics.add.collider(this.bombs, this.bombs);
+
+        groundLayer.setCollisionBetween(319, 325)
+        platformsLayer.setCollisionBetween(331, 335)
 
         //  Checks to see if the player overlaps with any of the stars, if he does call the collectStar function
         this.starPlayerCollider = this.physics.add.overlap(this.player, this.stars, this.collectStar, null, this);
@@ -298,8 +245,8 @@ export class Game extends Phaser.Scene
         this.anims.create({
 
             key: 'shield',
-            frames: this.anims.generateFrameNumbers('shield', {start: 0, end: 5}),
-            frameRate: 10,
+            frames: this.anims.generateFrameNumbers('shield', {start: 0, end: 3}),
+            frameRate: 30,
             repeat: -1
         });
 
@@ -309,37 +256,75 @@ export class Game extends Phaser.Scene
 
         this.shieldGenObj = this.physics.add.group();
 
-        this.physics.add.collider(this.player, this.shieldGenObj, (player, _shieldGenObj) =>
-        {
-            if (!this.gameOver)
-                {
-                    this.sound.play('munch')
-                    _shieldGenObj.destroy();
 
-                    this.time.delayedCall(600, () =>
-                    {
-                        if(!this.gameOver){
-                            this.effectShield = true
-                            this.sound.play('shield')
-                            this.shield = this.shieldPhysics.create(0, 0, 'shield').setAlpha(0.6)
-                        }
-                    });
-                }
+        this.anims.create({
+
+            key: 'invStars',
+            frames: this.anims.generateFrameNumbers('invStars', {start: 0, end: 3}),
+            frameRate: 30,
+            repeat: -1
         });
 
+        this.invPhysics = this.physics.add.group();
 
-        
+        this.invGenObj = this.physics.add.group();
+
+        this.physics.add.collider(this.player, this.shieldGenObj, this.shieldAbility, null, this);
+        this.physics.add.collider(this.player, this.invGenObj, this.invinsAbility, null, this);
+
+        this.cameras.main.centerOn(470, 300)
     }
 
     update ()
     {
-        //player handler
-        this.player.update(this.cursors, this.keyA, this.keyS, this.keyD, this.keySPACEBAR, this.key2, this.skiddSound, this.jumpSound, this.activeStomp, this.gameOver, this.time);
+
         //music handler
-        if(!this.scene.isActive('pause') && this.mainStageMusic.isPaused){
-            this.mainStageMusic.resume()
+        if((!this.scene.isActive('pause') && this.mainStageMusic.isPaused)){
+            if(!this.invMusicHandler){
+                this.mainStageMusic.resume()
+            }
+            else if(this.invMusicHandler){
+                this.invMusic.resume()
+            }
+            else if (this.invMusicIntro.isPaused){
+                this.invMusicIntro.resume()
+            }
+            
             console.log("Music resumed")
         }
+
+        if(this.effectInv && !this.invMusic.isPlaying && !this.invMusicIntro.isPlaying){
+            this.invMusic.play()
+
+        }
+        else if(!this.effectInv && this.invMusic.isPlaying){
+            this.invMusic.stop()
+            
+        };
+
+
+        if(!this.gameOver){
+            this.bg_farestClouds.tilePositionX += 0.1
+            this.bg_middleClouds.tilePositionX += 0.05
+            this.bg_nearestClouds.tilePositionX += 0.02
+        }
+        if(this.player.x < 4){
+            this.player.x = 930
+        }
+
+        if (this.player.x > 935){
+            this.player.x = 5 
+        }
+        this.physics.world.wrap(this.player, 600)
+        if(this.player.y > 520){
+            this.player.y = 500
+            this.player.charstateAbility = false
+        }
+
+
+        //player handler
+        this.player.update(this.cursors, this.keyA, this.keyS, this.keyD, this.keySPACEBAR, this.key2, this.skiddSound, this.jumpSound, this.activeStomp, this.gameOver, this.time);
+        
 
         if(this.player.body.y > 1000 && !this.aboveWorldBounds){
             this.aboveWorldBounds = true
@@ -363,21 +348,20 @@ export class Game extends Phaser.Scene
         //error screen stuff
 
         //Background starts here
-        if(!this.gameOver){
-            this.bg_nearestClouds.tilePositionX -= 0.2;
-            this.bg_middleClouds.tilePositionX -= 0.1;
-            this.bg_farestClouds.tilePositionX -= 0.05;
-        }
-        else if(this.gameOver){
-            this.bg_nearestClouds.tilePositionX -= 0;
-            this.bg_middleClouds.tilePositionX -= 0;
-            this.bg_farestClouds.tilePositionX -= 0;
-        }
+        
 
         //shield stuff
-        if(this.effectShield){
+        if(this.effectShield && !this.effectInv){
             Phaser.Display.Align.In.Center(this.shield, this.player)
             this.shield.anims.play('shield', true)
+            this.shield.setActive(true).setVisible(true)
+        }
+        else if(this.effectInv){
+            Phaser.Display.Align.In.Center(this.invStars, this.player)
+            this.invStars.anims.play('invStars', true)
+            if(this.effectShield){
+                this.shield.setActive(false).setVisible(false)
+            }
         }
 
         if(this.invAfterHit){
@@ -403,9 +387,9 @@ export class Game extends Phaser.Scene
 
         //bomb manager
 
-        if(((this.bombsExploded >= 15 || this.innerScore >= 10000) || this.key1.isDown) && this.level <= 256 && !this.fastLevelUp){
+        if(((this.bombsExploded >= 15 || this.innerScore >= 5000) || this.key1.isDown) && this.level <= 256 && !this.fastLevelUp){
             this.fastLevelUp = true
-            if(this.innerScore >= 10000){
+            if(this.innerScore >= 5000){
                 this.innerScore = 0
             }
             this.bombsExploded = 0
@@ -413,10 +397,10 @@ export class Game extends Phaser.Scene
             this.bombsThatShouldSpawn += 1
             this.levelText.setText(`LEVEL: ${this.level}`);
             this.sound.play('check')
-            if(this.level <= 10){
+            if(this.level <= 20){
                 this.mainStageMusic.rate += 0.01
             }
-            this.time.delayedCall(500, () =>{
+            this.time.delayedCall(1, () =>{
                 this.fastLevelUp = false
             })
         }
@@ -459,7 +443,7 @@ export class Game extends Phaser.Scene
             this.stars.children.iterate(child =>
             {
 
-                child.enableBody(true, (Phaser.Math.Between(10, 1450)), 0, true, true);
+                child.enableBody(true, (Phaser.Math.Between(10, 920)), 0, true, true);
                 child.setBounce(0.9);
                 child.setVelocityX(Phaser.Math.FloatBetween(-200, 200), 20);
                 child.setCollideWorldBounds(true);
@@ -482,7 +466,7 @@ export class Game extends Phaser.Scene
             }
 
             for (let i = this.bombSpawning; i < this.bombsThatShouldSpawn; i++){
-                const x = Phaser.Math.Between(100, 1400);
+                const x = Phaser.Math.Between(100, 900);
                 const bomb = this.bombs.create(x, -10, 'bomb');
                 bomb.body.setMaxSpeed(500);
                 bomb.setGravityY(300);
@@ -501,15 +485,27 @@ export class Game extends Phaser.Scene
             
 
                 
-            
+            //this is for the shield
             if(!this.effectShield && this.shieldGenObj.countActive(true) == 0){
                 const shieldProbability = Phaser.Math.Between(1, 5)
                 if(shieldProbability == 3){
-                    this.Xshield = Phaser.Math.Between(100, 1400);
-                    this.Yshield = Phaser.Math.Between(100, 450);
+                    this.Xshield = Phaser.Math.Between(100, 800);
+                    this.Yshield = Phaser.Math.Between(100, 400);
                     this.shieldCollect = this.shieldGenObj.create(this.Xshield, this.Yshield, 'shield_box')
                     this.shieldCollect.anims.play('shield_pw', true)
                     console.log("This should have spawned a shield box...")
+            
+                }
+            }
+
+            if(this.invGenObj.countActive(true) == 0){
+                const invProbability = Phaser.Math.Between(1, 10)
+                if(invProbability == 3){
+                    this.Xinv = Phaser.Math.Between(100, 800);
+                    this.Yinv = Phaser.Math.Between(100, 400);
+                    this.invCollect = this.invGenObj.create(this.Xinv, this.Yinv, 'star_box')
+                    this.invCollect.anims.play('star_pw', true)
+                    console.log("This should have spawned a candy...")
             
                 }
             }
@@ -521,20 +517,32 @@ export class Game extends Phaser.Scene
     }
     hitBomb (player, bomb)
     {
-        if (this.player.charstateAbility || this.effectShield){
+        if (this.player.charstateAbility || this.effectShield || this.effectInv){
             bomb.body.setVelocity(0, 0);
             bomb.body.setEnable(false);
             bomb.body.debugBodyColor = 0x9048fc;
             this.cameras.main.shake(200, 0.003);
             console.log("You should have seen a shake effect on your screen rn")
             bomb.anims.play("explode", true);
-            if(this.effectShield && this.player.charstateAbility){
+            if((this.effectShield && this.player.charstateAbility) || this.effectInv){
+
                 this.score += 500;
                 this.innerScore += 500;
                 this.scoreText.setText(`SCORE: ${this.score}`);
                 this.bombsExploded += 1
+                this.time.delayedCall(10, () =>{
+                    if(this.player.charstateAbility){
+                        this.player.abilityCooldown = true
+                        this.player.charstateAbility = false
+                        this.player.charstateFall = true
+                        this.player.setVelocityY(-200)
+                        this.time.delayedCall(100, () =>{
+                            this.player.abilityCooldown = false
+                        })
+                    }
+                })
             }
-            if(this.effectShield && !this.player.charstateAbility){
+            if(this.effectShield && !this.player.charstateAbility && !this.effectInv){
                 this.invAfterHit = true;
                 this.effectShield = false;
                 this.shield.destroy()
@@ -545,8 +553,8 @@ export class Game extends Phaser.Scene
                 this.scoreText.setText(`SCORE: ${this.score}`);
                 this.bombsExploded += 1
             }
-            if(!this.effectShield && this.player.charstateAbility){
-                this.charstateAbility = false;
+            if(!this.effectShield && this.player.charstateAbility && !this.effectInv){
+                this.player.charstateAbility = false;
                 this.player.upStun = true;
                 this.sound.play('hurt')
                 this.score += 100;
@@ -568,6 +576,7 @@ export class Game extends Phaser.Scene
                         this.gameOverLauncher = true
                         this.scene.launch('gameover', {
                             score : this.score,
+                            stageName: this.stageName,
                         });
                         this.time.delayedCall(200, () =>{
                             this.registry.destroy()
@@ -586,9 +595,75 @@ export class Game extends Phaser.Scene
             this.physics.pause();
             this.cameras.main.shake(300, 0.025);
             this.mainStageMusic.stop()
+            this.effectInv = false
+            this.invMusic.stop()
+            this.invMusicIntro.stop()
             
         }
         this.sound.play('bomb_explosion')
+    }
+    shieldAbility(player, _shieldGenObj){
+        if (!this.gameOver)
+                {
+                    this.sound.play('munch')
+                    _shieldGenObj.destroy();
+
+                    this.time.delayedCall(600, () =>
+                    {
+                        if(!this.gameOver){
+                            this.effectShield = true
+                            this.sound.play('shield')
+                            this.shield = this.shieldPhysics.create(0, 0, 'shield')
+                            this.shield.body.debugBodyColor = 0x0000ff
+                        }
+                    });
+                }
+    }
+
+    invinsAbility(player, _invGenObj){
+        if (!this.gameOver)
+                {
+                    this.sound.play('munch')
+                    _invGenObj.destroy();
+                    this.invMusicHandler = true
+                    
+
+                    this.time.delayedCall(600, () =>
+                    {
+                        if(!this.gameOver && this.invStack == 0){
+                            this.invStack += 1
+                            this.mainStageMusic.stop()
+                            this.effectInv = true
+                            this.invMusicIntro.play()
+                            this.invStars = this.invPhysics.create(0, 0, 'invStars')
+                            this.invStars.body.debugBodyColor = 0x0000ff
+                            
+                        }
+                        else if(!this.gameOver && this.invStack > 0){
+                            this.invStack += 1
+                        };
+
+
+                        this.time.delayedCall(45000, () =>{
+                            if(this.invStack == 1){
+                                this.invStack -= 1
+                                console.log(`1 stack removed, total stack is ${this.invStack}`)
+                                this.effectInv = false
+                                this.invMusicHandler = false
+                                this.invMusic.stop()
+                                this.invStars.destroy()
+                                this.mainStageMusic.play()
+                                this.invAfterHit = true
+                                
+                            }
+                            else if(this.invStack > 1){
+                                this.invStack -=1 
+                                console.log(`1 stack removed, total stack is ${this.invStack}`)
+                            }
+                        })
+                    });
+                    
+                }
     }
 }
 

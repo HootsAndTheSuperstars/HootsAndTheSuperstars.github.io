@@ -17,11 +17,11 @@ export class GameOver extends Phaser.Scene{
         
         this.cameras.main.fadeIn(1000, 255, 255, 255)
         this.keyW = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
-        this.bg_gameover = this.add.tileSprite(750, 300, 1500, 600, 'gameover_background');
+        this.bg_gameover = this.add.tileSprite(450, 300, 940, 600, 'gameover_background');
         this.pressEnterText = this.physics.add.staticGroup();
         this.escReturnText = this.physics.add.staticGroup();
 
-        this.gameOverText = this.add.image(750, 250, 'gameover_text'),
+        this.gameOverText = this.add.image(450, 250, 'gameover_text'),
 
         this.anims.create({
 
@@ -50,8 +50,8 @@ export class GameOver extends Phaser.Scene{
 
 
 
-        this.pressEnterTextAnims = this.pressEnterText.create(750, 400, 'pressenter_text').setVisible(false)
-        this.escReturnTextAnims = this.escReturnText.create(750, 450, 'returnTitle').setVisible(false)
+        this.pressEnterTextAnims = this.pressEnterText.create(450, 400, 'pressenter_text').setVisible(false)
+        this.escReturnTextAnims = this.escReturnText.create(450, 450, 'returnTitle').setVisible(false)
 
 
         this.time.delayedCall(1300, () =>{
@@ -60,7 +60,7 @@ export class GameOver extends Phaser.Scene{
             this.pressEnterTextAnims.anims.play('text_flash')
         })
         
-        this.scoreText = this.add.text(560, 320, 'SCORE: 0', { fontFamily:'HUDfont', fontSize: '46px', fill: '#fcfc00' }).setVisible(false);
+        this.scoreText = this.add.text(450, 350, 'SCORE: 0', { fontFamily:'HUDfont', fontSize: '46px', fill: '#fcfc00' }).setVisible(false).setOrigin(0.5, 0.5);
         this.scoreText.setText(`YOUR SCORE: ${this.score}`).setVisible(true)
         console.log("Created game over's text and background!")
 
@@ -107,7 +107,7 @@ export class GameOver extends Phaser.Scene{
                             this.cameras.main.fadeOut(1000)
                             this.time.delayedCall(1000, () => {
                                 console.log('Switching to titlescreen...')
-                                this.scene.switch('menu')
+                                this.scene.switch('titlescreen')
                                 this.scene.stop('gameover')
                         })
                     })

@@ -1,0 +1,149 @@
+{
+    "anims": [
+
+        {
+            "key": "keyA_up",
+            "frames": [ 
+                { "frame": 0 }
+            ],
+            "frameRate": 10,
+            "defaultTextureKey": "keys",
+            "repeat": -1
+        },
+        {
+            "key": "keyA_down",
+            "frames": [ 
+                { "frame": 1 }
+            ],
+            "frameRate": 10,
+            "defaultTextureKey": "keys",
+            "repeat": -1
+        },
+        {
+            "key": "keyS_up",
+            "frames": [ 
+                { "frame": 2 }
+            ],
+            "frameRate": 10,
+            "defaultTextureKey": "keys",
+            "repeat": -1
+        },
+        {
+            "key": "keyS_down",
+            "frames": [ 
+                { "frame": 3 }
+            ],
+            "frameRate": 10,
+            "defaultTextureKey": "keys",
+            "repeat": -1
+        },
+        {
+            "key": "keyD_up",
+            "frames": [ 
+                { "frame": 4 }
+            ],
+            "frameRate": 10,
+            "defaultTextureKey": "keys",
+            "repeat": -1
+        },
+        {
+            "key": "keyD_down",
+            "frames": [ 
+                { "frame": 5 }
+            ],
+            "frameRate": 10,
+            "defaultTextureKey": "keys",
+            "repeat": -1
+        },
+        {
+            "key": "cursorRight_up",
+            "frames": [ 
+                { "frame": 6 }
+            ],
+            "frameRate": 10,
+            "defaultTextureKey": "keys",
+            "repeat": -1
+        },
+        {
+            "key": "cursorRight_down",
+            "frames": [ 
+                { "frame": 7 }
+            ],
+            "frameRate": 10,
+            "defaultTextureKey": "keys",
+            "repeat": -1
+        },
+        {
+            "key": "cursorLeft_up",
+            "frames": [ 
+                { "frame": 8 }
+            ],
+            "frameRate": 10,
+            "defaultTextureKey": "keys",
+            "repeat": -1
+        },
+        {
+            "key": "cursorLeft_down",
+            "frames": [ 
+                { "frame": 9 }
+            ],
+            "frameRate": 10,
+            "defaultTextureKey": "keys",
+            "repeat": -1
+        },
+        {
+            "key": "cursorUp_up",
+            "frames": [ 
+                { "frame": 10 }
+            ],
+            "frameRate": 10,
+            "defaultTextureKey": "keys",
+            "repeat": -1
+        },
+        {
+            "key": "cursorUp_down",
+            "frames": [ 
+                { "frame": 11 }
+            ],
+            "frameRate": 10,
+            "defaultTextureKey": "keys",
+            "repeat": -1
+        },
+        {
+            "key": "cursorDown_up",
+            "frames": [ 
+                { "frame": 12 }
+            ],
+            "frameRate": 10,
+            "defaultTextureKey": "keys",
+            "repeat": -1
+        },
+        {
+            "key": "cursorDown_down",
+            "frames": [ 
+                { "frame": 13 }
+            ],
+            "frameRate": 10,
+            "defaultTextureKey": "keys",
+            "repeat": -1
+        },
+        {
+            "key": "keySpace_up",
+            "frames": [ 
+                { "frame": 0 }
+            ],
+            "frameRate": 10,
+            "defaultTextureKey": "keySpace",
+            "repeat": -1
+        },
+        {
+            "key": "keySpace_down",
+            "frames": [ 
+                { "frame": 1 }
+            ],
+            "frameRate": 10,
+            "defaultTextureKey": "keySpace",
+            "repeat": -1
+        }
+    ]
+}

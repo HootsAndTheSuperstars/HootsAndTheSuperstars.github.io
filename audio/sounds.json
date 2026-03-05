@@ -101,6 +101,11 @@
                 "type": "audio",
                 "key": "invalid",
                 "url": "invalid.wav"
+            },
+            {
+                "type": "audio",
+                "key": "select",
+                "url": "select.wav"
             }
 
         ]
@@ -114,6 +119,16 @@
                 "type": "audio",
                 "key": "stage",
                 "url": "stage.wav"
+            },
+            {
+                "type": "audio",
+                "key": "invincibility",
+                "url": "invincibility.wav"
+            },
+            {
+                "type": "audio",
+                "key": "invincibilityIntro",
+                "url": "invincibility_intro.wav"
             },
             {
                 "type": "audio",
@@ -139,6 +154,16 @@
                 "type": "audio",
                 "key": "mainMenu",
                 "url": "mainmenu.wav"
+            },
+            {
+                "type": "audio",
+                "key": "controlsRoomIntro",
+                "url": "controlsRoom2Intro.wav"
+            },
+            {
+                "type": "audio",
+                "key": "controlsRoom",
+                "url": "controlsRoom2.wav"
             }
 
         ]

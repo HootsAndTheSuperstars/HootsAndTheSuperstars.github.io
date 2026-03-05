@@ -38,8 +38,8 @@ export class TitleScreen extends Phaser.Scene{
         })
             
         
-        this.bg_tts = this.add.tileSprite(750, 300, 1500, 600, 'title_background');
-        this.titleHoots = this.add.image(750, 250, 'titleHoots')
+        this.bg_tts = this.add.tileSprite(450, 300, 900, 600, 'title_background');
+        this.titleHoots = this.add.image(450, 250, 'titleHoots')
         this.pressEnterTextTTS = this.physics.add.staticGroup();
 
         this.anims.create({
@@ -58,8 +58,9 @@ export class TitleScreen extends Phaser.Scene{
             repeat: -1
         });
 
-
-        this.pressEnterTextTTSAnims = this.pressEnterTextTTS.create(750, 520, 'enter_text_tts').setVisible(false)
+        this.add.image(450, 400, 'DemoVer')
+        this.add.image(800, 570, 'license')
+        this.pressEnterTextTTSAnims = this.pressEnterTextTTS.create(460, 520, 'enter_text_tts').setVisible(false)
         
         this.sound.add('continue')
         console.log('Hey, welcome!\n Title screen assets created!')
@@ -78,8 +79,8 @@ export class TitleScreen extends Phaser.Scene{
                     this.time.delayedCall(2000, () => {
                             this.cameras.main.fadeOut(1000)
                             this.time.delayedCall(1000, () => {
-                                console.log('Switching to stage...\n Prepare for console.log caos')
-                                this.scene.switch('menu')
+                                console.log('Switching to tutorial...\n Prepare for console.log caos')
+                                this.scene.switch('controlsScreen')
                                 this.scene.stop('titlescreen')
                         })
                     })

@@ -1,68 +1,52 @@
-# HootsAndTheSuperstars.github.io
-
-Hey there! here's what you need to know for now:
-
-Controls:
-
-D, Space, cursor up: jump
-
-cursor left, cursor right: Move left and right
-
-A, cursor down (both in air): use ability 
-
-Maintaining S: Run/Back
-
-Escape (ESC): Back (In short)
-
-Enter: Select/Pause
-
-What to do?
-
-In this game you simply recolect stars and avoid bombs, shrimple! You can destroy the bombs with your ability, but it will stun you and make you vulnerable until you touch ground.
-
-Powers:
-
-Stomp (Ability): This ability will launch you straight to the floor, making you unable to move sideways but you will be able to break a bomb (if you get to destroy one, you will be stunned and you will be vulnerable to other bombs)
-
-Shield: Gives you protection against a bomb and bomb stunning when using your ability, it will give you temporal invulnerability if it breaks.
-
-Secrets: 
-
-For now, there are three secrets, can you find them?
-
-Side notes:
-
-- A lot of stuff is missing righ now, don't expect having a load of content like v1, due to the re-do, a lot of stuff is still on the oven
-
-- The invulnerability time will be indicated with a white flash in Hoots! body, if you see that, you should start avoiding bombs...
-
-- This game is NOT made for mobile, don't try to play it on mobile...
-
-- Credits to: idk, i've been doing this all alone
-
-- This was made with Phaser3 Engine; using the "FirstGame" as a base
+# Hoots! and the Superstars
 
 
-Controles:
+Hey! Welcome to the game's Github! This game is still in development, so there's some stuff missing.
 
-D, Espacio, cursor arriba: saltar
+## CHANGELOG DEMO 3.0
 
-Cursor izquierda, cursor derecha: moverse a la izquierda y a la derecha
+- Added a "Tutorial" Screen
+- Removed the menu for now
+- Sprite overhaul
+- Audio overhaul
+- New powerup: Candy (Invinsibility)
+- New music track: Preparation
+- New music track: Invinsible!
+- Shrinked screen size for better performance
+- Added a tilemap for replacement of the old level creation method
+- Hoots! can now loop trough the stage instead of stopping in the borders
+- Changed Hoots! hitbox for more fair play
+- Added a License
 
-A, cursor abajo (ambos en el aire): usar habilidad
 
-Mantener S: correr/atrás
 
-Escape (ESC): atrás (en resumen)
+This project features original narrative and artistic elements developed with Phaser. By accessing the software or using its assets, you agree to the license terms and conditions established to protect the integrity of the work.
 
-Intro: seleccionar/pausar
+## Access and Usage
+To use or play the program, simply visit the official link:
+**[https://hootsandthesuperstars.github.io](https://hootsandthesuperstars.github.io)**
 
-¿Qué hacer?
+## Mandatory Attribution
+If you create content based on this program (art commissions, gameplay videos, or reviews), **you must credit the original author**:
+> *Original Characters/Music by: S_A3*
+> *Official Link: https://hootsandthesuperstars.github.io*
 
-En este juego, simplemente recolectas estrellas y evitas las bombas, ¡facil! Puedes destruir las bombas con tu habilidad, pero te aturdirá y te hará vulnerable hasta que toques el suelo.
+## Permitted Uses
+* **Commissions:** You are allowed to accept paid commissions for original fan art of the characters.
+* **Video Content:** You may monetize your gameplay videos or reviews on platforms like YouTube and Twitch, provided you include the mandatory credits.
 
-Poderes:
+## Prohibited Uses (Subject to Removal)
+* **AI Training:** Using game assets or derivative works for Artificial Intelligence training, fine-tuning, or generation (including images and music) is strictly forbidden.
+* **"YouTube Kids" Content:** Usage in automated, mass-produced, or low-quality children's content (content farms) is not allowed.
+* **Unauthorized Commercial Use:** You may not sell physical merchandise or integrate these assets into other software without a specific written agreement.
 
-Pisotón (Habilidad): Esta habilidad te lanzará directamente al suelo, impidiéndote moverte lateralmente, pero podrás romper una bomba (si destruyes una, quedarás aturdido y vulnerable a otras bombas).
+## Contact for Commercial Use
+For business inquiries, special licensing, or commercial permissions, please contact:
+**Via Discord: s_a3, via Gmail: sa3.gameryt@gmail.com, via Bluesky: @s-a3.bsky.social**
 
-Escudo: Te protege contra bombas y te aturde al usar tu habilidad; te dará invulnerabilidad temporal si se rompe.
+## ⚠️ Legal Notice
+**The author reserves the right to update, change, or enforce these rules and restrictions at any time if deemed necessary.** The author also reserves the right to restrict or remove any specific content deemed harmful to the project's reputation or moral rights.
+
+---
+© 2026 S_A3
+
