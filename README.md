@@ -28,7 +28,7 @@ To use or play the program, simply visit the official link:
 
 ## Mandatory Attribution
 If you create content based on this program (art commissions, gameplay videos, or reviews), **you must credit the original author**:
-> *Original Characters/Music by: S_A3*
+> *Original Characters/Music/Programing by: S_A3*
 > *Official Link: https://hootsandthesuperstars.github.io*
 
 ## Permitted Uses
@@ -44,7 +44,7 @@ If you create content based on this program (art commissions, gameplay videos, o
 For business inquiries, special licensing, or commercial permissions, please contact:
 **Via Discord: s_a3, via Gmail: sa3.gameryt@gmail.com, via Bluesky: @s-a3.bsky.social**
 
-## ⚠️ Legal Notice
+## Legal Notice
 **The author reserves the right to update, change, or enforce these rules and restrictions at any time if deemed necessary.** The author also reserves the right to restrict or remove any specific content deemed harmful to the project's reputation or moral rights.
 
 ---

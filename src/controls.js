@@ -82,12 +82,6 @@ export class controlsScreen extends Phaser.Scene{
             this.add.image(450, 530, 'enterToPlay')
         })
         this.physics.add.collider(this.player, this.invisiblePlatform)
-        this.input.keyboard.on('keydown-A', ()=>{
-            this.HUDkeyA.anims.play('keyA_down', true)
-        })
-        this.input.keyboard.on('keyup-A', ()=>{
-            this.HUDkeyA.anims.play('keyA_up', true)
-        });
 
         this.input.keyboard.on('keydown-S', ()=>{
             this.HUDkeyS.anims.play('keyS_down', true)
@@ -124,13 +118,6 @@ export class controlsScreen extends Phaser.Scene{
             this.HUDcursorUp.anims.play('cursorUp_up', true)
         });
 
-        this.input.keyboard.on('keydown-DOWN', ()=>{
-            this.HUDcursorDown.anims.play('cursorDown_down', true)
-        })
-        this.input.keyboard.on('keyup-DOWN', ()=>{
-            this.HUDcursorDown.anims.play('cursorDown_up', true)
-        });
-
         this.input.keyboard.on('keydown-RIGHT', ()=>{
             this.HUDcursorRight.anims.play('cursorRight_down', true)
         })
@@ -139,6 +126,40 @@ export class controlsScreen extends Phaser.Scene{
         });
     }
     update(){
+
+        if(this.keyA.isDown)
+            if(!this.player.body.onFloor()){
+                    this.HUDkeyA.anims.play('keyA_down', true)
+            }
+            else{
+                this.HUDkeyA.anims.play('keyANA_down', true)
+            }
+        
+        else if(!this.keyA.isDown){
+            if(!this.player.body.onFloor()){
+                this.HUDkeyA.anims.play('keyA_up', true)
+            }
+            else{
+                this.HUDkeyA.anims.play('keyANA_up', true)
+            }
+        };
+
+        if(this.cursors.down.isDown)
+            if(!this.player.body.onFloor()){
+                    this.HUDcursorDown.anims.play('cursorDown_down', true)
+            }
+            else{
+                this.HUDcursorDown.anims.play('cursorDownNA_down', true)
+            }
+        
+        else if(!this.cursors.down.isDown){
+            if(!this.player.body.onFloor()){
+                this.HUDcursorDown.anims.play('cursorDown_up', true)
+            }
+            else{
+                this.HUDcursorDown.anims.play('cursorDownNA_up', true)
+            }
+        };
 
         this.background.tilePositionX += 0.2
         this.background.tilePositionY += 0.2

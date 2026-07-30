@@ -1,0 +1,30 @@
+{
+    "anims":[
+        {
+            "key": "star_idle",
+            "frames": [
+                { "frame": 0, "duration": 100 },
+                { "frame": 1, "duration": 100 },
+                { "frame": 2, "duration": 100 },
+                { "frame": 3, "duration": 100 }
+
+            ],
+            "defaultTextureKey": "star",
+            "repeat" : -1
+        },
+        {
+            "key": "star_collect",
+            "frames": [
+                { "frame": 0, "duration": 30 },
+                { "frame": 1, "duration": 30 },
+                { "frame": 2, "duration": 30 },
+                { "frame": 3, "duration": 30 },
+                { "frame": 4, "duration": 30 }
+
+            ],
+            "defaultTextureKey": "starGet",
+            "showOnStart": true,
+            "hideOnComplete": true
+        }
+    ]
+}

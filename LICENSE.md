@@ -12,7 +12,7 @@ All characters, music, art, and derived content are subject to the following ter
 
 * **Attribution (Mandatory Credits):** Any person or entity creating content based on this program (including fan art commissions, gameplay videos, or reviews) **MUST** provide clear and visible credit to the original author (S_A3) and include a link to the official project page.
 * **Monetization:** Fan art commissions and video monetization (YouTube/Twitch/social media) are **PERMITTED**, provided they strictly follow the attribution rules and do not violate the restrictions below.
-* **AI Training Prohibition:** Neither the in-game content nor any derivative works may be used to train, fine-tune, or generate content via Artificial Intelligence models. This includes but is not limited to AI-generated images, AI-generated music, or AI-generated voices.
+* **AI Training Prohibition:** Neiher the in-game content nor any derivative works may be used to train, fine-tune, or generate content via Artificial Intelligence models. This includes but is not limited to AI-generated images, AI-generated music, or AI-generated voices.
 * **Contextual Restrictions:** The use of assets in "YouTube Kids" style automated content, mass-produced low-quality animations (e.g., "Elsagate" style), or any context the author explicitly deems harmful is **STRICTLY PROHIBITED**.
 
 ## 3. CONTACT AND SPECIAL PERMISSIONS

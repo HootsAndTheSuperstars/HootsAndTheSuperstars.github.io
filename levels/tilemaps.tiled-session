@@ -1,0 +1,123 @@
+{
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "noon/level.tmx",
+    "expandedProjectPaths": [
+        ".",
+        "noon/json",
+        "noon"
+    ],
+    "fileStates": {
+        "": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "noon/background.tsx": {
+            "scaleInDock": 3,
+            "scaleInEditor": 5.5
+        },
+        "noon/cloud_big.tsx": {
+            "scaleInDock": 2,
+            "scaleInEditor": 5.5
+        },
+        "noon/clouds_medium.tsx": {
+            "scaleInDock": 3,
+            "scaleInEditor": 5.5
+        },
+        "noon/clouds_small.tsx": {
+            "scaleInDock": 8,
+            "scaleInEditor": 5.5
+        },
+        "noon/decoration.tsx": {
+            "scaleInDock": 3,
+            "scaleInEditor": 5.5
+        },
+        "noon/ground.tsx": {
+            "scaleInDock": 4,
+            "scaleInEditor": 5.5
+        },
+        "noon/json/levelMain.json": {
+            "scale": 0.25547391623806026,
+            "selectedLayer": 7,
+            "viewCenter": {
+                "x": 751.5444348576358,
+                "y": 299.44348576358925
+            }
+        },
+        "noon/level.tmx": {
+            "expandedGroupLayers": [
+                5
+            ],
+            "scale": 0.75,
+            "selectedLayer": 5,
+            "viewCenter": {
+                "x": 82,
+                "y": 261.99999999999994
+            }
+        },
+        "noon/level.tmx#background": {
+            "scaleInDock": 1,
+            "scaleInEditor": 5.5
+        },
+        "noon/level.tmx#cloud_big": {
+            "scaleInDock": 1
+        },
+        "noon/level.tmx#clouds_big": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "noon/level.tmx#clouds_medium": {
+            "scaleInDock": 1
+        },
+        "noon/level.tmx#clouds_small": {
+            "scaleInDock": 1
+        },
+        "noon/level.tmx#decoration": {
+            "scaleInDock": 1
+        },
+        "noon/level.tmx#ground": {
+            "scaleInDock": 1
+        },
+        "noon/level.tmx#platforms": {
+            "scaleInDock": 1
+        },
+        "noon/platforms.tsx": {
+            "scaleInDock": 4,
+            "scaleInEditor": 5.5
+        }
+    },
+    "last.exportedFilePath": "C:/Users/asher/OneDrive/Escritorio/game/Juego1/levels/noon",
+    "last.externalTilesetPath": "C:/Users/asher/OneDrive/Escritorio/game/Juego1/levels/noon",
+    "last.imagePath": "C:/Users/asher/OneDrive/Escritorio/game/Juego1/assets/noon",
+    "map.height": 30,
+    "map.lastUsedExportFilter": "JSON map files (*.tmj *.json)",
+    "map.lastUsedFormat": "tmx",
+    "map.tileHeight": 20,
+    "map.tileWidth": 20,
+    "map.width": 68,
+    "openFiles": [
+        "noon/level.tmx"
+    ],
+    "project": "tilemaps.tiled-project",
+    "recentFiles": [
+        "noon/level.tmx",
+        "noon/json/levelMain.json",
+        "noon/background.tsx",
+        "noon/platforms.tsx",
+        "noon/ground.tsx",
+        "noon/decoration.tsx",
+        "noon/clouds_small.tsx",
+        "noon/clouds_medium.tsx",
+        "noon/cloud_big.tsx"
+    ],
+    "tileset.embedInMap": true,
+    "tileset.lastUsedFilter": "Archivos de conjuntos de patrones Tiled (*.tsx *.xml)",
+    "tileset.lastUsedFormat": "tsx",
+    "tileset.tileSize": {
+        "height": 20,
+        "width": 20
+    },
+    "tileset.useTransparentColor": true
+}

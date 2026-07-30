@@ -11,15 +11,26 @@ export class PreLoader extends Phaser.Scene{
         //player
 
         this.load.spritesheet('hoots', 'assets/hoots/hoots.png', {frameWidth: 64, frameHeight: 64});
-        this.load.spritesheet('hoots2', 'assets/hoots/hoots2.png', {frameWidth: 64, frameHeight: 64});
 
 
         this.load.animation('hootsAnims', '/assets/hoots/hoots.json')
-        this.load.animation('hootsAnims2', '/assets/hoots/hoots2.json')
+        
+        //powerUps
+        this.load.spritesheet('powerups', 'assets/misc/powerups.png', {frameWidth: 30, frameHeight: 30});
+        this.load.animation('powerupsAnims', '/assets/misc/powerups.json')
+
+
+        this.load.spritesheet('shield', 'assets/misc/shield/shield.png', {frameWidth: 48, frameHeight: 42});
+        this.load.spritesheet('invStars', 'assets/misc/star/stars.png', {frameWidth: 48, frameHeight: 48});
+
+        this.load.animation('shieldAnims', '/assets/misc/shield/shield.json')
+        this.load.animation('starInvAnims', '/assets/misc/star/invstars.json')
+        
+        
         //TOC
         this.load.image('ToC', 'assets/ToC/ToC.png')
         this.load.spritesheet('ToC_button', 'assets/ToC/ToC_buttons.png', {frameWidth: 280, frameHeight: 70})
-        this.load.audio('hurt_dev', 'assets/sounds/hurt_shield.wav')
+
         
         //title screen
         this.load.image('license', 'assets/Title Screen/copyright.png')
@@ -47,11 +58,12 @@ export class PreLoader extends Phaser.Scene{
 
 
         this.load.animation('keyHUDAnims', 'assets/controlScreen/keys.json')
-
+        /*
         //Test Stage
         this.load.image('test_background', 'assets/teststage/test_background.png');
         this.load.image('teststage_mainplatform', 'assets/teststage/mainplatform.png');
         this.load.image('platform_test_0x01', 'assets/teststage/platform_01.png');
+        */
         //main game
         this.load.script('webfont', 'https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js');
 
@@ -65,18 +77,15 @@ export class PreLoader extends Phaser.Scene{
 
         this.load.spritesheet('star', 'assets/misc/star.png', {frameWidth: 25, frameHeight: 24});
         this.load.spritesheet('starGet', 'assets/misc/star_explosion.png', {frameWidth: 25, frameHeight: 73});
+        this.load.animation("starAnims", "assets/misc/star.json")
         this.load.spritesheet('boom', 'assets/misc/bomb_explosion.png', {frameWidth: 56, frameHeight: 56});
         this.load.spritesheet('bomb', 'assets/misc/bomb.png', {frameWidth: 28, frameHeight: 28});
-        
-        
-        this.load.spritesheet('powerups', 'assets/misc/powerups.png', {frameWidth: 30, frameHeight: 30});
-        this.load.animation('powerupsAnims', '/assets/misc/powerups.json')
+        this.load.animation('bombMisc', 'assets/misc/bomb.json')
+                
 
-
-        this.load.spritesheet('shield', 'assets/misc/shield/shield.png', {frameWidth: 48, frameHeight: 42});
-        this.load.spritesheet('invStars', 'assets/misc/star/stars.png', {frameWidth: 48, frameHeight: 48});
-        
-        this.load.pack('music_json', 'audio/sounds.json')
+        //sounds
+        this.load.pack('music_sound', 'audio/sounds.json')
+        this.load.pack('music_json', 'audio/music.json')
 
         //gameOver
         this.load.image('gameover_background', 'assets/GameOver/gameover_background.png')
@@ -94,7 +103,7 @@ export class PreLoader extends Phaser.Scene{
         //pause
         this.load.image('pause_background', 'assets/Pause/pause_background.png')
         this.load.spritesheet('pause_text', 'assets/Pause/pause_text.png', {frameWidth: 385, frameHeight: 94})        
-
+        /*
         //Menu
         this.load.spritesheet('menu_selecter', 'assets/Menu/menu_selecter.png', {frameWidth: 290, frameHeight: 76})
         this.load.spritesheet('menu_buttons', 'assets/Menu/menu_buttons.png', {frameWidth: 282, frameHeight: 72})
@@ -103,14 +112,14 @@ export class PreLoader extends Phaser.Scene{
         this.load.image('menu_arrow', 'assets/Menu/menu_arrow.png')
         this.load.image('menu_arrowH', 'assets/Menu/menu_arrowH.png')
         //this.load.image('menu_starBombs', 'assets/Menu/sihoulettes.png')
-        
+        */
 
     }
 
     create (){
         
         this.sound.pauseOnBlur = false;
-        this.scene.launch('ToC')
+        this.scene.launch('stage')
         
 
 

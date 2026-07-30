@@ -1,4 +1,14 @@
-﻿import { ObjPlayer } from './objects/player.js'
+﻿import Bomb from './objects/bombs.js';
+import { InvSTARS } from './objects/invStars.js';
+import { ObjPlayer } from './objects/player.js'
+import { Shield } from './objects/shield.js';
+import Star from './objects/star.js';
+
+
+//this should be the global functions
+
+import { reusableActions } from './globalFunctions/globalFunctions.js';
+
 
 export class Game extends Phaser.Scene
 
@@ -162,29 +172,15 @@ export class Game extends Phaser.Scene
         console.log("Char sprites created!");
 
 
-        
-        this.anims.create({
-
-            key: 'bomb_movement',
-            frames: this.anims.generateFrameNumbers('bomb', {start: 4, end: 7}),
-            frameRate: 10,
-            repeat: -1
-        });
-
         this.bombExplosion = this.add.sprite(0, 0, 'boom').setVisible(false);
-        this.anims.create({
-
-            key: 'explode',
-            frames: this.anims.generateFrameNumbers('boom', {start: 0, end: 3}),
-            frameRate: 10,
-            repeat: -1,
-        });
+        
 
 
         console.log("Bomb sprites created!");
 
         //  Some stars to collect, 12 in total, evenly spaced 70 pixels apart along the x axis
         this.stars = this.physics.add.group({
+            classType: Star,
             key: 'star',
             repeat: 10,
             setXY: { x: 12, y: 0, stepX: 70 }
@@ -192,32 +188,12 @@ export class Game extends Phaser.Scene
 
         this.starCollect = this.add.sprite(0, 0, 'starGet').setVisible(false);
 
-        this.anims.create({
-
-        key: 'star_movement',
-            frames: this.anims.generateFrameNumbers('star', {start: 0, end: 3}),
-            frameRate: 10,
-            repeat: -1
-        });
-        this.anims.create({
-
-            key: 'star_collect',
-            frames: this.anims.generateFrameNumbers('starGet', {start: 0, end: 3}),
-            frameRate: 30,
-            showOnStart: true,
-            hideOnComplete: true
+        this.stars.children.iterate(child => {
+            child.initPhysics();
         });
 
-        this.stars.children.iterate(child =>
-        {
+    
 
-            child.setBounce(0.9);
-            child.setGravityY(300)
-            child.setVelocityX(Phaser.Math.FloatBetween(-200, 200), 20);
-            child.setCollideWorldBounds(true);
-            child.anims.play('star_movement', true);
-
-        });
         console.log("Stars created!")
 
         this.bombs = this.physics.add.group()
@@ -235,42 +211,27 @@ export class Game extends Phaser.Scene
         platformsLayer.setCollisionBetween(331, 335)
 
         //  Checks to see if the player overlaps with any of the stars, if he does call the collectStar function
-        this.starPlayerCollider = this.physics.add.overlap(this.player, this.stars, this.collectStar, null, this);
+        this.starPlayerCollider = this.physics.add.overlap(this.player, this.stars, reusableActions.collectStar(this, this.player, this.star), null, this);
 
-        this.bombPlayerCollider = this.physics.add.collider(this.player, this.bombs, this.hitBomb, null, this);
+        this.bombPlayerCollider = this.physics.add.collider(this.player, this.bombs, reusableActions.hitBomb(this, this.player, this.bomb), null, this);
 
         //Powers start here
 
-        
-        this.anims.create({
-
-            key: 'shield',
-            frames: this.anims.generateFrameNumbers('shield', {start: 0, end: 3}),
-            frameRate: 30,
-            repeat: -1
-        });
-
-        this.shieldPhysics = this.physics.add.group();
+        this.shield = new Shield(this, 0, 0)
 
 
 
         this.shieldGenObj = this.physics.add.group();
 
 
-        this.anims.create({
+        
 
-            key: 'invStars',
-            frames: this.anims.generateFrameNumbers('invStars', {start: 0, end: 3}),
-            frameRate: 30,
-            repeat: -1
-        });
-
-        this.invPhysics = this.physics.add.group();
+        this.invStars = new InvSTARS(this, 0, 0)
 
         this.invGenObj = this.physics.add.group();
 
-        this.physics.add.collider(this.player, this.shieldGenObj, this.shieldAbility, null, this);
-        this.physics.add.collider(this.player, this.invGenObj, this.invinsAbility, null, this);
+        this.physics.add.collider(this.player, this.shieldGenObj, reusableActions.shieldAbility(this, this.player, this.shieldGenObj), null, this);
+        this.physics.add.collider(this.player, this.invGenObj, reusableActions.invinsAbility(this, this.player, this.invGenObj), null, this);
 
         this.cameras.main.centerOn(470, 300)
     }
@@ -327,42 +288,14 @@ export class Game extends Phaser.Scene
         
 
         if(this.player.body.y > 1000 && !this.aboveWorldBounds){
-            this.aboveWorldBounds = true
-            this.bombPlayerCollider = false
-            this.cameras.main.fadeOut(1000)
-            const noWay = Phaser.Math.Between(1, 1995)
-            this.time.delayedCall(5000, () =>{
-                if(noWay == 1994){
-                    this.scene.launch('error')
-                }
-                else{
-                    this.scene.launch('gameover', {
-                        score: this.score,
-                    })
-                }
-                    this.scene.stop('stage')
-                    
-                
-            })
+            reusableActions.outOfBounds(this)
         }
         //error screen stuff
 
-        //Background starts here
-        
+        //Power updating
+        this.shield.update(this.player, this.effectShield, this.effectInv)
+        this.invStars.update(this.player, this.effectInv)
 
-        //shield stuff
-        if(this.effectShield && !this.effectInv){
-            Phaser.Display.Align.In.Center(this.shield, this.player)
-            this.shield.anims.play('shield', true)
-            this.shield.setActive(true).setVisible(true)
-        }
-        else if(this.effectInv){
-            Phaser.Display.Align.In.Center(this.invStars, this.player)
-            this.invStars.anims.play('invStars', true)
-            if(this.effectShield){
-                this.shield.setActive(false).setVisible(false)
-            }
-        }
 
         if(this.invAfterHit){
             this.bombPlayerCollider.active = false
@@ -388,21 +321,7 @@ export class Game extends Phaser.Scene
         //bomb manager
 
         if(((this.bombsExploded >= 15 || this.innerScore >= 5000) || this.key1.isDown) && this.level <= 256 && !this.fastLevelUp){
-            this.fastLevelUp = true
-            if(this.innerScore >= 5000){
-                this.innerScore = 0
-            }
-            this.bombsExploded = 0
-            this.level += 1
-            this.bombsThatShouldSpawn += 1
-            this.levelText.setText(`LEVEL: ${this.level}`);
-            this.sound.play('check')
-            if(this.level <= 20){
-                this.mainStageMusic.rate += 0.01
-            }
-            this.time.delayedCall(1, () =>{
-                this.fastLevelUp = false
-            })
+            reusableActions.bombExplodedManager(this)
         }
         else if(this.keyE.isDown && this.keyZ.isDown && !this.youAskedForIt){
             this.youAskedForIt = true
@@ -420,250 +339,5 @@ export class Game extends Phaser.Scene
         }
     }
 
-    collectStar (player, star)
-    {
-        this.starCollect.copyPosition(star).play('star_collect');
-        star.disableBody(true, true);
-
-        //  Add and update the score
-        if(!this.starSound.isPlaying){
-            this.starSound.play()
-        }
-        else if(this.starSound.isPlaying){
-            this.starSound.stop()
-            this.starSound.play()
-        }
-        this.score += 100;
-        this.innerScore += 100;
-        this.scoreText.setText(`SCORE: ${this.score}`).setVisible(true);
-        this.levelText.setText(`LEVEL: ${this.level}`).setVisible(true)
-        if (this.stars.countActive(true) === 0)
-        {
-            //  A new batch of stars to collect
-            this.stars.children.iterate(child =>
-            {
-
-                child.enableBody(true, (Phaser.Math.Between(10, 920)), 0, true, true);
-                child.setBounce(0.9);
-                child.setVelocityX(Phaser.Math.FloatBetween(-200, 200), 20);
-                child.setCollideWorldBounds(true);
-                
-
-            });
-            const badLuck = Phaser.Math.Between(1, 1000)
-            if(badLuck == 1){
-                this.youAskedForIt = true
-                this.bombsThatShouldSpawn += 999
-                console.warn('You are doomed...')
-            }
-
-
-            if(this.youAskedForIt){
-                this.sound.play('wetfard')
-            }
-            else{
-                this.sound.play('bomb_fall')
-            }
-
-            for (let i = this.bombSpawning; i < this.bombsThatShouldSpawn; i++){
-                const x = Phaser.Math.Between(100, 900);
-                const bomb = this.bombs.create(x, -10, 'bomb');
-                bomb.body.setMaxSpeed(500);
-                bomb.setGravityY(300);
-                bomb.anims.play('bomb_movement', true);
-                bomb.setBounce(1);
-                bomb.setCollideWorldBounds(true);
-                bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
-                //this should be for a better hitbox w/ the bomb...
-                bomb.setCircle(7);
-                bomb.body.offset.y = 7;
-                bomb.body.offset.x = 7;
-                console.log("Bomb created!");
-                bomb.body.debugBodyColor = 0xff0000;
-                console.log("Added color red (#ff0000) to the bomb's hitbox")  
-            }
-            
-
-                
-            //this is for the shield
-            if(!this.effectShield && this.shieldGenObj.countActive(true) == 0){
-                const shieldProbability = Phaser.Math.Between(1, 5)
-                if(shieldProbability == 3){
-                    this.Xshield = Phaser.Math.Between(100, 800);
-                    this.Yshield = Phaser.Math.Between(100, 400);
-                    this.shieldCollect = this.shieldGenObj.create(this.Xshield, this.Yshield, 'shield_box')
-                    this.shieldCollect.anims.play('shield_pw', true)
-                    console.log("This should have spawned a shield box...")
-            
-                }
-            }
-
-            if(this.invGenObj.countActive(true) == 0){
-                const invProbability = Phaser.Math.Between(1, 10)
-                if(invProbability == 3){
-                    this.Xinv = Phaser.Math.Between(100, 800);
-                    this.Yinv = Phaser.Math.Between(100, 400);
-                    this.invCollect = this.invGenObj.create(this.Xinv, this.Yinv, 'star_box')
-                    this.invCollect.anims.play('star_pw', true)
-                    console.log("This should have spawned a candy...")
-            
-                }
-            }
-            this.badLuck = false
-            this.youAskedForIt = false
-            
-
-        }
-    }
-    hitBomb (player, bomb)
-    {
-        if (this.player.charstateAbility || this.effectShield || this.effectInv){
-            bomb.body.setVelocity(0, 0);
-            bomb.body.setEnable(false);
-            bomb.body.debugBodyColor = 0x9048fc;
-            this.cameras.main.shake(200, 0.003);
-            console.log("You should have seen a shake effect on your screen rn")
-            bomb.anims.play("explode", true);
-            if((this.effectShield && this.player.charstateAbility) || this.effectInv){
-
-                this.score += 500;
-                this.innerScore += 500;
-                this.scoreText.setText(`SCORE: ${this.score}`);
-                this.bombsExploded += 1
-                this.time.delayedCall(10, () =>{
-                    if(this.player.charstateAbility){
-                        this.player.abilityCooldown = true
-                        this.player.charstateAbility = false
-                        this.player.charstateFall = true
-                        this.player.setVelocityY(-200)
-                        this.time.delayedCall(100, () =>{
-                            this.player.abilityCooldown = false
-                        })
-                    }
-                })
-            }
-            if(this.effectShield && !this.player.charstateAbility && !this.effectInv){
-                this.invAfterHit = true;
-                this.effectShield = false;
-                this.shield.destroy()
-                this.player.upStun = true;
-                this.sound.play('hurt_shield')
-                this.score += 10;
-                this.innerScore += 10;
-                this.scoreText.setText(`SCORE: ${this.score}`);
-                this.bombsExploded += 1
-            }
-            if(!this.effectShield && this.player.charstateAbility && !this.effectInv){
-                this.player.charstateAbility = false;
-                this.player.upStun = true;
-                this.sound.play('hurt')
-                this.score += 100;
-                this.innerScore += 100;
-                this.scoreText.setText(`SCORE: ${this.score}`);
-                this.bombsExploded += 1
-            }
-            this.time.delayedCall(1000, () => {
-                bomb.destroy();
-                console.log('Bomb destroyed!')
-            })
-
-        }
-        else{
-            if(!this.gameover)
-                this.gameOver = true;
-                this.time.delayedCall(800, () =>{
-                    if(!this.gameOverLauncher){
-                        this.gameOverLauncher = true
-                        this.scene.launch('gameover', {
-                            score : this.score,
-                            stageName: this.stageName,
-                        });
-                        this.time.delayedCall(200, () =>{
-                            this.registry.destroy()
-                            this.scene.stop('stage')
-                        })
-                    }
-                });
-            bomb.anims.play('explode', true);
-            this.bombPlayerCollider.active = false
-            this.player.charstateFall = false;
-            this.player.charstateWalk = false;
-            this.player.charstateJump = false;
-            this.player.charstateIdle = false;
-            this.player.charstateSkidd = false;
-            this.player.charstateDead = true;
-            this.physics.pause();
-            this.cameras.main.shake(300, 0.025);
-            this.mainStageMusic.stop()
-            this.effectInv = false
-            this.invMusic.stop()
-            this.invMusicIntro.stop()
-            
-        }
-        this.sound.play('bomb_explosion')
-    }
-    shieldAbility(player, _shieldGenObj){
-        if (!this.gameOver)
-                {
-                    this.sound.play('munch')
-                    _shieldGenObj.destroy();
-
-                    this.time.delayedCall(600, () =>
-                    {
-                        if(!this.gameOver){
-                            this.effectShield = true
-                            this.sound.play('shield')
-                            this.shield = this.shieldPhysics.create(0, 0, 'shield')
-                            this.shield.body.debugBodyColor = 0x0000ff
-                        }
-                    });
-                }
-    }
-
-    invinsAbility(player, _invGenObj){
-        if (!this.gameOver)
-                {
-                    this.sound.play('munch')
-                    _invGenObj.destroy();
-                    this.invMusicHandler = true
-                    
-
-                    this.time.delayedCall(600, () =>
-                    {
-                        if(!this.gameOver && this.invStack == 0){
-                            this.invStack += 1
-                            this.mainStageMusic.stop()
-                            this.effectInv = true
-                            this.invMusicIntro.play()
-                            this.invStars = this.invPhysics.create(0, 0, 'invStars')
-                            this.invStars.body.debugBodyColor = 0x0000ff
-                            
-                        }
-                        else if(!this.gameOver && this.invStack > 0){
-                            this.invStack += 1
-                        };
-
-
-                        this.time.delayedCall(45000, () =>{
-                            if(this.invStack == 1){
-                                this.invStack -= 1
-                                console.log(`1 stack removed, total stack is ${this.invStack}`)
-                                this.effectInv = false
-                                this.invMusicHandler = false
-                                this.invMusic.stop()
-                                this.invStars.destroy()
-                                this.mainStageMusic.play()
-                                this.invAfterHit = true
-                                
-                            }
-                            else if(this.invStack > 1){
-                                this.invStack -=1 
-                                console.log(`1 stack removed, total stack is ${this.invStack}`)
-                            }
-                        })
-                    });
-                    
-                }
-    }
 }
 

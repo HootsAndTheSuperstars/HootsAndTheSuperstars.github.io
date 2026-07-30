@@ -1,0 +1,17 @@
+{
+    "anims":[
+        {
+            "key": "invStars",
+            "frames": [ 
+                { "frame": 0 },
+                { "frame": 1 },
+                { "frame": 2 },
+                { "frame": 3 }
+            
+            ],
+            "frameRate": 30,
+            "defaultTextureKey": "invStars",
+            "repeat": -1
+        }
+    ]
+}

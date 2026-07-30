@@ -144,6 +144,42 @@
             "frameRate": 10,
             "defaultTextureKey": "keySpace",
             "repeat": -1
+        },
+        {
+            "key": "cursorDownNA_up",
+            "frames": [ 
+                { "frame": 16 }
+            ],
+            "frameRate": 10,
+            "defaultTextureKey": "keys",
+            "repeat": -1
+        },
+        {
+            "key": "cursorDownNA_down",
+            "frames": [ 
+                { "frame": 17 }
+            ],
+            "frameRate": 10,
+            "defaultTextureKey": "keys",
+            "repeat": -1
+        },
+        {
+            "key": "keyANA_up",
+            "frames": [ 
+                { "frame": 14 }
+            ],
+            "frameRate": 10,
+            "defaultTextureKey": "keys",
+            "repeat": -1
+        },
+        {
+            "key": "keyANA_down",
+            "frames": [ 
+                { "frame": 15 }
+            ],
+            "frameRate": 10,
+            "defaultTextureKey": "keys",
+            "repeat": -1
         }
     ]
 }

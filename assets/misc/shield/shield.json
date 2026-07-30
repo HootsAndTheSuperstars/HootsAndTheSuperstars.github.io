@@ -1,0 +1,17 @@
+{
+    "anims":[
+        {
+            "key": "shield",
+            "frames": [ 
+                { "frame": 0 },
+                { "frame": 1 },
+                { "frame": 2 },
+                { "frame": 3 }
+            
+            ],
+            "frameRate": 30,
+            "defaultTextureKey": "shield",
+            "repeat": -1
+        }
+    ]
+}
