@@ -28,7 +28,7 @@ export class controlsScreen extends Phaser.Scene{
 
         });
         //background
-        this.background = this.add.tileSprite(750, 300, 1500, 600, 'test_background');
+        this.background = this.add.tileSprite(750, 300, 1500, 600, 'pause_background');
 
         //Sounds
         this.jumpSound = this.sound.add('jump')

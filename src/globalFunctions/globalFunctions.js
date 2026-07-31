@@ -55,7 +55,7 @@ export class globalFunctions{
                 
             //this is for the shield
             if(!scene.effectShield && scene.shieldGenObj.countActive(true) == 0){
-                const shieldProbability = 3 //Phaser.Math.Between(1, 5)
+                const shieldProbability = Phaser.Math.Between(1, 5)
                 if(shieldProbability == 3){
                     scene.Xshield = Phaser.Math.Between(100, 800);
                     scene.Yshield = Phaser.Math.Between(100, 400);
@@ -67,7 +67,7 @@ export class globalFunctions{
             }
 
             if(scene.invGenObj.countActive(true) == 0){
-                const invProbability = 3//Phaser.Math.Between(1, 10)
+                const invProbability = Phaser.Math.Between(1, 10)
                 if(invProbability == 3){
                     scene.Xinv = Phaser.Math.Between(100, 800);
                     scene.Yinv = Phaser.Math.Between(100, 400);
