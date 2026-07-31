@@ -1,9 +1,10 @@
-export class reusableActions{
+import Bomb from '../objects/bombs.js';
+
+export class globalFunctions{
     
     //star function
     
-    static collectStar (scene, player, star)
-        {
+    static collectStar (scene, player, star, starCollect){
         scene.starCollect.copyPosition(star).play('star_collect');
         star.disableBody(true, true);
 
@@ -45,7 +46,7 @@ export class reusableActions{
 
             for (let i = scene.bombSpawning; i < scene.bombsThatShouldSpawn; i++){
                 const x = Phaser.Math.Between(100, 900);
-                const bomb = new Bomb(scene, x, -10, scene.bombs);
+                var bomb = new Bomb(scene, x, -10, scene.bombs);
                 
                 
             }
@@ -68,9 +69,9 @@ export class reusableActions{
             if(scene.invGenObj.countActive(true) == 0){
                 const invProbability = 3//Phaser.Math.Between(1, 10)
                 if(invProbability == 3){
-                    this.Xinv = Phaser.Math.Between(100, 800);
-                    this.Yinv = Phaser.Math.Between(100, 400);
-                    scene.invCollect = scene.invGenObj.create(this.Xinv, this.Yinv, 'star_box')
+                    scene.Xinv = Phaser.Math.Between(100, 800);
+                    scene.Yinv = Phaser.Math.Between(100, 400);
+                    scene.invCollect = scene.invGenObj.create(scene.Xinv, scene.Yinv, 'star_box')
                     scene.invCollect.anims.play('star_pw', true)
                     console.log("this should have spawned a candy...")
             
@@ -135,7 +136,7 @@ export class reusableActions{
                 scene.sound.play('hurt_shield')
                 scene.score += 10;
                 scene.innerScore += 10;
-                scene.scoreText.setText(`SCORE: ${this.score}`);
+                scene.scoreText.setText(`SCORE: ${scene.score}`);
                 scene.bombsExploded += 1
             }
             if(!scene.effectShield && scene.player.charstateAbility && !scene.effectInv){
@@ -144,7 +145,7 @@ export class reusableActions{
                 scene.sound.play('hurt')
                 scene.score += 100;
                 scene.innerScore += 100;
-                scene.scoreText.setText(`SCORE: ${this.score}`);
+                scene.scoreText.setText(`SCORE: ${scene.score}`);
                 scene.bombsExploded += 1
             }
             scene.time.delayedCall(1000, () => {

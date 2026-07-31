@@ -3,21 +3,6 @@
 
 Hey! Welcome to the game's Github! This game is still in development, so there's some stuff missing.
 
-## CHANGELOG DEMO 3.0
-
-- Added a "Tutorial" Screen
-- Removed the menu for now
-- Sprite overhaul
-- Audio overhaul
-- New powerup: Candy (Invinsibility)
-- New music track: Preparation
-- New music track: Invinsible!
-- Shrinked screen size for better performance
-- Added a tilemap for replacement of the old level creation method
-- Hoots! can now loop trough the stage instead of stopping in the borders
-- Changed Hoots! hitbox for more fair play
-- Added a License
-
 
 
 This project features original narrative and artistic elements developed with Phaser. By accessing the software or using its assets, you agree to the license terms and conditions established to protect the integrity of the work.

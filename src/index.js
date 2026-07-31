@@ -1,6 +1,6 @@
 import { PreLoader } from './preloader.js'
 import { ToC } from './ToC.js';
-import { Game } from './script.js';
+import { Game } from './stages/stage_noon.js';
 import { Pause } from './pause.js';
 import { GameOver } from './gameOver.js';
 import { Error } from './error.js';
@@ -10,7 +10,7 @@ import { controlsScreen } from './controls.js';
 
 
 const config = {
-    type: Phaser.AUTO,
+    type: Phaser.WEBGL,
     parent: 'game_container',
     width: 900,
     //pixelArt: true,

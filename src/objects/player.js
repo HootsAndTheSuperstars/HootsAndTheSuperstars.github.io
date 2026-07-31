@@ -1,3 +1,4 @@
+
 export class ObjPlayer extends Phaser.Physics.Arcade.Sprite {
     init(){
         //this are the character states (ex. walking, facing left... right... etc)
@@ -42,8 +43,7 @@ export class ObjPlayer extends Phaser.Physics.Arcade.Sprite {
         this.body.setGravityY(600);
         this.debugBodyColor = 0xffffff;
         console.log("Player's MISC configs should work now...");
-        //  Our player animations, turning, walking left and walking right
-
+        
     }
     update (cursors, keyA, keyS, keyD, keySPACEBAR, key2, skiddSound, jumpSound, activeStomp, gameOver, time){
         //Updates

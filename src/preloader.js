@@ -12,7 +12,6 @@ export class PreLoader extends Phaser.Scene{
 
         this.load.spritesheet('hoots', 'assets/hoots/hoots.png', {frameWidth: 64, frameHeight: 64});
 
-
         this.load.animation('hootsAnims', '/assets/hoots/hoots.json')
         
         //powerUps

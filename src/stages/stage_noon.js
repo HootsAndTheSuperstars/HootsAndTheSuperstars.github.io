@@ -1,13 +1,13 @@
-﻿import Bomb from './objects/bombs.js';
-import { InvSTARS } from './objects/invStars.js';
-import { ObjPlayer } from './objects/player.js'
-import { Shield } from './objects/shield.js';
-import Star from './objects/star.js';
+﻿import Bomb from '../objects/bombs.js';
+import { InvSTARS } from '../objects/invStars.js';
+import { ObjPlayer } from '../objects/player.js'
+import { Shield } from '../objects/shield.js';
+import Star from '../objects/star.js';
 
 
 //this should be the global functions
 
-import { reusableActions } from './globalFunctions/globalFunctions.js';
+import { globalFunctions } from '../globalFunctions/globalFunctions.js';
 
 
 export class Game extends Phaser.Scene
@@ -161,6 +161,8 @@ export class Game extends Phaser.Scene
         const platformsTiles = stage.addTilesetImage("platforms", "platforms");
 
         const decorationLayer = stage.createLayer("decoration", decorationTiles)
+        
+        
         this.player = new ObjPlayer(this, 450, 450);
         const groundLayer = stage.createLayer("ground", groundTiles)
         const platformsLayer = stage.createLayer("platforms", platformsTiles)
@@ -185,12 +187,13 @@ export class Game extends Phaser.Scene
             repeat: 10,
             setXY: { x: 12, y: 0, stepX: 70 }
         });
-
-        this.starCollect = this.add.sprite(0, 0, 'starGet').setVisible(false);
-
         this.stars.children.iterate(child => {
             child.initPhysics();
         });
+
+
+        this.starCollect = this.add.sprite(0, 0, 'starGet').setVisible(false);
+
 
     
 
@@ -211,9 +214,9 @@ export class Game extends Phaser.Scene
         platformsLayer.setCollisionBetween(331, 335)
 
         //  Checks to see if the player overlaps with any of the stars, if he does call the collectStar function
-        this.starPlayerCollider = this.physics.add.overlap(this.player, this.stars, reusableActions.collectStar(this, this.player, this.star), null, this);
+        this.starPlayerCollider = this.physics.add.overlap(this.player, this.stars, (player, star) => { globalFunctions.collectStar(this, this.player, star, this.starCollect) }, null, this);
 
-        this.bombPlayerCollider = this.physics.add.collider(this.player, this.bombs, reusableActions.hitBomb(this, this.player, this.bomb), null, this);
+        this.bombPlayerCollider = this.physics.add.collider(this.player, this.bombs, (player, bomb) => { globalFunctions.hitBomb(this, this.player, bomb)}, null, this);
 
         //Powers start here
 
@@ -230,8 +233,12 @@ export class Game extends Phaser.Scene
 
         this.invGenObj = this.physics.add.group();
 
-        this.physics.add.collider(this.player, this.shieldGenObj, reusableActions.shieldAbility(this, this.player, this.shieldGenObj), null, this);
-        this.physics.add.collider(this.player, this.invGenObj, reusableActions.invinsAbility(this, this.player, this.invGenObj), null, this);
+        this.physics.add.collider(this.player, this.shieldGenObj, (player, shieldGenObj) => {
+                globalFunctions.shieldAbility(this, player, shieldGenObj);
+            }, null, this);
+        this.physics.add.collider(this.player, this.invGenObj, (player, invGenObj) => {
+                globalFunctions.invinsAbility(this, player, invGenObj);
+            }, null, this);
 
         this.cameras.main.centerOn(470, 300)
     }
@@ -288,7 +295,7 @@ export class Game extends Phaser.Scene
         
 
         if(this.player.body.y > 1000 && !this.aboveWorldBounds){
-            reusableActions.outOfBounds(this)
+            globalFunctions.outOfBounds(this)
         }
         //error screen stuff
 
@@ -321,7 +328,7 @@ export class Game extends Phaser.Scene
         //bomb manager
 
         if(((this.bombsExploded >= 15 || this.innerScore >= 5000) || this.key1.isDown) && this.level <= 256 && !this.fastLevelUp){
-            reusableActions.bombExplodedManager(this)
+            globalFunctions.bombExplodedManager(this)
         }
         else if(this.keyE.isDown && this.keyZ.isDown && !this.youAskedForIt){
             this.youAskedForIt = true
@@ -333,6 +340,7 @@ export class Game extends Phaser.Scene
         if(this.level >= 255){
             this.physics.pause()
             this.mainStageMusic.stop()
+            this.invMusic.stop()
             this.time.delayedCall(500, () =>{
                 this.scene.switch('error')
             })
