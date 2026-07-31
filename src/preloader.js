@@ -118,7 +118,7 @@ export class PreLoader extends Phaser.Scene{
     create (){
         
         this.sound.pauseOnBlur = false;
-        this.scene.launch('stage')
+        this.scene.launch('ToC')
         
 
 
