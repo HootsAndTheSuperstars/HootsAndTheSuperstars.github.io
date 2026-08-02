@@ -10,6 +10,11 @@
         },
         {
             "type": "audio",
+            "key": "stage_doubt",
+            "url": "stage_doubt.wav"
+        },
+        {
+            "type": "audio",
             "key": "invincibility",
             "url": "invincibility.wav"
         },
@@ -52,6 +57,16 @@
             "type": "audio",
             "key": "controlsRoom",
             "url": "controlsRoom2.wav"
+        },
+        {
+            "type": "audio",
+            "key": "mainMenu",
+            "url": "mainmenu.wav"
+        },
+        {
+            "type": "audio",
+            "key": "tree",
+            "url": "tree.wav"
         }
 
     ]

@@ -24,7 +24,7 @@ export class controlsScreen extends Phaser.Scene{
             this.controlRoomMusicIntro.stop()
             this.controlRoomMusic.stop()
             this.scene.stop('controlsScreen')
-            this.scene.launch('stage')
+            this.scene.launch('menu')
 
         });
         //background
@@ -47,7 +47,6 @@ export class controlsScreen extends Phaser.Scene{
 
         this.keysHUD = this.physics.add.staticGroup()
 
-        this.HUDkeyA = this.keysHUD.create(100, 200, 'keys').anims.play('keyA_up')
         this.HUDkeyS = this.keysHUD.create(180, 200, 'keys').anims.play('keyS_up')
         this.HUDkeyD = this.keysHUD.create(260, 200, 'keys').anims.play('keyD_up')
         this.HUDkeySpace = this.keysHUD.create(450, 200, 'keySpace').anims.play('keySpace_up')
@@ -63,14 +62,11 @@ export class controlsScreen extends Phaser.Scene{
         this.invisiblePlatformHandler.setSize(1000, 16)
 
 
-        this.add.image(100, 280, 'explodeBombs')
         this.add.image(180, 110, 'holdToRun')
-        this.add.image(280, 130, 'jump')
-        this.add.image(500, 130, 'jump')
-        this.add.image(750, 90, 'jump')
-        this.add.image(730, 280, 'explodeBombs')
-        this.add.image(620, 150, 'move')
-        this.add.image(820, 150, 'move')
+        this.jump1 = this.add.sprite(280, 130, 'jump')
+        this.jump2 = this.add.sprite(500, 130, 'jump')
+        this.add.image(750, 90, 'move')
+        
         
 
 
@@ -124,9 +120,15 @@ export class controlsScreen extends Phaser.Scene{
         this.input.keyboard.on('keyup-RIGHT', ()=>{
             this.HUDcursorRight.anims.play('cursorRight_up', true)
         });
+        this.input.keyboard.on('keydown-DOWN', ()=>{
+            this.HUDcursorDown.anims.play('cursorDown_down', true)
+        })
+        this.input.keyboard.on('keyup-DOWN', ()=>{
+            this.HUDcursorDown.anims.play('cursorDown_up', true)
+        });
     }
     update(){
-
+        /*
         if(this.keyA.isDown)
             if(!this.player.body.onFloor()){
                     this.HUDkeyA.anims.play('keyA_down', true)
@@ -160,7 +162,41 @@ export class controlsScreen extends Phaser.Scene{
                 this.HUDcursorDown.anims.play('cursorDownNA_up', true)
             }
         };
+        */
 
+        if(!this.player.body.onFloor()){
+            this.jump1.setTexture('ability')
+            this.jump2.setTexture('ability')
+        }
+        else{
+            this.jump1.setTexture('jump')
+            this.jump2.setTexture('jump')
+        }
+
+        if(this.player.charstateAbility){
+            this.HUDkeyD.setTint(0x48486c)
+            this.HUDkeySpace.setTint(0x48486c)
+            this.HUDcursorLeft.setTint(0x48486c)
+            this.HUDcursorUp.setTint(0x48486c)
+            this.HUDcursorDown.setTint(0x48486c)
+            this.HUDcursorRight.setTint(0x48486c)
+        }
+        else{
+            if(this.player.jumpFatigue){
+                this.HUDkeyD.setTint(0x48486c)
+                this.HUDkeySpace.setTint(0x48486c)
+            }
+            else{
+                this.HUDkeyD.clearTint()
+                this.HUDkeySpace.clearTint()
+            }
+            if(this.player.body.onFloor()){
+                this.HUDcursorLeft.clearTint()
+                this.HUDcursorUp.clearTint()
+                this.HUDcursorDown.clearTint()
+                this.HUDcursorRight.clearTint()
+            }
+        }
         this.background.tilePositionX += 0.2
         this.background.tilePositionY += 0.2
         
@@ -176,7 +212,7 @@ export class controlsScreen extends Phaser.Scene{
             this.player.y = 490
             this.player.charstateAbility = false
         }
-        this.player.update(this.cursors, this.keyA, this.keyS, this.keyD, this.keySPACEBAR, this.key2, this.skiddSound, this.jumpSound, this.activeStomp, this.gameOver, this.time);
+        this.player.update(this);
 
     }
 }

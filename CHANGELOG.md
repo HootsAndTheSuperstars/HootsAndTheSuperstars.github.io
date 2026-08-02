@@ -1,3 +1,12 @@
+## CHANGELOG DEMO 4.0
+
+- Changed Ability behavior to reasemble old builds
+- Changed controls to be simpler (double jump to use the ability)
+- Added New stage "doubt"
+- Added menu
+- Tweaked and added various tracks and sounds
+- Is that a tree?
+
 ## CHANGELOG DEMO 3.1
 
 - Now there are "global functions" for code optimisation

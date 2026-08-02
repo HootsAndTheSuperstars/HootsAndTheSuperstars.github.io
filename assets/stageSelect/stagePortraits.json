@@ -1,0 +1,49 @@
+{
+    "anims": [
+
+        {
+            
+            "key": "stage_noon",
+            "frames": [
+                { "frame": 0 }
+            ],
+            "frameRate": 10,
+            "repeat": -1,
+            "defaultTextureKey": "stagePortraits"
+        
+        },
+        {
+            
+            "key": "stage_doubt",
+            "frames": [
+                { "frame": 1 }
+            ],
+            "frameRate": 10,
+            "repeat": -1,
+            "defaultTextureKey": "stagePortraits"
+        
+        },
+        {
+            
+            "key": "controlsScreen",
+            "frames": [
+                { "frame": 2 }
+            ],
+            "frameRate": 10,
+            "repeat": -1,
+            "defaultTextureKey": "stagePortraits"
+        
+        },
+        {
+            
+            "key": "tree",
+            "frames": [
+                { "frame": 3 }
+            ],
+            "frameRate": 10,
+            "repeat": -1,
+            "defaultTextureKey": "stagePortraits"
+        
+        }
+    ]
+}

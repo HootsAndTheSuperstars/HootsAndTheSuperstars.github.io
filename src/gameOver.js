@@ -14,7 +14,7 @@ export class GameOver extends Phaser.Scene{
     create ()
     {
 
-        
+        this.scene.stop(Phaser.Utils.String.Format('%1', [this.stageName]))
         this.cameras.main.fadeIn(1000, 255, 255, 255)
         this.keyW = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
         this.bg_gameover = this.add.tileSprite(450, 300, 940, 600, 'gameover_background');
@@ -107,7 +107,7 @@ export class GameOver extends Phaser.Scene{
                             this.cameras.main.fadeOut(1000)
                             this.time.delayedCall(1000, () => {
                                 console.log('Switching to titlescreen...')
-                                this.scene.switch('titlescreen')
+                                this.scene.switch('menu')
                                 this.scene.stop('gameover')
                         })
                     })

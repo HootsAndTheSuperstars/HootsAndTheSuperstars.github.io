@@ -1,0 +1,48 @@
+{
+    "stageSelectAssets":{
+        "path": "assets/stageSelect",
+        "files": [
+            
+            {
+                "type": "image",
+                "key": "hootsBig",
+                "url": "hootsBig.png"
+            },
+            {
+                "type": "image",
+                "key": "arrowLeft",
+                "url": "arrowLeft.png"
+            },
+            {
+                "type": "image",
+                "key": "arrowRight",
+                "url": "arrowRight.png"
+            },
+            {
+                "type": "image",
+                "key": "stageText",
+                "url": "stageText.png"
+            },
+            {
+                "type": "image",
+                "key": "selectText",
+                "url": "selectText.png"
+            },
+            {
+                "type": "image",
+                "key": "stageSelectBackground",
+                "url": "background.png"
+            },
+            {
+                "type": "image",
+                "key": "stageSelectBackground",
+                "url": "background.png"
+            },
+            {
+                "type": "image",
+                "key": "lineSSBackground",
+                "url": "lineBackground.png"
+            }
+        ]
+    }
+}

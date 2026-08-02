@@ -1,0 +1,18 @@
+{
+    "doubtAssets":{
+        "path": "assets/stages/doubt",
+        "files": [
+            
+            {
+                "type": "image",
+                "key": "tileSet_doubt",
+                "url": "doubt_tileSet.png"
+            },
+            {
+                "type": "image",
+                "key": "background_doubt",
+                "url": "background.png"
+            }
+        ]
+    }
+}

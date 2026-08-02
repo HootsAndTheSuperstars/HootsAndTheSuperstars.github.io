@@ -79,8 +79,7 @@ export class TitleScreen extends Phaser.Scene{
                     this.time.delayedCall(2000, () => {
                             this.cameras.main.fadeOut(1000)
                             this.time.delayedCall(1000, () => {
-                                console.log('Switching to tutorial...\n Prepare for console.log caos')
-                                this.scene.switch('controlsScreen')
+                                this.scene.switch('menu')
                                 this.scene.stop('titlescreen')
                         })
                     })

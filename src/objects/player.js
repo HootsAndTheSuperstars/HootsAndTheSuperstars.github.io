@@ -5,6 +5,8 @@ export class ObjPlayer extends Phaser.Physics.Arcade.Sprite {
         //This is especially for flipping the sprites, DO NOT REMOVE
         this.facingRight = true;
         this.facingLeft = false;
+        this.charstateUp = false
+        this.charstateDown = false
 
         //char check
         this.Char1 = true;
@@ -27,6 +29,10 @@ export class ObjPlayer extends Phaser.Physics.Arcade.Sprite {
         this.invAfterHit = false;
         this.checkforpreventingSkiddafterStun = false
         this.charstateThroughPlatform = false
+        this.onLadder = false
+        this.charstateClimb = false
+        this.climbDisabling = false
+        
     }
 
     constructor (scene, x, y)
@@ -37,39 +43,46 @@ export class ObjPlayer extends Phaser.Physics.Arcade.Sprite {
         scene.physics.add.existing(this);
         console.log("Player Created!");
         this.body.setOffset(25, 14);
+        this.body.setGravityY(600)
         console.log("The player's hitbox should be mesured to fit the sprites");
         //  Player physics properties. Give the little guy a slight bounce.
         this.setBounce(0);
-        this.body.setGravityY(600);
         this.debugBodyColor = 0xffffff;
         console.log("Player's MISC configs should work now...");
         
     }
-    update (cursors, keyA, keyS, keyD, keySPACEBAR, key2, skiddSound, jumpSound, activeStomp, gameOver, time){
-        //Updates
-
-        //Special console logs
-
-        if(this.abilityCooldown){
-            console.log("Cooldown")
-        }
-        if(this.coyoteTime){
-            console.log("Coyote time")
-        }
-        if(this.charstateAbility){
-            console.log("Ability")
+    update (scene){
+        
+        if(this.invAfterHit){
+            scene.bombPlayerCollider.active = false
+            this.setAlpha(0.7)
+            if(this.body.onFloor()){
+                scene.time.delayedCall(3000, () =>{
+                    if(this.invAfterHit){
+                        this.setTint(0xfcfcfc).setTintMode(Phaser.TintModes.FILL)
+                    }
+                })
+                scene.time.delayedCall(3500, () =>{
+                    if(this.invAfterHit){
+                        this.setAlpha(1)
+                        this.clearTint()
+                        this.invAfterHit = false
+                        scene.bombPlayerCollider.active = true
+                    }
+                })
+            }
         }
         
         //special sound handler
-
-        if(this.body.onFloor()){
-            jumpSound.stop()
-            activeStomp.stop()
+        if(!scene.gameOver){
+            if(this.body.onFloor()){
+                scene.jumpSound.stop()
+                scene.activeStomp.stop()
+            }
+            if(!this.charstateAbility && scene.activeStomp.isPlaying){
+                scene.activeStomp.stop()
+            }
         }
-        if(!this.charstateAbility && activeStomp.isPlaying){
-            activeStomp.stop()
-        }
-
 
 
 
@@ -93,15 +106,15 @@ export class ObjPlayer extends Phaser.Physics.Arcade.Sprite {
         }
         */
 
-        if(this.body.velocity.y > -1){
+        if(this.body.velocity.y > -1 && !this.charstateClimb){
             this.charstateThroughPlatform = true
             
         }
-        else if (this.body.velocity.y <= 0){
+        else if (this.body.velocity.y <= 0 || this.charstateClimb){
             this.charstateThroughPlatform = false
         }
 
-        if(key2.isDown && this.CharChange == false){
+        if(scene.key2.isDown && this.CharChange == false){
             this.CharChange = true
             if(this.Char1){
                 this.Char2 = true
@@ -113,7 +126,7 @@ export class ObjPlayer extends Phaser.Physics.Arcade.Sprite {
                 this.Char1 = true
                 console.warn('Changing to char1...')
             }
-            time.delayedCall(1000, () =>{
+            scene.time.delayedCall(1000, () =>{
                 this.CharChange = false
             })
         }
@@ -133,15 +146,15 @@ export class ObjPlayer extends Phaser.Physics.Arcade.Sprite {
             }
 
             if(!this.charstateHurt && !this.charstateSkidd){
-                if(cursors.left.isDown && !cursors.right.isDown && this.body.velocity.x >= 0){
+                if(scene.cursors.left.isDown && !scene.cursors.right.isDown && this.body.velocity.x >= 0){
                     this.facingLeft = true;
                     this.facingRight = false;
                 }
-                else if(cursors.right.isDown && !cursors.left.isDown && this.body.velocity.x <= 0){
+                else if(scene.cursors.right.isDown && !scene.cursors.left.isDown && this.body.velocity.x <= 0){
                     this.facingLeft = false;
                     this.facingRight = true;
                 }
-            else if((cursors.left.isDown && cursors.right.isDown || cursors.left.isDown && cursors.right.isDown)){
+            else if((scene.cursors.left.isDown && scene.cursors.right.isDown || scene.cursors.left.isDown && scene.cursors.right.isDown)){
                 if(this.body.velocity.x > 0){
                     this.facingLeft = false;
                     this.facingRight = true;
@@ -182,18 +195,18 @@ export class ObjPlayer extends Phaser.Physics.Arcade.Sprite {
                 }
                 else if(this.charstateSkidd){
                     //console.log("State: Skidding")
-                    if(!skiddSound.isPlaying && this.body.onFloor()){
-                        skiddSound.play()
+                    if(!scene.skiddSound.isPlaying && this.body.onFloor()){
+                        scene.skiddSound.play()
                     }
                     else if(!this.body.onFloor()){
-                        skiddSound.stop()
+                        scene.skiddSound.stop()
                     }
                     if(!this.charstateIdle){
-                        if(cursors.left.isDown){
+                        if(scene.cursors.left.isDown){
                             this.setAccelerationX(-350);
                             //console.log("Pushing right");
                         }
-                        else if(cursors.right.isDown){
+                        else if(scene.cursors.right.isDown){
                             this.setAccelerationX(350);
                             //console.log("Pushing left");                
                         }
@@ -213,7 +226,25 @@ export class ObjPlayer extends Phaser.Physics.Arcade.Sprite {
                     this.setAccelerationX(0);
                     this.setAccelerationY(0);
                     this.setVelocityX(0);
+
+                    if(this.charstateClimb && !(this.charstateUp && this.charstateDown)){
+                            this.setVelocityY(0)
+                        }
                     //console.log("State: idle");
+                }
+
+                //climb
+
+                if(this.charstateClimb){
+                    if(this.charstateUp){
+                        this.setVelocityY(-150)
+                    }
+                    else if(this.charstateDown){
+                        this.setVelocityY(300)
+                    }
+                    else{
+                        this.setVelocityY(0)
+                    }
                 }
 
                 if(this.charstateJump && !this.charstateFall){
@@ -250,10 +281,12 @@ export class ObjPlayer extends Phaser.Physics.Arcade.Sprite {
             if (this.upStun){
                 this.body.setVelocityY(-200)
                 this.charstateHurt = true;
-                time.delayedCall(100, () => {
+                scene.time.delayedCall(100, () => {
                     this.upStun = false
                 })
             }
+
+            
         }
         else if(this.charstateDead){
             this.setVelocityX(0);
@@ -262,67 +295,113 @@ export class ObjPlayer extends Phaser.Physics.Arcade.Sprite {
  
 
         //Keybinds
-        if(this.coyoteTime && !this.body.onFloor()){
-            time.delayedCall(50,() => {
-                this.coyoteTime = false
-                if(!keyA.isDown && !cursors.down.isDown){
-                    this.charstateFall = true
-                }
-                
+        //climb stuff
+        if(this.onLadder && scene.cursors.up.isDown && !this.charstateClimb){
+            this.charstateClimb = true
+            this.charstateFall = false
+            this.charstateJump = false
+            this.climbDisabling = true
+            scene.time.delayedCall(100, ()=>{
+                this.climbDisabling = false
             })
         }
-        if(!this.charstateHurt){
+        else if(!this.onLadder && this.charstateClimb && !this.climbDisabling){
+            this.charstateClimb = false
+            this.charstateFall = true
+        }
+
+        if(this.charstateClimb){
+            if(scene.cursors.up.isDown && !scene.cursors.down.isDown){
+                this.charstateUp = true
+                this.charstateDown = false
+            }
+            else if(!scene.cursors.up.isDown && scene.cursors.down.isDown){
+                this.charstateUp = false
+                this.charstateDown = true
+            }
+            else if(!scene.cursors.up.isDown && !scene.cursors.down.isDown){
+                this.charstateUp = false
+                this.charstateDown = false
+            }
+        }
+        else if(!this.charstateClimb){
+            this.charstateUp = false
+            this.charstateDown = false
+        }
+
+
+        //coyote time (aka, an extension of the platform you might be standing on)
+        if(this.coyoteTime && !this.body.onFloor()){
+            scene.time.delayedCall(50,() => {
+                if(!this.body.onFloor()){
+                    this.coyoteTime = false
+                    if(!this.charstateClimb){
+                        this.charstateFall = true
+                    }
+                }
+            })
+        }
+        if(!this.charstateHurt && !scene.gameOver){
             //general walk
-            if(cursors.left.isDown || cursors.right.isDown){
+            if(scene.cursors.left.isDown || scene.cursors.right.isDown){
                     this.charstateWalk = true
-                if(keyS.isDown && this.body.onFloor()){
+                if(scene.keyS.isDown && this.body.onFloor() && !this.charstateClimb){
                     this.charstateRun = true
-                    if((cursors.left.isDown && this.body.velocity.x > 160) || (cursors.right.isDown && this.body.velocity.x < -160)){
+                    if((scene.cursors.left.isDown && this.body.velocity.x > 160) || (scene.cursors.right.isDown && this.body.velocity.x < -160)){
                         this.charstateSkidd = true
                     }
-                    else if((cursors.left.isDown && this.body.velocity.x < 160) || (cursors.right.isDown && this.body.velocity.x > -160)){
+                    else if((scene.cursors.left.isDown && this.body.velocity.x < 160) || (scene.cursors.right.isDown && this.body.velocity.x > -160)){
                         this.charstateSkidd = false
                     }
                 }
-                else if(!keyS.isDown || (!this.body.onFloor() && !this.coyoteTime)){
+                else if(!scene.keyS.isDown || (!this.body.onFloor() && !this.coyoteTime)){
                     this.charstateRun = false
                     this.charstateSkidd = false
                 }
                 
             }
             //jumping and falling
-            if((cursors.up.isDown || keyD.isDown || keySPACEBAR.isDown) && (this.body.onFloor() || this.coyoteTime)){
-                if(!jumpSound.isPlaying){
-                    jumpSound.play()
+            if(!this.jumpFatigue && !this.charstateAbility && (scene.keyD.isDown || scene.keySPACEBAR.isDown) && ((this.body.onFloor() || this.charstateClimb) || this.coyoteTime)){
+                if(!scene.jumpSound.isPlaying){
+                    scene.jumpSound.play()
                 }
                 this.coyoteTime = false
-                this.charstateJump = true;
-                this.charstateFall = false;
+                this.onLadder = false
+                this.charstateClimb = false
+                this.abilityCooldown = true
+                this.charstateJump = true
                 this.charstateSkidd = false
+
             }
-            else if(!keyA.isDown && !cursors.down.isDown){
-                if((cursors.up.isDown || keyD.isDown || keySPACEBAR.isDown) && !this.body.onFloor() && this.body.velocity.y < -1 && !this.coyoteTime){
-                    this.charstateJump = true;
-                    this.charstateFall = true 
-                }
-                else if(!this.body.onFloor() && (this.body.velocity.y >= -1 && (cursors.up.isDown || keyD.isDown || keySPACEBAR.isDown) || (!cursors.up.isDown || !keyD.isDown || keySPACEBAR.isDown))){
-                    
-                    if(this.charstateJump){
-                        this.charstateJump = false;
-                        this.charstateFall = true;
-                        this.charstateAbility = false
-                        this.charstateSkidd = false
+            else if(!scene.cursors.down.isDown && !this.charstateClimb){
+                    if((scene.keyD.isDown || scene.keySPACEBAR.isDown) && !this.body.onFloor() && this.body.velocity.y < -1 && !this.coyoteTime){
+                        this.charstateJump = true;
+                        this.charstateFall = true
+                    }
+                    else if(!this.body.onFloor() && (this.body.velocity.y >= -1 && (scene.keyD.isDown || scene.keySPACEBAR.isDown) || !(scene.keyD.isDown || scene.keySPACEBAR.isDown))){
+                        
+                        if(this.charstateJump){
+                            this.charstateJump = false;
+                            this.charstateFall = true;
+                            this.charstateAbility = false
+                            this.charstateSkidd = false
+
+                            if(!(scene.keyD.isDown || scene.keySPACEBAR.isDown)){
+                                this.abilityCooldown = false
+                            }
+                        }
                     }
                 }
-            }
-            else if(!this.body.onFloor() && (keyA.isDown || cursors.down.isDown) && !this.abilityCooldown && !this.coyoteTime){
+
+            if(!this.body.onFloor() && (scene.keyD.isDown || scene.keySPACEBAR.isDown) && !this.abilityCooldown && !this.coyoteTime && !this.charstateClimb){
                 if(!this.charstateAbility && this.Char1){
                     this.charstateJump = false;
                     this.charstateFall = false;
                     //this.charstateWalk = false
                     this.charstateAbility = true;
-                    if(!activeStomp.isPlaying && this.charstateAbility){
-                        activeStomp.play()
+                    this.jumpFatigue = true
+                    if(!scene.activeStomp.isPlaying && this.charstateAbility){
+                        scene.activeStomp.play()
                     }
                     
     
@@ -333,13 +412,27 @@ export class ObjPlayer extends Phaser.Physics.Arcade.Sprite {
 
         else if(this.body.onFloor()){
             this.charstateHurt = false;
-            time.delayedCall(300, () =>{
+            scene.time.delayedCall(300, () =>{
                 this.checkforpreventingSkiddafterStun = false
             })
         };
 
+
+        //this is for the jump fatigue, to avoid a jump after ability for Hoots
+        if(this.body.onFloor() && this.jumpFatigue){
+            if(scene.keyD.isDown || scene.keySPACEBAR.isDown){
+                scene.time.delayedCall(50, ()=>{
+                    this.jumpFatigue = false
+                })
+            }
+            else{
+                this.jumpFatigue = false
+            }
+            
+        }
+
         if(!this.charstateHurt){
-            if((this.body.onFloor() && (!cursors.up.isDown && !keyD.isDown || keySPACEBAR.isDown)|| !this.body.onFloor()) && (!cursors.left.isDown && !cursors.right.isDown || cursors.left.isDown && cursors.right.isDown) || (this.body.velocity.x == 0 && (this.body.touching.left || this.body.touching.right))){
+            if((this.body.onFloor() && ( !scene.keyD.isDown || scene.keySPACEBAR.isDown)|| !this.body.onFloor()) && (!scene.cursors.left.isDown && !scene.cursors.right.isDown || scene.cursors.left.isDown && scene.cursors.right.isDown) || (this.body.velocity.x == 0 && (this.body.touching.left || this.body.touching.right))){
                 if((this.body.velocity.x >= 160 || this.body.velocity.x <= -160) && !this.checkforpreventingSkiddafterStun){
                     if(this.charstateRun){
                         this.charstateSkidd = true
@@ -351,7 +444,7 @@ export class ObjPlayer extends Phaser.Physics.Arcade.Sprite {
                     this.charstateSkidd = false
                 }
             }
-            else if (keyA.isDown || cursors.down.isDown || keyD.isDown || keySPACEBAR.isDown || cursors.up.isDown  || cursors.left.isDown || cursors.right.isDown){
+            else if ((scene.keyD.isDown && this.charstateAbility && !this.body.onFloor()) || !(this.jumpFatigue && this.body.onFloor() && scene.keyD.isDown)  || scene.keySPACEBAR.isDown || (this.charstateClimb && (scene.cursors.up.isDown || scene.cursors.down.isDown))  || scene.cursors.left.isDown || scene.cursors.right.isDown){
                 this.charstateIdle = false
             }
 
@@ -368,8 +461,8 @@ export class ObjPlayer extends Phaser.Physics.Arcade.Sprite {
             }
 
         }
-            //gameover ig
-            if (gameOver)
+            //gameOver
+            if (scene.gameOver)
             {
                 this.charstateDead = true;
             }
@@ -415,6 +508,15 @@ export class ObjPlayer extends Phaser.Physics.Arcade.Sprite {
                         this.play(Phaser.Utils.String.Format('%1_turn', [this.CharKey]), true);
                     }
                 }
+                else if(this.charstateClimb){
+                    if(this.body.velocity.x == 0 && this.body.velocity.y == 0){
+                        this.play(Phaser.Utils.String.Format('%1_climb', [this.CharKey]), false)
+                    }
+                    else{
+                        this.play(Phaser.Utils.String.Format('%1_climb', [this.CharKey]), true)
+  
+                    }
+                }
 
             }
             else if(this.charstateDead){
@@ -432,6 +534,23 @@ export class ObjPlayer extends Phaser.Physics.Arcade.Sprite {
         if(this.Char2){
             this.CharKey = "hoots2"
         }
+
+        //sound handler
+
+        if(this.charstateClimb && (!this.charstateIdle || this.charstateUp || this.charstateDown)){
+            if(!scene.vineClimbSFX.isPlaying && !this.vineClimbSFXPlay){
+                    this.vineClimbSFXPlay = true
+                    this.pitch = Phaser.Math.FloatBetween(-200, 200)
+                    scene.vineClimbSFX.detune = this.pitch
+                    
+                    scene.vineClimbSFX.play()
+
+                    scene.time.delayedCall(100, ()=>{
+                        this.vineClimbSFXPlay = false
+                        
+                    })
+                }
+            }
     }
 
 

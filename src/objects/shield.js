@@ -10,17 +10,17 @@ export class Shield extends Phaser.Physics.Arcade.Sprite {
         this.setVisible(false)
     }
 
-    update(player, effectShield, effectInv) {
+    update(scene) {
         
         // Seguir automáticamente al jugador en cada frame
-        if(effectShield && !effectInv){
+        if(scene.effectShield && !scene.effectInv){
             if(!this.visible){
                 this.anims.play('shield', true);
                 this.setVisible(true).setActive(true)
             }
-            this.setPosition(player.x, player.y);
+            this.setPosition(scene.player.x, scene.player.y);
         }
-        else if(!effectShield || effectInv)
+        else if(!scene.effectShield || scene.effectInv)
             this.setVisible(false).setActive(false)
         
     }

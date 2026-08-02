@@ -11,6 +11,7 @@ export class Pause extends Phaser.Scene{
         this.bombLoad = data.bombLoad
         this.level = data.level
         this.stageName = data.stageName
+        this
     }
 
 

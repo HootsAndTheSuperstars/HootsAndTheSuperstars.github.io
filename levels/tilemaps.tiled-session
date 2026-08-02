@@ -3,16 +3,50 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "noon/level.tmx",
+    "activeFile": "doubt/level.tmx",
     "expandedProjectPaths": [
+        "noon",
         ".",
         "noon/json",
-        "noon"
+        "doubt"
     ],
+    "file.lastUsedOpenFilter": "Todos los archivos (*)",
     "fileStates": {
         "": {
             "scaleInDock": 1,
             "scaleInEditor": 1
+        },
+        "doubt/level.tmx": {
+            "scale": 3,
+            "selectedLayer": 2,
+            "viewCenter": {
+                "x": 557.6666666666666,
+                "y": 195.16666666666669
+            }
+        },
+        "doubt/level.tmx#decoration": {
+            "scaleInDock": 1
+        },
+        "doubt/level.tmx#ground": {
+            "scaleInDock": 1
+        },
+        "doubt/level.tmx#platforms": {
+            "scaleInDock": 1
+        },
+        "doubt/level.tmx#tileSet": {
+            "scaleInDock": 4,
+            "scaleInEditor": 1
+        },
+        "doubt/levelMain.json": {
+            "scale": 1.015691489361702,
+            "selectedLayer": 3,
+            "viewCenter": {
+                "x": 469.6307934014141,
+                "y": 299.79575805184606
+            }
+        },
+        "doubt/levelMain.json#tileSet": {
+            "scaleInDock": 1
         },
         "noon/background.tsx": {
             "scaleInDock": 3,
@@ -50,11 +84,11 @@
             "expandedGroupLayers": [
                 5
             ],
-            "scale": 0.75,
-            "selectedLayer": 5,
+            "scale": 1,
+            "selectedLayer": 0,
             "viewCenter": {
-                "x": 82,
-                "y": 261.99999999999994
+                "x": 680,
+                "y": 299.5
             }
         },
         "noon/level.tmx#background": {
@@ -83,14 +117,43 @@
         "noon/level.tmx#platforms": {
             "scaleInDock": 1
         },
+        "noon/levelMain.json": {
+            "scale": 0.7015062454077883,
+            "selectedLayer": 5,
+            "viewCenter": {
+                "x": 679.9654359780048,
+                "y": 300.0686043466877
+            }
+        },
+        "noon/levelMain.json#background": {
+            "scaleInDock": 1
+        },
+        "noon/levelMain.json#clouds_big": {
+            "scaleInDock": 1
+        },
+        "noon/levelMain.json#clouds_medium": {
+            "scaleInDock": 1
+        },
+        "noon/levelMain.json#clouds_small": {
+            "scaleInDock": 1
+        },
+        "noon/levelMain.json#decoration": {
+            "scaleInDock": 1
+        },
+        "noon/levelMain.json#ground": {
+            "scaleInDock": 1
+        },
+        "noon/levelMain.json#platforms": {
+            "scaleInDock": 1
+        },
         "noon/platforms.tsx": {
             "scaleInDock": 4,
             "scaleInEditor": 5.5
         }
     },
-    "last.exportedFilePath": "C:/Users/asher/OneDrive/Escritorio/game/Juego1/levels/noon",
+    "last.exportedFilePath": "C:/Users/asher/OneDrive/Documentos/GitHub/HootsAndTheSuperstars.github.io/levels/doubt",
     "last.externalTilesetPath": "C:/Users/asher/OneDrive/Escritorio/game/Juego1/levels/noon",
-    "last.imagePath": "C:/Users/asher/OneDrive/Escritorio/game/Juego1/assets/noon",
+    "last.imagePath": "C:/Users/asher/OneDrive/Documentos/GitHub/HootsAndTheSuperstars.github.io/assets/stages/doubt",
     "map.height": 30,
     "map.lastUsedExportFilter": "JSON map files (*.tmj *.json)",
     "map.lastUsedFormat": "tmx",
@@ -98,10 +161,13 @@
     "map.tileWidth": 20,
     "map.width": 68,
     "openFiles": [
-        "noon/level.tmx"
+        "doubt/level.tmx"
     ],
     "project": "tilemaps.tiled-project",
     "recentFiles": [
+        "doubt/level.tmx",
+        "noon/levelMain.json",
+        "doubt/levelMain.json",
         "noon/level.tmx",
         "noon/json/levelMain.json",
         "noon/background.tsx",

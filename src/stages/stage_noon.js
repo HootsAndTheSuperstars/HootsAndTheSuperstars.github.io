@@ -10,17 +10,17 @@ import Star from '../objects/star.js';
 import { globalFunctions } from '../globalFunctions/globalFunctions.js';
 
 
-export class Game extends Phaser.Scene
+export class StageNoon extends Phaser.Scene
 
 
 {
     constructor (){
 
-        super({key: 'stage'});
+        super({key: 'stage_noon'});
     }
 
     init(){
-        this.stageName = 'stage';
+        this.stageName = 'stage_noon';
         this.gameOverLauncher = false;
         this.scoreText;
         this.gameOver = false;
@@ -126,22 +126,7 @@ export class Game extends Phaser.Scene
         console.log("inputs created!")
         this.input.keyboard.on('keydown-ENTER', () =>
         {
-                if(!this.charstateDead && !this.groundKill){
-                    console.log('Pausing game...')
-                    this.scene.launch('pause', {
-                        score: this.score,
-                        bombLoad: this.bombsThatShouldSpawn,
-                        level: this.level,
-                        stageName: this.stageName,
-                    })
-                    this.scene.pause('stage')
-                    this.mainStageMusic.pause()
-                    this.invMusic.pause()
-                    this.invMusicIntro.pause()
-                }
-                else{
-                    console.log("You can't pause the game right now...")
-                }
+                globalFunctions.pauseHandler(this)
         });
 
         this.add.tileSprite(750, 300, 1500, 600, 'sky');
@@ -153,7 +138,7 @@ export class Game extends Phaser.Scene
         //Background spud!
 
     
-        //tilemap of the stage itself
+        //tilemap of the stage itself and collision handler pt 1
         const stage = this.add.tilemap('noonStage');
 
         const decorationTiles = stage.addTilesetImage("decoration", "decoration");
@@ -166,6 +151,10 @@ export class Game extends Phaser.Scene
         this.player = new ObjPlayer(this, 450, 450);
         const groundLayer = stage.createLayer("ground", groundTiles)
         const platformsLayer = stage.createLayer("platforms", platformsTiles)
+
+        groundLayer.setCollisionByExclusion([-1])
+        platformsLayer.setCollisionByExclusion([-1])
+
 
         //  The score
         this.scoreText = this.add.text(32, 16, `SCORE: ${this.score}`, { fontFamily:'HUDfont', fontSize: '32px', fill: '#000' }).setVisible(false);
@@ -187,7 +176,7 @@ export class Game extends Phaser.Scene
             repeat: 10,
             setXY: { x: 12, y: 0, stepX: 70 }
         });
-        this.stars.children.iterate(child => {
+        this.stars.children.forEach(function (child) {
             child.initPhysics();
         });
 
@@ -210,14 +199,29 @@ export class Game extends Phaser.Scene
         this.physics.add.collider(this.bombs, platformsLayer);
         this.physics.add.collider(this.bombs, this.bombs);
 
-        groundLayer.setCollisionBetween(319, 325)
-        platformsLayer.setCollisionBetween(331, 335)
+
+        //  Collide the player and the stars with the platforms
+        this.physics.add.collider(this.player, platformsLayer, null, (player) => { return (this.player.charstateThroughPlatform == true)});
+        this.physics.add.collider(this.player, groundLayer);
+        this.physics.add.collider(this.stars, platformsLayer);
+        this.physics.add.collider(this.stars, groundLayer);
+        this.physics.add.collider(this.bombs, groundLayer);
+        this.physics.add.collider(this.bombs, platformsLayer);
+        this.physics.add.collider(this.bombs, this.bombs);
+
 
         //  Checks to see if the player overlaps with any of the stars, if he does call the collectStar function
         this.starPlayerCollider = this.physics.add.overlap(this.player, this.stars, (player, star) => { globalFunctions.collectStar(this, this.player, star, this.starCollect) }, null, this);
 
-        this.bombPlayerCollider = this.physics.add.collider(this.player, this.bombs, (player, bomb) => { globalFunctions.hitBomb(this, this.player, bomb)}, null, this);
-
+        this.bombPlayerCollider = this.physics.add.overlap(this.player, this.bombs, (player, bomb) => { globalFunctions.hitBomb(this, this.player, bomb)}, null, this);
+        
+        //this overlaps are mainly to avoid noclip, like sonic 3 but upwards
+        this.physics.add.overlap(this.player, groundLayer, (_player, tile) => {
+            if (tile.index !== -1) {
+                this.player.y = this.player.y -10
+                
+            }
+        }, null, this);
         //Powers start here
 
         this.shield = new Shield(this, 0, 0)
@@ -233,10 +237,10 @@ export class Game extends Phaser.Scene
 
         this.invGenObj = this.physics.add.group();
 
-        this.physics.add.collider(this.player, this.shieldGenObj, (player, shieldGenObj) => {
+        this.physics.add.overlap(this.player, this.shieldGenObj, (player, shieldGenObj) => {
                 globalFunctions.shieldAbility(this, player, shieldGenObj);
             }, null, this);
-        this.physics.add.collider(this.player, this.invGenObj, (player, invGenObj) => {
+        this.physics.add.overlap(this.player, this.invGenObj, (player, invGenObj) => {
                 globalFunctions.invinsAbility(this, player, invGenObj);
             }, null, this);
 
@@ -291,7 +295,7 @@ export class Game extends Phaser.Scene
 
 
         //player handler
-        this.player.update(this.cursors, this.keyA, this.keyS, this.keyD, this.keySPACEBAR, this.key2, this.skiddSound, this.jumpSound, this.activeStomp, this.gameOver, this.time);
+        this.player.update(this);
         
 
         if(this.player.body.y > 1000 && !this.aboveWorldBounds){
@@ -300,29 +304,10 @@ export class Game extends Phaser.Scene
         //error screen stuff
 
         //Power updating
-        this.shield.update(this.player, this.effectShield, this.effectInv)
-        this.invStars.update(this.player, this.effectInv)
+        this.shield.update(this)
+        this.invStars.update(this)
 
 
-        if(this.invAfterHit){
-            this.bombPlayerCollider.active = false
-            this.player.setAlpha(0.7)
-            if(this.player.body.onFloor()){
-                this.time.delayedCall(3000, () =>{
-                    if(this.invAfterHit){
-                        this.player.setTintFill(0xfcfcfc)
-                    }
-                })
-                this.time.delayedCall(3500, () =>{
-                    if(this.invAfterHit){
-                        this.player.setAlpha(1)
-                        this.player.clearTint()
-                        this.invAfterHit = false
-                        this.bombPlayerCollider.active = true
-                    }
-                })
-            }
-        }
     
 
         //bomb manager

@@ -25,9 +25,11 @@ export class globalFunctions{
         // Comprobamos si el mapa se quedó sin estrellas activas
         if (scene.stars.countActive(true) === 0) {
             // Llamamos al respawn interno de cada estrella de forma directa y limpia
-            scene.stars.children.iterate(child => {
+            scene.stars.children.forEach(function (child) {
                 child.respawn();
             });
+
+            
 
             const badLuck = Phaser.Math.Between(1, 1000)
             if(badLuck == 1){
@@ -43,7 +45,7 @@ export class globalFunctions{
             else{
                 scene.sound.play('bomb_fall')
             }
-
+            
             for (let i = scene.bombSpawning; i < scene.bombsThatShouldSpawn; i++){
                 const x = Phaser.Math.Between(100, 900);
                 var bomb = new Bomb(scene, x, -10, scene.bombs);
@@ -57,11 +59,12 @@ export class globalFunctions{
             if(!scene.effectShield && scene.shieldGenObj.countActive(true) == 0){
                 const shieldProbability = Phaser.Math.Between(1, 5)
                 if(shieldProbability == 3){
+                    //481 370
                     scene.Xshield = Phaser.Math.Between(100, 800);
                     scene.Yshield = Phaser.Math.Between(100, 400);
                     scene.shieldCollect = scene.shieldGenObj.create(scene.Xshield, scene.Yshield, 'shield_box')
                     scene.shieldCollect.anims.play('shield_pw', true)
-                    console.log("this should have spawned a shield box...")
+                    console.log(scene.Xshield, scene.Yshield)
             
                 }
             }
@@ -117,20 +120,10 @@ export class globalFunctions{
                 scene.innerScore += 500;
                 scene.scoreText.setText(`SCORE: ${scene.score}`);
                 scene.bombsExploded += 1
-                scene.time.delayedCall(10, () =>{
-                    if(scene.player.charstateAbility){
-                        scene.player.abilityCooldown = true
-                        scene.player.charstateAbility = false
-                        scene.player.charstateFall = true
-                        scene.player.setVelocityY(-200)
-                        scene.time.delayedCall(100, () =>{
-                            scene.player.abilityCooldown = false
-                        })
-                    }
-                })
+            
             }
             if(scene.effectShield && !scene.player.charstateAbility && !scene.effectInv){
-                scene.invAfterHit = true;
+                scene.player.invAfterHit = true;
                 scene.effectShield = false;
                 scene.player.upStun = true;
                 scene.sound.play('hurt_shield')
@@ -217,7 +210,7 @@ export class globalFunctions{
                         scene.invMusicHandler = false
                         scene.invMusic.stop()
                         scene.mainStageMusic.play()
-                        scene.invAfterHit = true
+                        scene.player.invAfterHit = true
                         
                     }
                     else if(scene.invStack > 1){
@@ -244,7 +237,7 @@ export class globalFunctions{
                     score: scene.score,
                 })
             }
-                scene.scene.stop('stage')
+                scene.scene.stop(Phaser.Utils.String.Format('%1', [scene.stageName]))
         })
     }
 
@@ -262,4 +255,23 @@ export class globalFunctions{
                 });
             }
         }
+
+    static pauseHandler(scene){
+        if(!scene.player.charstateDead && !scene.groundKill){
+                    console.log('Pausing game...')
+                    scene.scene.launch('pause', {
+                        score: scene.score,
+                        bombLoad: scene.bombsThatShouldSpawn,
+                        level: scene.level,
+                        stageName: scene.stageName,
+                    })
+                    scene.scene.pause(Phaser.Utils.String.Format('%1', [scene.stageName]))
+                    scene.mainStageMusic.pause()
+                    scene.invMusic.pause()
+                    scene.invMusicIntro.pause()
+                }
+                else{
+                    console.log("You can't pause the game right now...")
+                }
+    }
 }

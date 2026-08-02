@@ -5,6 +5,8 @@ export class PreLoader extends Phaser.Scene{
     }
     preload (){
 
+        this.load.image('tree', 'assets/stages/tree/tree.png')
+
         //nothing
         this.load.image('nothing', "assets/nothing.png")
 
@@ -41,22 +43,23 @@ export class PreLoader extends Phaser.Scene{
 
 
         //keysScreen
-        this.load.image('aPixelOfNothing', 'assets/controlScreen/aPixelOfNothing.png')
+        this.load.image('aPixelOfNothing', 'assets/stages/controlScreen/aPixelOfNothing.png')
         
-        this.load.image('holdToRun', 'assets/controlScreen/text1.png')
-        this.load.image('move', 'assets/controlScreen/text2.png')
-        this.load.image('jump', 'assets/controlScreen/text3.png')
-        this.load.image('explodeBombs', 'assets/controlScreen/text4.png')
-        this.load.image('tutorial', 'assets/controlScreen/text5.png')
-        this.load.image('enterToPlay', 'assets/controlScreen/text6.png')
+        this.load.image('holdToRun', 'assets/stages/controlScreen/text1.png')
+        this.load.image('move', 'assets/stages/controlScreen/text2.png')
+        this.load.image('jump', 'assets/stages/controlScreen/text3.png')
+        this.load.image('ability', 'assets/stages/controlScreen/text3_alt.png')
+        this.load.image('explodeBombs', 'assets/stages/controlScreen/text4.png')
+        this.load.image('tutorial', 'assets/stages/controlScreen/text5.png')
+        this.load.image('enterToPlay', 'assets/stages/controlScreen/text6.png')
 
         
         
-        this.load.spritesheet('keys', 'assets/controlScreen/keys.png', {frameWidth: 66, frameHeight: 58})
-        this.load.spritesheet('keySpace', 'assets/controlScreen/keySpace.png', {frameWidth: 196, frameHeight: 58})
+        this.load.spritesheet('keys', 'assets/stages/controlScreen/keys.png', {frameWidth: 66, frameHeight: 58})
+        this.load.spritesheet('keySpace', 'assets/stages/controlScreen/keySpace.png', {frameWidth: 196, frameHeight: 58})
 
 
-        this.load.animation('keyHUDAnims', 'assets/controlScreen/keys.json')
+        this.load.animation('keyHUDAnims', 'assets/stages/controlScreen/keys.json')
         /*
         //Test Stage
         this.load.image('test_background', 'assets/teststage/test_background.png');
@@ -67,10 +70,19 @@ export class PreLoader extends Phaser.Scene{
         this.load.script('webfont', 'https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js');
 
 
+
+        //stage Select
+
+        this.load.pack('stageSelectAssets', 'assets/stageSelect/stageSelectAssets.json')
+        this.load.animation('stagePortraits', 'assets/stageSelect/stagePortraits.json')
+        this.load.spritesheet('stagePortraits', 'assets/stageSelect/stagePortraits.png', {frameWidth: 292, frameHeight: 168})
         //stage noon
-        this.load.pack('noonAssets', 'assets/noon/noon_main.json');
+        this.load.pack('noonAssets', 'assets/stages/noon/noon_main.json');
         this.load.tilemapTiledJSON("noonStage", "levels/noon/levelMain.json");
 
+        //stage doubt
+        this.load.tilemapTiledJSON("doubtStage", "levels/doubt/levelMain.json");
+        this.load.pack('doubtAssets', 'assets/stages/doubt/doubtAssets.json');
 
 
 
