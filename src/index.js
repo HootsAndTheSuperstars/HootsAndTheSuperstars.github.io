@@ -13,11 +13,16 @@ import { treeStar } from './stages/tree.js';
 
 
 const config = {
-    type: Phaser.WEBGL,
-    parent: 'game_container',
-    width: 900,
+    type: Phaser.AUTO,
+    scale: {
+		mode: Phaser.Scale.FIT,
+		parent: 'game_container',
+		autoCenter: Phaser.Scale.CENTER_BOTH,
+		width: 900,
+        height: 600,
+	},
     pixelArt: true,
-    height: 600,
+
     scene: [PreLoader, ToC, TitleScreen, StageNoon, StageDoubt, controlsScreen, treeStar, /*unmovable*/  Pause, GameOver, Error, Menu],
     physics: {
         default: 'arcade',

@@ -99,7 +99,6 @@ export class ToC extends Phaser.Scene{
             })
                 
         }, this); 
-        console.log('Boot screen created\n This should make the audio actually play when you click the button')
     
     }
 

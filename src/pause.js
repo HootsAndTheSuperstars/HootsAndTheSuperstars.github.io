@@ -42,7 +42,6 @@ export class Pause extends Phaser.Scene{
         this.pauseTextAnims = this.pauseText.create(450, 300, 'pause_text'),
         this.pauseTextAnims.anims.play('text_flash_pause', true);
 
-        console.log("Created pause's text and background!")
 
         this.scoreText = this.add.text(13, 16, `SCORE: ${this.score}`, { fontFamily:'HUDfont', fontSize: '32px', fill: '#fff' });
         this.levelText = this.add.text(13, 50, `LEVEL: ${this.level}`, { fontFamily:'HUDfont', fontSize: '32px', fill: '#fff' });
@@ -54,7 +53,6 @@ export class Pause extends Phaser.Scene{
             if(!this.fastFlash){
                 this.sound.play('check')
                 this.fastFlash = true
-                console.log('Resuming game...')
                 this.time.delayedCall(900, () => {
                     this.scene.resume(Phaser.Utils.String.Format('%1', [this.stageName]));
                     this.scene.stop('pause')
@@ -72,7 +70,6 @@ export class Pause extends Phaser.Scene{
         this.bg_pause.tilePositionX -= 0.1;
         this.bg_pause.tilePositionY -= 0.1;
         if(this.keyW.isDown){
-            console.log("Hiding assets...")
             this.bg_pause.setAlpha(0)
             this.pauseText.setAlpha(0)
             this.scoreText.setAlpha(0)
@@ -81,7 +78,6 @@ export class Pause extends Phaser.Scene{
     
         }
         else if(!this.keyW.isDown){
-            console.log("Showing assets...")
             this.bg_pause.setAlpha(0.95)
             this.pauseText.setAlpha(1)
             this.scoreText.setAlpha(1)

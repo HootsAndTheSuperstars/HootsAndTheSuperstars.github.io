@@ -3,8 +3,15 @@
 - Changed Ability behavior to reasemble old builds
 - Changed controls to be simpler (double jump to use the ability)
 - Added New stage "doubt"
-- Added menu
-- Tweaked and added various tracks and sounds
+- Added Stage Select
+- Tweaked track: Preparation
+- Tweaked track: Take a rest
+- Added track: Doubt (HATSS version)
+- Added track: Disc/Egg
+- Edited CSS to make the game match the internet explorer's window size
+- Added a new Floor sink preventer
+- Tweaked various sound effects
+- Removed various console.logs that lagged the game
 - Is that a tree?
 
 ## CHANGELOG DEMO 3.1

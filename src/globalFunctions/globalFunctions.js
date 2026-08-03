@@ -35,7 +35,6 @@ export class globalFunctions{
             if(badLuck == 1){
                 scene.youAskedForIt = true
                 scene.bombsThatShouldSpawn += 999
-                console.warn('You are doomed...')
             }
 
 
@@ -64,7 +63,6 @@ export class globalFunctions{
                     scene.Yshield = Phaser.Math.Between(100, 400);
                     scene.shieldCollect = scene.shieldGenObj.create(scene.Xshield, scene.Yshield, 'shield_box')
                     scene.shieldCollect.anims.play('shield_pw', true)
-                    console.log(scene.Xshield, scene.Yshield)
             
                 }
             }
@@ -76,7 +74,6 @@ export class globalFunctions{
                     scene.Yinv = Phaser.Math.Between(100, 400);
                     scene.invCollect = scene.invGenObj.create(scene.Xinv, scene.Yinv, 'star_box')
                     scene.invCollect.anims.play('star_pw', true)
-                    console.log("this should have spawned a candy...")
             
                 }
             }
@@ -112,7 +109,6 @@ export class globalFunctions{
             bomb.body.setEnable(false);
             bomb.body.debugBodyColor = 0x9048fc;
             scene.cameras.main.shake(200, 0.003);
-            console.log("You should have seen a shake effect on your screen rn")
             bomb.anims.play("explode", true);
             if((scene.effectShield && scene.player.charstateAbility) || scene.effectInv){
 
@@ -143,7 +139,6 @@ export class globalFunctions{
             }
             scene.time.delayedCall(1000, () => {
                 bomb.destroy();
-                console.log('Bomb destroyed!')
             })
 
         }
@@ -205,7 +200,6 @@ export class globalFunctions{
                 scene.time.delayedCall(45000, () =>{
                     if(scene.invStack == 1){
                         scene.invStack -= 1
-                        console.log(`1 stack removed, total stack is ${scene.invStack}`)
                         scene.effectInv = false
                         scene.invMusicHandler = false
                         scene.invMusic.stop()
@@ -215,7 +209,6 @@ export class globalFunctions{
                     }
                     else if(scene.invStack > 1){
                         scene.invStack -=1 
-                        console.log(`1 stack removed, total stack is ${scene.invStack}`)
                     }
                 })
             })
@@ -258,7 +251,6 @@ export class globalFunctions{
 
     static pauseHandler(scene){
         if(!scene.player.charstateDead && !scene.groundKill){
-                    console.log('Pausing game...')
                     scene.scene.launch('pause', {
                         score: scene.score,
                         bombLoad: scene.bombsThatShouldSpawn,
@@ -271,7 +263,6 @@ export class globalFunctions{
                     scene.invMusicIntro.pause()
                 }
                 else{
-                    console.log("You can't pause the game right now...")
                 }
     }
 }

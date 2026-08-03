@@ -42,7 +42,6 @@ export class Menu extends Phaser.Scene{
         this.input.keyboard.on('keydown-S', () =>
         {
             if(!this.dupPreventer){
-                console.log("Leaving so soon?\n Going back to the title screen")
                 this.cameras.main.fadeOut(1000)
                 this.mainMenuTrackmusicFadeOut.play()
                 this.time.delayedCall(1500, () =>{
@@ -61,7 +60,6 @@ export class Menu extends Phaser.Scene{
                 this.cameras.main.fadeOut(1000)
                 this.mainMenuTrackmusicFadeOut.play()
                 this.time.delayedCall(1500, () =>{
-                    console.log("Use the S key brub\n Going back to the title screen")
                     this.mainMenuTrack.pause()
                     this.dupPreventer = true
                     this.scene.launch('titlescreen')

@@ -131,11 +131,6 @@ export class PreLoader extends Phaser.Scene{
         
         this.sound.pauseOnBlur = false;
         this.scene.launch('ToC')
-        
 
-
-
-
-        
     }
 }

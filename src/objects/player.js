@@ -41,15 +41,12 @@ export class ObjPlayer extends Phaser.Physics.Arcade.Sprite {
         this.init()
         scene.add.existing(this);
         scene.physics.add.existing(this);
-        console.log("Player Created!");
         this.body.setOffset(25, 14);
         this.body.setGravityY(600)
-        console.log("The player's hitbox should be mesured to fit the sprites");
         //  Player physics properties. Give the little guy a slight bounce.
         this.setBounce(0);
         this.debugBodyColor = 0xffffff;
-        console.log("Player's MISC configs should work now...");
-        
+       
     }
     update (scene){
         

@@ -20,7 +20,6 @@ export class Error extends Phaser.Scene{
         if(this.desktopCheck){
             this.noway_text1 = this.add.tileSprite(450, 50, 940, 38, 'desktop_only');
             this.noway_text2 = this.add.tileSprite(450, 550, 940, 38, 'desktop_only');
-            console.error("Hey! you can't play on mobile devices!\nHop on a pc or laptop and try again...")
         }
         else{
             this.noway_text1 = this.add.tileSprite(450, 50, 940, 29, 'no_way!');           
@@ -32,7 +31,6 @@ export class Error extends Phaser.Scene{
 
         this.add.image(450, 300, 'error_text');
 
-        console.log("Created error's text and background!")
     }
     update ()
     {

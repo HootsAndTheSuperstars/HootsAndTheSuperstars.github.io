@@ -123,7 +123,6 @@ export class StageNoon extends Phaser.Scene
 
 
 
-        console.log("inputs created!")
         this.input.keyboard.on('keydown-ENTER', () =>
         {
                 globalFunctions.pauseHandler(this)
@@ -160,14 +159,12 @@ export class StageNoon extends Phaser.Scene
         this.scoreText = this.add.text(32, 16, `SCORE: ${this.score}`, { fontFamily:'HUDfont', fontSize: '32px', fill: '#000' }).setVisible(false);
         this.levelText = this.add.text(32, 50, 'LEVEL: 0', { fontFamily:'HUDfont', fontSize: '32px', fill: '#000' }).setVisible(false);
 
-        console.log("Char sprites created!");
 
 
         this.bombExplosion = this.add.sprite(0, 0, 'boom').setVisible(false);
         
 
 
-        console.log("Bomb sprites created!");
 
         //  Some stars to collect, 12 in total, evenly spaced 70 pixels apart along the x axis
         this.stars = this.physics.add.group({
@@ -186,7 +183,6 @@ export class StageNoon extends Phaser.Scene
 
     
 
-        console.log("Stars created!")
 
         this.bombs = this.physics.add.group()
 
@@ -262,7 +258,6 @@ export class StageNoon extends Phaser.Scene
                 this.invMusicIntro.resume()
             }
             
-            console.log("Music resumed")
         }
 
         if(this.effectInv && !this.invMusic.isPlaying && !this.invMusicIntro.isPlaying){
@@ -319,7 +314,6 @@ export class StageNoon extends Phaser.Scene
             this.youAskedForIt = true
             this.bombsThatShouldSpawn += 999
             this.sound.play('beep')
-            console.warn('You are doomed...')
         }
 
         if(this.level >= 255){

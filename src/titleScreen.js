@@ -63,7 +63,6 @@ export class TitleScreen extends Phaser.Scene{
         this.pressEnterTextTTSAnims = this.pressEnterTextTTS.create(460, 520, 'enter_text_tts').setVisible(false)
         
         this.sound.add('continue')
-        console.log('Hey, welcome!\n Title screen assets created!')
 
         this.time.delayedCall(4000, () =>{
             this.pressEnterTextTTSAnims.setVisible(true)
@@ -72,7 +71,6 @@ export class TitleScreen extends Phaser.Scene{
                 {
                 if(!this.fastFlash && !this.preventPrematureStart){
                     this.loopTitleMusic.stop()
-                    console.log('Enter pressed! Starting game...')
                     this.fastFlash = true
                     this.pressEnterTextTTSAnims.anims.play('text_tts_flash_fast')
                     this.sound.play('continue')
