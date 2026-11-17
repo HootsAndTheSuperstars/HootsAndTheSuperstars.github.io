@@ -104,13 +104,8 @@ export class globalFunctions{
 
     static hitBomb (scene, player, bomb)
     {
-        if (scene.player.charstateAbility || scene.effectShield || scene.effectInv){
-            bomb.body.setVelocity(0, 0);
-            bomb.body.setEnable(false);
-            bomb.body.debugBodyColor = 0x9048fc;
-            scene.cameras.main.shake(200, 0.003);
-            bomb.anims.play("explode", true);
-            if((scene.effectShield && scene.player.charstateAbility) || scene.effectInv){
+        this.bombAnimManager(scene, player, bomb)
+            if(scene.effectInv){
 
                 scene.score += 500;
                 scene.innerScore += 500;
@@ -118,65 +113,35 @@ export class globalFunctions{
                 scene.bombsExploded += 1
             
             }
-            if(scene.effectShield && !scene.player.charstateAbility && !scene.effectInv){
-                scene.player.invAfterHit = true;
-                scene.effectShield = false;
-                scene.player.upStun = true;
-                scene.sound.play('hurt_shield')
-                scene.score += 10;
-                scene.innerScore += 10;
+            if(scene.effectShield && !scene.effectInv){
+                scene.score += 200;
+                scene.innerScore += 200;
                 scene.scoreText.setText(`SCORE: ${scene.score}`);
                 scene.bombsExploded += 1
             }
-            if(!scene.effectShield && scene.player.charstateAbility && !scene.effectInv){
-                scene.player.charstateAbility = false;
-                scene.player.upStun = true;
-                scene.sound.play('hurt')
+            if(!scene.effectShield && !scene.effectInv && !scene.gameOver){
                 scene.score += 100;
                 scene.innerScore += 100;
                 scene.scoreText.setText(`SCORE: ${scene.score}`);
                 scene.bombsExploded += 1
             }
-            scene.time.delayedCall(1000, () => {
-                bomb.destroy();
-            })
 
-        }
-        else{
-            if(!scene.gameover)
-                scene.gameOver = true;
-                scene.time.delayedCall(800, () =>{
-                    if(!scene.gameOverLauncher){
-                        scene.gameOverLauncher = true
-                        scene.scene.launch('gameover', {
-                            score : scene.score,
-                            stageName: scene.stageName,
-                        });
-                        scene.time.delayedCall(200, () =>{
-                            scene.registry.destroy()
-                            scene.scene.stop('stage')
-                        })
-                    }
-                });
-            bomb.anims.play('explode', true);
-            scene.bombPlayerCollider.active = false
-            scene.player.charstateFall = false;
-            scene.player.charstateWalk = false;
-            scene.player.charstateJump = false;
-            scene.player.charstateIdle = false;
-            scene.player.charstateSkidd = false;
-            scene.player.charstateDead = true;
-            scene.physics.pause();
-            scene.cameras.main.shake(300, 0.025);
-            scene.mainStageMusic.stop()
-            scene.effectInv = false
-            scene.invMusic.stop()
-            scene.invMusicIntro.stop()
-            
-        }
-        scene.sound.play('bomb_explosion')
+        
     }
 
+    static bombAnimManager(scene, player, bomb){
+        bomb.body.setVelocity(0, 0);
+        bomb.body.setEnable(false);
+        bomb.body.debugBodyColor = 0x9048fc;
+        scene.cameras.main.shake(200, 0.003);
+        bomb.anims.play("explode", true);
+        scene.sound.play('bomb_explosion')
+        scene.time.delayedCall(1000, () => {
+            bomb.destroy();
+        })
+
+
+    }
     static invinsAbility(scene, player, _invGenObj){
         if(!scene.gameOver){
             scene.sound.play('munch')
@@ -251,18 +216,43 @@ export class globalFunctions{
 
     static pauseHandler(scene){
         if(!scene.player.charstateDead && !scene.groundKill){
-                    scene.scene.launch('pause', {
-                        score: scene.score,
-                        bombLoad: scene.bombsThatShouldSpawn,
-                        level: scene.level,
-                        stageName: scene.stageName,
-                    })
-                    scene.scene.pause(Phaser.Utils.String.Format('%1', [scene.stageName]))
-                    scene.mainStageMusic.pause()
-                    scene.invMusic.pause()
-                    scene.invMusicIntro.pause()
-                }
-                else{
-                }
+            scene.scene.launch('pause', {
+                score: scene.score,
+                bombLoad: scene.bombsThatShouldSpawn,
+                level: scene.level,
+                stageName: scene.stageName,
+            })
+            scene.scene.pause(Phaser.Utils.String.Format('%1', [scene.stageName]))
+
+        }
+    }
+    static gameOverHandler(scene){
+        if(!scene.gameover){
+            scene.gameOver = true;
+        }
+        scene.bombPlayerCollider.active = false
+        scene.gameOver = true
+        scene.physics.pause();
+        scene.cameras.main.shake(300, 0.025);
+        scene.mainStageMusic.stop()
+        scene.effectInv = false
+        scene.invMusic.stop()
+        scene.invMusicIntro.stop()
+
+        scene.time.delayedCall(800, () =>{
+            if(!scene.gameOverLauncher){
+                scene.gameOverLauncher = true
+                
+                scene.scene.launch('gameover', {
+                    score : scene.score,
+                    stageName: scene.stageName,
+                });
+                scene.time.delayedCall(200, () =>{
+                    scene.registry.destroy()
+                    scene.scene.stop(Phaser.Utils.String.Format('%1', [scene.stageName]))
+                })
+            }
+        });            
+
     }
 }

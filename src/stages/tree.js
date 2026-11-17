@@ -1,4 +1,7 @@
-import { ObjPlayer } from "../objects/player.js";
+import { globalFunctions } from "../globalFunctions/globalFunctions.js";
+import { InputManager } from "../globalFunctions/inputManager.js";
+import { CharacterRegistry } from "../objects/characters/characterManager.js";
+
 
 export class treeStar extends Phaser.Scene{
 
@@ -6,7 +9,17 @@ export class treeStar extends Phaser.Scene{
 
         super({key: 'tree'});
     }
+    init(data){
+        this.selectedChar = data.selectedChar
+    }
     create(){
+
+        this.globalFunctions = globalFunctions
+        this.key1 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ONE);
+        this.keyE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
+        this.keyZ = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Z);
+        
+        this.inputManager = new InputManager(this); //setup of the inputs, internally
         this.gameOver = false
         this.cameras.main.fadeIn(500)
 
@@ -30,12 +43,6 @@ export class treeStar extends Phaser.Scene{
         this.starSound = this.sound.add('star_get')
 
         //Controls
-        this.cursors = this.input.keyboard.createCursorKeys();
-        this.keyS = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
-        this.keyD = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
-        this.keyA = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
-        this.keySPACEBAR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
-        this.key2 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.TWO);
 
 
         this.invisiblePlatform = this.physics.add.staticGroup()
@@ -43,8 +50,19 @@ export class treeStar extends Phaser.Scene{
         this.invisiblePlatformHandler = this.invisiblePlatform.create(450, 500, 'aPixelOfNothing')
 
         this.invisiblePlatformHandler.setSize(1000, 16)
+        //player info and allat
+        this.bombs = this.physics.add.group()
 
-        this.player = new ObjPlayer(this, 50, 450)
+        //player info and allat
+        const startingChar = CharacterRegistry[this.selectedChar]
+        if (startingChar) {
+            this.player = new startingChar(this, 30, 450, this.selectedChar);
+        }
+
+         this.bombPlayerCollider = this.physics.add.overlap(this.player, this.bombs, (player, bomb) => { 
+            globalFunctions.hitBomb(this, this.player, bomb)
+            this.player.smashBomb(this)
+        }, null, this);
 
         this.physics.add.collider(this.player, this.invisiblePlatform)
         this.add.image(600, 308, 'tree')

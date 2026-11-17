@@ -1,3 +1,6 @@
+import { globalFunctions } from "./globalFunctions/globalFunctions.js";
+import { InputManager } from "./globalFunctions/inputManager.js";
+
 export class TitleScreen extends Phaser.Scene{
 
     constructor (){
@@ -13,6 +16,10 @@ export class TitleScreen extends Phaser.Scene{
 
     create ()
     {
+        this.globalFunctions = globalFunctions
+        
+        this.inputManager = new InputManager(this); //setup of the inputs, internally
+
         this.loopTitleMusic = this.sound.add('title')
 
         this.loopTitleMusic.addMarker({
@@ -67,9 +74,13 @@ export class TitleScreen extends Phaser.Scene{
         this.time.delayedCall(4000, () =>{
             this.pressEnterTextTTSAnims.setVisible(true)
             this.pressEnterTextTTSAnims.anims.play('text_tts_flash')
-                this.input.keyboard.on('keydown-ENTER', () =>
-                {
-                if(!this.fastFlash && !this.preventPrematureStart){
+        })
+
+    }
+    update (){
+
+        if(this.inputManager.startINST()){
+            if(!this.fastFlash && !this.preventPrematureStart){
                     this.loopTitleMusic.stop()
                     this.fastFlash = true
                     this.pressEnterTextTTSAnims.anims.play('text_tts_flash_fast')
@@ -82,12 +93,7 @@ export class TitleScreen extends Phaser.Scene{
                         })
                     })
                 }
-            });
-        
-        })
-
-    }
-    update (){
+        }
         this.bg_tts.tilePositionX += 1
         this.bg_tts.tilePositionY -= 1
     }

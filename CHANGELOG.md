@@ -1,3 +1,14 @@
+## CHANGELOG DEMO 4.1
+
+- Added new character ~> Abby
+* Abby is a fierceful mouse that always looks for some trouble, just to have fun. She will swing her pop to anything she does not like or find annoying (she tends to lick the pop when she's utterly bored, though it seems to never end). **IN GAME** ~> Abby is small compared to other characters but her moveset is pretty good for clearing up bombs fast, she can swing to any direction (4 directions) her pop while gaining a small speed boost to explode bombs, by using the movement keys to aim where she will be swinging, though be careful, she won't be able to turn or slow down or reswing when she swings her pop for once and will have a small fatigue on her next jump (without the shield).
+- Added dedicated hitbox for exploding bombs so it doesn't use the character's hit hitbox
+- Changed player logic so it doesn't handle 2 players at once
+- Changed player spawn logic so it can spawn any character added from now on
+- Changed button logic so it can be used globally
+- Improved menu for better sauce (adecuating to the new character)
+- Improved collision (Phaser 4 is being weeny with tile collision)
+
 ## CHANGELOG DEMO 4.0
 
 - Changed Ability behavior to reasemble old builds
@@ -36,3 +47,7 @@
 - Hoots! can now loop trough the stage instead of stopping in the borders
 - Changed Hoots! hitbox for more fair play
 - Added a License
+
+## CHANGELOG DEMO 2.0
+- Recoded all game in order to improve and add quality of life stuff.
+- i forgor

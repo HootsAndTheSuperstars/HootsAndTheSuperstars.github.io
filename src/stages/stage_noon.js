@@ -1,6 +1,5 @@
 ﻿import Bomb from '../objects/bombs.js';
 import { InvSTARS } from '../objects/invStars.js';
-import { ObjPlayer } from '../objects/player.js'
 import { Shield } from '../objects/shield.js';
 import Star from '../objects/star.js';
 
@@ -8,6 +7,8 @@ import Star from '../objects/star.js';
 //this should be the global functions
 
 import { globalFunctions } from '../globalFunctions/globalFunctions.js';
+import { InputManager } from '../globalFunctions/inputManager.js';
+import { CharacterRegistry } from '../objects/characters/characterManager.js';
 
 
 export class StageNoon extends Phaser.Scene
@@ -19,7 +20,8 @@ export class StageNoon extends Phaser.Scene
         super({key: 'stage_noon'});
     }
 
-    init(){
+    init(data){
+        this.selectedChar = data.selectedChar
         this.stageName = 'stage_noon';
         this.gameOverLauncher = false;
         this.scoreText;
@@ -32,11 +34,6 @@ export class StageNoon extends Phaser.Scene
         this.bombsThatShouldSpawn = 1;
 
 
-        this.cursors;
-        this.keyD;
-        this.keyS;
-        this.keyA;
-        this.keySPACEBAR;
 
         this.platforms;
         this.bombs;
@@ -68,7 +65,13 @@ export class StageNoon extends Phaser.Scene
 
     create ()
     {
-       this.physics.world.setBounds(20, 0, 900, 600)
+        this.globalFunctions = globalFunctions
+        this.key1 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ONE);
+        this.keyE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
+        this.keyZ = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Z);
+        
+        this.inputManager = new InputManager(this); //setup of the inputs, internally
+        this.physics.world.setBounds(20, 0, 900, 600)
 
         //this.charstateDead = false
         //this.gameOver = false
@@ -107,26 +110,7 @@ export class StageNoon extends Phaser.Scene
         
         this.physics.world.checkCollision.up = false;
         this.physics.world.checkCollision.down = false;
-        
-        //this.sound.add('shield')
-        //main game
-        this.cursors = this.input.keyboard.createCursorKeys();
-        this.keyS = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
-        this.keyD = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
-        this.keyA = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
-        this.keySPACEBAR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
-        this.keyE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
-        this.keyZ = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Z);
-        this.key1 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ONE);
-        this.key2 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.TWO);
-
-
-
-        this.input.keyboard.on('keydown-ENTER', () =>
-        {
-                globalFunctions.pauseHandler(this)
-        });
 
         this.add.tileSprite(750, 300, 1500, 600, 'sky');
         // We add some complexity to the background
@@ -146,8 +130,13 @@ export class StageNoon extends Phaser.Scene
 
         const decorationLayer = stage.createLayer("decoration", decorationTiles)
         
-        
-        this.player = new ObjPlayer(this, 450, 450);
+        this.bombs = this.physics.add.group()
+
+        //player info and allat
+        const startingChar = CharacterRegistry[this.selectedChar]
+        if (startingChar) {
+            this.player = new startingChar(this, 450, 450, this.selectedChar);
+        }
         const groundLayer = stage.createLayer("ground", groundTiles)
         const platformsLayer = stage.createLayer("platforms", platformsTiles)
 
@@ -180,12 +169,6 @@ export class StageNoon extends Phaser.Scene
 
         this.starCollect = this.add.sprite(0, 0, 'starGet').setVisible(false);
 
-
-    
-
-
-        this.bombs = this.physics.add.group()
-
         //  Collide the player and the stars with the platforms
         this.physics.add.collider(this.player, platformsLayer, null, (player) => { return (this.player.charstateThroughPlatform == true)});
         this.physics.add.collider(this.player, groundLayer);
@@ -209,11 +192,21 @@ export class StageNoon extends Phaser.Scene
         //  Checks to see if the player overlaps with any of the stars, if he does call the collectStar function
         this.starPlayerCollider = this.physics.add.overlap(this.player, this.stars, (player, star) => { globalFunctions.collectStar(this, this.player, star, this.starCollect) }, null, this);
 
-        this.bombPlayerCollider = this.physics.add.overlap(this.player, this.bombs, (player, bomb) => { globalFunctions.hitBomb(this, this.player, bomb)}, null, this);
+        this.bombPlayerCollider = this.physics.add.overlap(this.player, this.bombs, (player, bomb) => { 
+            globalFunctions.hitBomb(this, this.player, bomb)
+            this.player.smashBomb(this)
+        }, null, this);
         
         //this overlaps are mainly to avoid noclip, like sonic 3 but upwards
         this.physics.add.overlap(this.player, groundLayer, (_player, tile) => {
             if (tile.index !== -1) {
+                this.player.y = this.player.y -10
+                
+            }
+        }, null, this);
+        this.physics.add.overlap(this.player, platformsLayer, (_player, tile) => {
+            if (tile.index !== -1 && this.player.body.velocity.y >= 300) {
+                this.player.body.velocity.y =- 50
                 this.player.y = this.player.y -10
                 
             }
@@ -246,8 +239,20 @@ export class StageNoon extends Phaser.Scene
     update ()
     {
 
+        if (this.inputManager.startINST()) {
+            globalFunctions.pauseHandler(this);
+            this.sceneIsPaused = true
+        }
+        else if(!this.scene.isActive("pause")){
+            this.sceneIsPaused = false
+        }
         //music handler
-        if((!this.scene.isActive('pause') && this.mainStageMusic.isPaused)){
+        if(this.sceneIsPaused){
+            this.mainStageMusic.pause()
+            this.invMusic.pause()
+            this.invMusicIntro.pause()
+        }
+        else if((!this.sceneIsPaused && this.mainStageMusic.isPaused)){
             if(!this.invMusicHandler){
                 this.mainStageMusic.resume()
             }

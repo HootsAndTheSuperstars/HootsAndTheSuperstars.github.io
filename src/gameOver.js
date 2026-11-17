@@ -1,3 +1,5 @@
+import { InputManager } from "./globalFunctions/inputManager.js";
+
 export class GameOver extends Phaser.Scene{
 
     constructor (){
@@ -8,11 +10,13 @@ export class GameOver extends Phaser.Scene{
         this.score = data.score;
         this.stageName = data.stageName;
         this.fastFlash = false;
+        this.canRetry = false
         this.pressEnterText;
     }
 
     create ()
     {
+        this.inputManager = new InputManager(this); //setup of the inputs, internally
 
         this.scene.stop(Phaser.Utils.String.Format('%1', [this.stageName]))
         this.cameras.main.fadeIn(1000, 255, 255, 255)
@@ -67,58 +71,53 @@ export class GameOver extends Phaser.Scene{
         this.sound.add('continue')
         this.sound.add('hurt_shield')
 
-        const music = this.sound.add('gameOver')
-        music.loop = true
+        this.music = this.sound.add('gameOver')
+        this.music.loop = true
         this.time.delayedCall(1000, () => {
-            music.play()
-            this.input.keyboard.on('keydown-ENTER', () =>
-                {
-                    this.gameOverText.setVisible(false)
-                    if(!this.fastFlash){
-                        this.pressEnterTextAnims.anims.play('text_flash_fast', true)
-                        this.scoreText.setVisible(false)
-                        this.escReturnText.setVisible(false)
-                        this.fastFlash = true
-                        this.sound.play('continue')
-                        console.log('Enter pressed! Restarting game...')
-                        music.stop()
-                        this.time.delayedCall(2000, () => {
-                            this.cameras.main.fadeOut(1000)
-                            this.time.delayedCall(1000, () => {
-                                console.log('Switching to stage...')
-                                this.scene.switch(Phaser.Utils.String.Format('%1', [this.stageName]))
-                                this.scene.stop('gameover')
-                        })
-                    })
-                }
-            });
-            this.input.keyboard.on('keydown-ESC', () =>
-                {
-                    this.gameOverText.setVisible(false)
-                    if(!this.fastFlash){
-                        this.scoreText.setVisible(false)
-                        this.pressEnterTextAnims.setVisible(false)
-                        this.escReturnTextAnims.anims.play('text_return_flash')
-                        this.fastFlash = true
-                        this.sound.play('hurt_shield')
-                        console.log('You coward (pressed ESC)\n Going back to the menu...')
-                        music.stop()
-                        this.time.delayedCall(2000, () => {
-                            this.cameras.main.fadeOut(1000)
-                            this.time.delayedCall(1000, () => {
-                                console.log('Switching to titlescreen...')
-                                this.scene.switch('menu')
-                                this.scene.stop('gameover')
-                        })
-                    })
-                }
-            });
+            this.music.play()
+            this.canRetry = true
         })
 
     }
     update ()
     {
-
+        if(this.canRetry){
+            if(this.inputManager.startINST() && !this.fastFlash){
+                
+                this.pressEnterTextAnims.anims.play('text_flash_fast', true)
+                this.gameOverText.setVisible(false)
+                this.scoreText.setVisible(false)
+                this.escReturnText.setVisible(false)
+                this.fastFlash = true
+                this.sound.play('continue')
+                this.music.stop()
+                this.time.delayedCall(2000, () => {
+                    this.cameras.main.fadeOut(1000)
+                    this.time.delayedCall(1000, () => {
+                        this.scene.switch(Phaser.Utils.String.Format('%1', [this.stageName]))
+                        this.scene.stop('gameover')
+                    })
+                })
+                
+            }
+            else if(this.inputManager.backINST() && !this.fastFlash){
+                this.gameOverText.setVisible(false)
+                this.scoreText.setVisible(false)
+                this.pressEnterTextAnims.setVisible(false)
+                this.escReturnTextAnims.anims.play('text_return_flash')
+                this.fastFlash = true
+                this.sound.play('hurt_shield')
+                this.music.stop()
+                this.time.delayedCall(2000, () => {
+                    this.cameras.main.fadeOut(1000)
+                    this.time.delayedCall(1000, () => {
+                        this.scene.switch('menu')
+                        this.scene.stop('gameover')
+                    })
+                })
+                    
+            }
+        }
         this.bg_gameover.tilePositionY -= 0.5;
 
     }

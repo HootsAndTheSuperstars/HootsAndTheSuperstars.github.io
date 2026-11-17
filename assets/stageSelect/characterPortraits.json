@@ -1,0 +1,19 @@
+{
+    "stageSelectAssets":{
+        "path": "assets/stageSelect",
+        "files": [
+            
+            {
+                "type": "image",
+                "key": "menu_hoots",
+                "url": "hootsBig.png"
+            },
+            {
+                "type": "image",
+                "key": "menu_abby",
+                "url": "abbyBig.png"
+            }
+            
+        ]
+    }
+}

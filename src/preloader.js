@@ -15,6 +15,10 @@ export class PreLoader extends Phaser.Scene{
         this.load.spritesheet('hoots', 'assets/hoots/hoots.png', {frameWidth: 64, frameHeight: 64});
 
         this.load.animation('hootsAnims', '/assets/hoots/hoots.json')
+
+        this.load.spritesheet('abby', 'assets/abby/abby.png', {frameWidth: 96, frameHeight: 78});
+
+        this.load.animation('abbyAnims', '/assets/abby/abby.json')
         
         //powerUps
         this.load.spritesheet('powerups', 'assets/misc/powerups.png', {frameWidth: 30, frameHeight: 30});
@@ -74,6 +78,7 @@ export class PreLoader extends Phaser.Scene{
         //stage Select
 
         this.load.pack('stageSelectAssets', 'assets/stageSelect/stageSelectAssets.json')
+        this.load.pack('stagePortraits', 'assets/stageSelect/characterPortraits.json')
         this.load.animation('stagePortraits', 'assets/stageSelect/stagePortraits.json')
         this.load.spritesheet('stagePortraits', 'assets/stageSelect/stagePortraits.png', {frameWidth: 292, frameHeight: 168})
         //stage noon

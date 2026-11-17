@@ -1,10 +1,16 @@
-import { ObjPlayer } from "./objects/player.js";
+import { globalFunctions } from "./globalFunctions/globalFunctions.js";
+import { InputManager } from "./globalFunctions/inputManager.js";
+import { CharacterRegistry } from "./objects/characters/characterManager.js";
+
 
 export class controlsScreen extends Phaser.Scene{
 
     constructor (){
 
         super({key: 'controlsScreen'});
+    }
+    init(data){
+        this.selectedChar = data.selectedChar
     }
     create(){
         this.cameras.main.fadeIn(500)
@@ -36,12 +42,13 @@ export class controlsScreen extends Phaser.Scene{
         this.activeStomp = this.sound.add('stomp_activate')
 
         //Controls
-        this.cursors = this.input.keyboard.createCursorKeys();
-        this.keyS = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
-        this.keyD = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
-        this.keyA = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
-        this.keySPACEBAR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
-        this.key2 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.TWO);
+        this.globalFunctions = globalFunctions
+        this.key1 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ONE);
+        this.keyE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
+        this.keyZ = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Z);
+        
+        this.inputManager = new InputManager(this); //setup of the inputs, internally
+        this.physics.world.setBounds(20, 0, 900, 600)
 
 
 
@@ -73,7 +80,18 @@ export class controlsScreen extends Phaser.Scene{
         this.time.delayedCall(1000, ()=>{
             this.add.image(450, 320, 'tutorial')
         })
-        this.player = new ObjPlayer(this, 450, 450);
+        this.bombs = this.physics.add.group()
+
+        //player info and allat
+        const startingChar = CharacterRegistry[this.selectedChar]
+        if (startingChar) {
+            this.player = new startingChar(this, 450, 450, this.selectedChar);
+        }
+
+         this.bombPlayerCollider = this.physics.add.overlap(this.player, this.bombs, (player, bomb) => { 
+            globalFunctions.hitBomb(this, this.player, bomb)
+            this.player.smashBomb(this)
+        }, null, this);
         this.time.delayedCall(10000, ()=>{
             this.add.image(450, 530, 'enterToPlay')
         })

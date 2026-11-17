@@ -1,5 +1,5 @@
 
-export class ObjPlayer extends Phaser.Physics.Arcade.Sprite {
+export class CHAR_hoots extends Phaser.Physics.Arcade.Sprite {
     init(){
         //this are the character states (ex. walking, facing left... right... etc)
         //This is especially for flipping the sprites, DO NOT REMOVE
@@ -7,13 +7,7 @@ export class ObjPlayer extends Phaser.Physics.Arcade.Sprite {
         this.facingLeft = false;
         this.charstateUp = false
         this.charstateDown = false
-
-        //char check
-        this.Char1 = true;
-        this.Char2 = false;
-        this.CharChange = false;
-
-        //background
+        
         //movement spud
         this.abilityCooldown = false
         this.charstateWalk = false;
@@ -41,31 +35,64 @@ export class ObjPlayer extends Phaser.Physics.Arcade.Sprite {
         this.init()
         scene.add.existing(this);
         scene.physics.add.existing(this);
+        this.body.setSize(16, 38);
+
         this.body.setOffset(25, 14);
         this.body.setGravityY(600)
         //  Player physics properties. Give the little guy a slight bounce.
         this.setBounce(0);
         this.debugBodyColor = 0xffffff;
-       
+        this.explodeHitbox = scene.add.zone(0, 0, 50, 50);
+        scene.physics.add.existing(this.explodeHitbox); 
+        this.explodeHitbox.body.setImmovable(true);
+
+        this.expHitboxOffsetX = 7;   
+        this.expHitboxOffsetY = 30;
+
+        this.bombHITCollider = scene.physics.add.overlap(this.explodeHitbox, scene.bombs, (hitbox, bomb) => { 
+                scene.globalFunctions.hitBomb(scene, this, bomb);
+                this.smashBomb(scene);
+            }, null, this);   
+
+    }
+    preUpdate(time, delta){
+        super.preUpdate(time, delta)
+        this.explodeHitbox.x = this.body.x + this.expHitboxOffsetX
+        this.explodeHitbox.y = this.body.y + this.expHitboxOffsetY
+
     }
     update (scene){
+        this.CharKey = "hoots"
         
-        if(this.invAfterHit){
-            scene.bombPlayerCollider.active = false
-            this.setAlpha(0.7)
-            if(this.body.onFloor()){
-                scene.time.delayedCall(3000, () =>{
-                    if(this.invAfterHit){
-                        this.setTint(0xfcfcfc).setTintMode(Phaser.TintModes.FILL)
-                    }
-                })
+        if(this.invAfterHit && !this.invPreventer){
+            this.invPreventer = true
+            
+                if(!this.flashing){
+                    this.flashOn = true
+                    this.flashing = true
+                }
                 scene.time.delayedCall(3500, () =>{
                     if(this.invAfterHit){
+                        this.flashing = false
+                        this.flashOn = false
                         this.setAlpha(1)
-                        this.clearTint()
+                        
                         this.invAfterHit = false
-                        scene.bombPlayerCollider.active = true
+                        this.invPreventer = false
+                        
                     }
+                })
+            
+        }
+        if (this.flashing){
+            if(this.flashOn){
+                this.flashOn = false
+                this.setAlpha(0)
+                scene.time.delayedCall(50, ()=>{
+                    this.setAlpha(1)
+                    scene.time.delayedCall(50, ()=>{
+                        this.flashOn = true
+                    })
                 })
             }
         }
@@ -83,26 +110,6 @@ export class ObjPlayer extends Phaser.Physics.Arcade.Sprite {
 
 
 
-
-        //hitbox handler
-
-        if(!this.charstateAbility){
-            this.body.setSize(16, 38);
-            //this.body.setOffset(25, 14);
-        }
-        else if (this.charstateAbility){
-            this.body.setSize(46, 38);
-            //this.body.setOffset(30, 14);
-        }
-        /*
-        if(this.charstateThroughPlatform){
-            console.log("Not Trough platform")
-        }
-        else if(!this.charstateThroughPlatform){
-            console.log("Through platform")
-        }
-        */
-
         if(this.body.velocity.y > -1 && !this.charstateClimb){
             this.charstateThroughPlatform = true
             
@@ -111,22 +118,6 @@ export class ObjPlayer extends Phaser.Physics.Arcade.Sprite {
             this.charstateThroughPlatform = false
         }
 
-        if(scene.key2.isDown && this.CharChange == false){
-            this.CharChange = true
-            if(this.Char1){
-                this.Char2 = true
-                this.Char1 = false
-                console.warn('Changing to char2...')
-            }
-            else if(this.Char2){
-                this.Char2 = false
-                this.Char1 = true
-                console.warn('Changing to char1...')
-            }
-            scene.time.delayedCall(1000, () =>{
-                this.CharChange = false
-            })
-        }
         //char starts here
         if(!this.charstateDead)
         {
@@ -143,15 +134,15 @@ export class ObjPlayer extends Phaser.Physics.Arcade.Sprite {
             }
 
             if(!this.charstateHurt && !this.charstateSkidd){
-                if(scene.cursors.left.isDown && !scene.cursors.right.isDown && this.body.velocity.x >= 0){
+                if(scene.inputManager.leftINST() && !scene.inputManager.rightINST() && this.body.velocity.x >= 0){
                     this.facingLeft = true;
                     this.facingRight = false;
                 }
-                else if(scene.cursors.right.isDown && !scene.cursors.left.isDown && this.body.velocity.x <= 0){
+                else if(scene.inputManager.rightINST() && !scene.inputManager.leftINST() && this.body.velocity.x <= 0){
                     this.facingLeft = false;
                     this.facingRight = true;
                 }
-            else if((scene.cursors.left.isDown && scene.cursors.right.isDown || scene.cursors.left.isDown && scene.cursors.right.isDown)){
+            else if((scene.inputManager.leftINST() && scene.inputManager.rightINST() || scene.inputManager.leftINST() && scene.inputManager.rightINST())){
                 if(this.body.velocity.x > 0){
                     this.facingLeft = false;
                     this.facingRight = true;
@@ -199,11 +190,11 @@ export class ObjPlayer extends Phaser.Physics.Arcade.Sprite {
                         scene.skiddSound.stop()
                     }
                     if(!this.charstateIdle){
-                        if(scene.cursors.left.isDown){
+                        if(scene.inputManager.leftINST()){
                             this.setAccelerationX(-350);
                             //console.log("Pushing right");
                         }
-                        else if(scene.cursors.right.isDown){
+                        else if(scene.inputManager.rightINST()){
                             this.setAccelerationX(350);
                             //console.log("Pushing left");                
                         }
@@ -290,182 +281,204 @@ export class ObjPlayer extends Phaser.Physics.Arcade.Sprite {
             //console.log("State: Dead")
         }
  
+        //Hitbox Handler for the stomp
+
+        if(this.charstateAbility || this.invAfterHit){
+            scene.bombPlayerCollider.active = false
+
+            this.body.debugBodyColor = 0x000000
+            if(this.charstateAbility){
+                this.bombHITCollider.active = true
+                this.explodeHitbox.body.debugBodyColor = 0x00ff00
+            }
+                
+        }
+        else{
+            scene.bombPlayerCollider.active = true
+            this.bombHITCollider.active = false
+
+            this.body.debugBodyColor = 0xffffff
+            this.explodeHitbox.body.debugBodyColor = 0xff0000
+
+        }
 
         //Keybinds
-        //climb stuff
-        if(this.onLadder && scene.cursors.up.isDown && !this.charstateClimb){
-            this.charstateClimb = true
-            this.charstateFall = false
-            this.charstateJump = false
-            this.climbDisabling = true
-            scene.time.delayedCall(100, ()=>{
-                this.climbDisabling = false
-            })
-        }
-        else if(!this.onLadder && this.charstateClimb && !this.climbDisabling){
-            this.charstateClimb = false
-            this.charstateFall = true
-        }
-
-        if(this.charstateClimb){
-            if(scene.cursors.up.isDown && !scene.cursors.down.isDown){
-                this.charstateUp = true
-                this.charstateDown = false
+        if(!this.charstateDead){
+            //climb stuff
+            if(this.onLadder && scene.inputManager.upINST() && !this.charstateClimb){
+                this.charstateClimb = true
+                this.charstateFall = false
+                this.charstateJump = false
+                this.climbDisabling = true
+                scene.time.delayedCall(100, ()=>{
+                    this.climbDisabling = false
+                })
             }
-            else if(!scene.cursors.up.isDown && scene.cursors.down.isDown){
-                this.charstateUp = false
-                this.charstateDown = true
+            else if(!this.onLadder && this.charstateClimb && !this.climbDisabling){
+                this.charstateClimb = false
+                this.charstateFall = true
             }
-            else if(!scene.cursors.up.isDown && !scene.cursors.down.isDown){
-                this.charstateUp = false
-                this.charstateDown = false
-            }
-        }
-        else if(!this.charstateClimb){
-            this.charstateUp = false
-            this.charstateDown = false
-        }
 
-
-        //coyote time (aka, an extension of the platform you might be standing on)
-        if(this.coyoteTime && !this.body.onFloor()){
-            scene.time.delayedCall(50,() => {
-                if(!this.body.onFloor()){
-                    this.coyoteTime = false
-                    if(!this.charstateClimb){
-                        this.charstateFall = true
-                    }
+            if(this.charstateClimb){
+                if(scene.inputManager.upINST() && !scene.inputManager.downINST()){
+                    this.charstateUp = true
+                    this.charstateDown = false
                 }
-            })
-        }
-        if(!this.charstateHurt && !scene.gameOver){
-            //general walk
-            if(scene.cursors.left.isDown || scene.cursors.right.isDown){
-                    this.charstateWalk = true
-                if(scene.keyS.isDown && this.body.onFloor() && !this.charstateClimb){
-                    this.charstateRun = true
-                    if((scene.cursors.left.isDown && this.body.velocity.x > 160) || (scene.cursors.right.isDown && this.body.velocity.x < -160)){
-                        this.charstateSkidd = true
+                else if(!scene.inputManager.upINST() && scene.inputManager.downINST()){
+                    this.charstateUp = false
+                    this.charstateDown = true
+                }
+                else if(!scene.inputManager.upINST() && !scene.inputManager.downINST()){
+                    this.charstateUp = false
+                    this.charstateDown = false
+                }
+            }
+            else if(!this.charstateClimb){
+                this.charstateUp = false
+                this.charstateDown = false
+            }
+
+
+            //coyote time (aka, an extension of the platform you might be standing on)
+            if(this.coyoteTime && !this.body.onFloor()){
+                scene.time.delayedCall(50,() => {
+                    if(!this.body.onFloor()){
+                        this.coyoteTime = false
+                        if(!this.charstateClimb){
+                            this.charstateFall = true
+                        }
                     }
-                    else if((scene.cursors.left.isDown && this.body.velocity.x < 160) || (scene.cursors.right.isDown && this.body.velocity.x > -160)){
+                })
+            }
+            if(!this.charstateHurt && !scene.gameOver){
+                //general walk
+                if(scene.inputManager.leftINST() || scene.inputManager.rightINST()){
+                        this.charstateWalk = true
+                    if(scene.inputManager.bINST() && this.body.onFloor() && !this.charstateClimb){
+                        this.charstateRun = true
+                        if((scene.inputManager.leftINST() && this.body.velocity.x > 160) || (scene.inputManager.rightINST() && this.body.velocity.x < -160)){
+                            this.charstateSkidd = true
+                        }
+                        else if((scene.inputManager.leftINST() && this.body.velocity.x < 160) || (scene.inputManager.rightINST() && this.body.velocity.x > -160)){
+                            this.charstateSkidd = false
+                        }
+                    }
+                    else if(!scene.inputManager.bINST() || (!this.body.onFloor() && !this.coyoteTime)){
+                        this.charstateRun = false
                         this.charstateSkidd = false
                     }
+                    
                 }
-                else if(!scene.keyS.isDown || (!this.body.onFloor() && !this.coyoteTime)){
-                    this.charstateRun = false
-                    this.charstateSkidd = false
-                }
-                
-            }
-            //jumping and falling
-            if(!this.jumpFatigue && !this.charstateAbility && (scene.keyD.isDown || scene.keySPACEBAR.isDown) && ((this.body.onFloor() || this.charstateClimb) || this.coyoteTime)){
-                if(!scene.jumpSound.isPlaying){
-                    scene.jumpSound.play()
-                }
-                this.coyoteTime = false
-                this.onLadder = false
-                this.charstateClimb = false
-                this.abilityCooldown = true
-                this.charstateJump = true
-                this.charstateSkidd = false
-
-            }
-            else if(!scene.cursors.down.isDown && !this.charstateClimb){
-                    if((scene.keyD.isDown || scene.keySPACEBAR.isDown) && !this.body.onFloor() && this.body.velocity.y < -1 && !this.coyoteTime){
-                        this.charstateJump = true;
-                        this.charstateFall = true
+                //jumping and falling
+                if(!this.jumpFatigue && !this.charstateAbility && (scene.inputManager.cINST() || scene.inputManager.aINST()) && ((this.body.onFloor() || this.charstateClimb) || this.coyoteTime)){
+                    if(!scene.jumpSound.isPlaying){
+                        scene.jumpSound.play()
                     }
-                    else if(!this.body.onFloor() && (this.body.velocity.y >= -1 && (scene.keyD.isDown || scene.keySPACEBAR.isDown) || !(scene.keyD.isDown || scene.keySPACEBAR.isDown))){
-                        
-                        if(this.charstateJump){
-                            this.charstateJump = false;
-                            this.charstateFall = true;
-                            this.charstateAbility = false
-                            this.charstateSkidd = false
+                    this.coyoteTime = false
+                    this.onLadder = false
+                    this.charstateClimb = false
+                    this.abilityCooldown = true
+                    this.charstateJump = true
+                    this.charstateSkidd = false
 
-                            if(!(scene.keyD.isDown || scene.keySPACEBAR.isDown)){
-                                this.abilityCooldown = false
+                }
+                else if(!scene.inputManager.downINST() && !this.charstateClimb){
+                        if((scene.inputManager.cINST() || scene.inputManager.aINST()) && !this.body.onFloor() && this.body.velocity.y < -1 && !this.coyoteTime){
+                            this.charstateJump = true;
+                            this.charstateFall = true
+                        }
+                        else if(!this.body.onFloor() && (this.body.velocity.y >= -1 && (scene.inputManager.cINST() || scene.inputManager.aINST()) || !(scene.inputManager.cINST() || scene.inputManager.aINST()))){
+                            
+                            if(this.charstateJump){
+                                this.charstateJump = false;
+                                this.charstateFall = true;
+                                this.charstateAbility = false
+                                this.charstateSkidd = false
+
+                                if(!(scene.inputManager.cINST() || scene.inputManager.aINST())){
+                                    this.abilityCooldown = false
+                                }
                             }
                         }
                     }
-                }
 
-            if(!this.body.onFloor() && (scene.keyD.isDown || scene.keySPACEBAR.isDown) && !this.abilityCooldown && !this.coyoteTime && !this.charstateClimb){
-                if(!this.charstateAbility && this.Char1){
-                    this.charstateJump = false;
-                    this.charstateFall = false;
-                    //this.charstateWalk = false
-                    this.charstateAbility = true;
-                    this.jumpFatigue = true
-                    if(!scene.activeStomp.isPlaying && this.charstateAbility){
-                        scene.activeStomp.play()
+                if(!this.body.onFloor() && (scene.inputManager.cINST() || scene.inputManager.aINST()) && !this.abilityCooldown && !this.coyoteTime && !this.charstateClimb){
+                    if(!this.charstateAbility){
+                        this.charstateJump = false;
+                        this.charstateFall = false;
+                        //this.charstateWalk = false
+                        this.charstateAbility = true;
+                        this.jumpFatigue = true
+                        if(!scene.activeStomp.isPlaying && this.charstateAbility){
+                            scene.activeStomp.play()
+                        }
+                        
+        
                     }
-                    
-    
+
                 }
-
             }
-        }
 
-        else if(this.body.onFloor()){
-            this.charstateHurt = false;
-            scene.time.delayedCall(300, () =>{
-                this.checkforpreventingSkiddafterStun = false
-            })
-        };
-
-
-        //this is for the jump fatigue, to avoid a jump after ability for Hoots
-        if(this.body.onFloor() && this.jumpFatigue){
-            if(scene.keyD.isDown || scene.keySPACEBAR.isDown){
-                scene.time.delayedCall(50, ()=>{
-                    this.jumpFatigue = false
+            else if(this.body.onFloor()){
+                this.charstateHurt = false;
+                scene.time.delayedCall(300, () =>{
+                    this.checkforpreventingSkiddafterStun = false
                 })
-            }
-            else{
-                this.jumpFatigue = false
-            }
-            
-        }
-
-        if(!this.charstateHurt){
-            if((this.body.onFloor() && ( !scene.keyD.isDown || scene.keySPACEBAR.isDown)|| !this.body.onFloor()) && (!scene.cursors.left.isDown && !scene.cursors.right.isDown || scene.cursors.left.isDown && scene.cursors.right.isDown) || (this.body.velocity.x == 0 && (this.body.touching.left || this.body.touching.right))){
-                if((this.body.velocity.x >= 160 || this.body.velocity.x <= -160) && !this.checkforpreventingSkiddafterStun){
-                    if(this.charstateRun){
-                        this.charstateSkidd = true
-                    }
-                    this.charstateIdle = true
-                }
-                else if(this.body.velocity.x < 160 && this.body.velocity.x > -160 || this.checkforpreventingSkiddafterStun){
-                    this.charstateIdle = true
-                    this.charstateSkidd = false
-                }
-            }
-            else if ((scene.keyD.isDown && this.charstateAbility && !this.body.onFloor()) || !(this.jumpFatigue && this.body.onFloor() && scene.keyD.isDown)  || scene.keySPACEBAR.isDown || (this.charstateClimb && (scene.cursors.up.isDown || scene.cursors.down.isDown))  || scene.cursors.left.isDown || scene.cursors.right.isDown){
-                this.charstateIdle = false
-            }
-
-            if(this.body.onFloor()){
-                this.charstateFall = false;
-                this.charstateAbility = false;
-                this.coyoteTime = true;
-
             };
 
-            if(this.charstateIdle){
-                this.charstateWalk = false;
+
+            //this is for the jump fatigue, to avoid a jump after ability for Hoots
+            if(this.body.onFloor() && this.jumpFatigue){
+                if(scene.inputManager.cINST() || scene.inputManager.aINST()){
+                    scene.time.delayedCall(50, ()=>{
+                        this.jumpFatigue = false
+                    })
+                }
+                else{
+                    this.jumpFatigue = false
+                }
                 
             }
 
+            if(!this.charstateHurt){
+                if((this.body.onFloor() && ( !scene.inputManager.cINST() || scene.inputManager.aINST())|| !this.body.onFloor()) && (!scene.inputManager.leftINST() && !scene.inputManager.rightINST() || scene.inputManager.leftINST() && scene.inputManager.rightINST()) || (this.body.velocity.x == 0 && (this.body.touching.left || this.body.touching.right))){
+                    if((this.body.velocity.x >= 160 || this.body.velocity.x <= -160) && !this.checkforpreventingSkiddafterStun){
+                        if(this.charstateRun){
+                            this.charstateSkidd = true
+                        }
+                        this.charstateIdle = true
+                    }
+                    else if(this.body.velocity.x < 160 && this.body.velocity.x > -160 || this.checkforpreventingSkiddafterStun){
+                        this.charstateIdle = true
+                        this.charstateSkidd = false
+                    }
+                }
+                else if ((scene.inputManager.cINST() && this.charstateAbility && !this.body.onFloor()) || !(this.jumpFatigue && this.body.onFloor() && scene.inputManager.cINST())  || scene.inputManager.aINST() || (this.charstateClimb && (scene.inputManager.upINST() || scene.inputManager.downINST()))  || scene.inputManager.leftINST() || scene.inputManager.rightINST()){
+                    this.charstateIdle = false
+                }
+
+                if(this.body.onFloor()){
+                    this.charstateFall = false;
+                    this.charstateAbility = false;
+                    this.coyoteTime = true;
+
+                };
+
+                if(this.charstateIdle){
+                    this.charstateWalk = false;
+                    
+                }
+
+            }
         }
-            //gameOver
-            if (scene.gameOver)
-            {
-                this.charstateDead = true;
-            }
-            if(this.charstateHurt){
-                this.checkforpreventingSkiddafterStun = true
-            }
+        //gameOver
+        if (scene.gameOver)
+        {
+            this.charstateDead = true;
+        }
+        if(this.charstateHurt){
+            this.checkforpreventingSkiddafterStun = true
+        }
         
     
 
@@ -525,12 +538,6 @@ export class ObjPlayer extends Phaser.Physics.Arcade.Sprite {
 
         
 
-        if(this.Char1){
-            this.CharKey = "hoots"
-        }
-        if(this.Char2){
-            this.CharKey = "hoots2"
-        }
 
         //sound handler
 
@@ -548,9 +555,29 @@ export class ObjPlayer extends Phaser.Physics.Arcade.Sprite {
                     })
                 }
             }
+        
     }
 
+    smashBomb(scene){
+        if (this.charstateAbility || scene.effectShield || scene.effectInv){
+            if(scene.effectShield && !this.charstateAbility && !scene.effectInv){
+                this.invAfterHit = true;
+                scene.effectShield = false;
+                this.upStun = true;
+                scene.sound.play('hurt_shield')
+            }
+            if(!scene.effectShield && scene.player.charstateAbility && !scene.effectInv){
+                this.charstateAbility = false;
+                this.upStun = true;
+                scene.sound.play('hurt')
+            }
 
+        }
+        else{
+            scene.globalFunctions.gameOverHandler(scene)
+        }
+
+    }
 }
 
 
